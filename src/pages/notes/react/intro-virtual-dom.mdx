@@ -1,0 +1,204 @@
+---
+title: React 與單向資料流
+tags: ['React', 'Virtual DOM', 'State Management']
+sidebar_label: React 與單向資料流
+sidebar_position: 1
+---
+
+## 前言
+
+<aside>
+💡 看完這篇文章你會知道：
+ 1. 什麼是 Virtual DOM？
+ 2 組成 Virtual DOM的最小單位：createElement
+
+</aside>
+
+## React 與 無前端框架的差別：Virtual DOM
+
+### 1. **較好維護的程式碼：**
+
+<iframe
+  height="300"
+  width="100%"
+  scrolling="no"
+  title="DOM Example"
+  src="https://codepen.io/Chious/embed/ZEZwgLj?default-tab=html%2Cresult"
+  frameborder="no"
+  loading="lazy"
+  allowtransparency="true"
+  allowfullscreen="true"
+>
+  See the Pen <a href="https://codepen.io/Chious/pen/ZEZwgLj">DOM Example</a> by
+  Chiou Jia Sheng (<a href="https://codepen.io/Chious">@Chious</a>) on{' '}
+  <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+如果使用傳統的 Javascript 來為維護 DOM，這是一件很麻煩的事情：
+
+- 產生一個初始的 `<ul/>` 物件。
+- 當按鈕被點擊時擷取使用者輸入的資訊。
+- 產生一個新的`<li/>`物件，並且賦予 id、內容。
+
+Virtual DOM 簡化整個流程。
+
+### 2. **只對必要重繪的部分進行重構：**
+
+當 DOM 元素進行變更時，Virtual DOM 會比較上一次的節點，並對對小的所需進行重繪。想像今天有個 `Counter` 的物件，當點擊按鈕後會更新計數器的數量：
+
+```jsx
+const virtualDOM = {
+  type: 'div',
+  props: {
+    children: [
+      {
+        type: 'p',
+        props: {
+          children: ['目前計數：0'],
+        },
+      },
+      {
+        type: 'button',
+        props: {
+          onClick: () => setCount(count + 1),
+          children: ['點我增加'],
+        },
+      },
+    ],
+  },
+};
+```
+
+然而當按鈕被點擊後，計數器的數字被變更，React 紀錄了新的資料對應關係（而非真實的 DOM 元素），並產生了新的 virtaulDOM：
+
+```jsx
+const newVirtualDOM = {
+  type: 'div',
+  props: {
+    children: [
+      {
+        type: 'p',
+        props: {
+          children: ['目前計數：1'],
+        },
+      },
+      {
+        type: 'button',
+        props: {
+          onClick: () => setCount(count + 1),
+          children: ['點我增加'],
+        },
+      },
+    ],
+  },
+};
+```
+
+透過 React 的演算法去比較新/舊的結構的差異，我們發現僅有 `<p/>` 的內容需要重繪，React 會根據最小的 DOM 操作範圍，去返回新的真實 DOM 元素物件：
+
+```html
+<div>
+  <p>目前計數：1</p>
+  <button>點我增加</button>
+</div>
+```
+
+若操作 DOM 元素，可能會重置整個物件並進行畫面重繪，相較於 Javascript 的計算是一件昂貴的事情。（這邊較為抽象，暫時參考網路上的[說法](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/47)）。
+
+註：在 React 當中，畫面繪製分為兩個流程：
+
+- Reconciler：負責定義、管理畫面結構的描述（如上面的 `newVirtualDOM`）。
+- Renderer：根據 Reconciler 的定義，同時會比較新舊的差異，並在 `react-dom` 這個容器中繪製真實的 DOM 元素。
+
+## React DOM 的容器：Root
+
+<aside>
+💡 了解Virtual DOM 的機制後，在專案中又是在哪處幫我們掌管專案的呢？
+
+</aside>
+
+若使用 `create-react-app` 建立一個專案，你可以在資料夾中找到 `index.html`，長相如下：
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React + TypeScript + Replit</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+</html>
+```
+
+在同一個資料夾也會發現`index.js`：
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+想像網頁在建構的過程中，我們會透過 `ReactDOM` 這個代理人，來幫我們決定該繪製什麼畫面。
+
+## 什麼是[React Element](https://react.dev/reference/react/createElement)
+
+<aside>
+💡 接下來要介紹組成 Virtual DOM 最小的單位：React Element
+
+</aside>
+
+在 React 當中，我們常以 Self Closing Tag 呼叫一個物件（例如： `<Greeting/>`），事實上在編譯時呼叫了 `React.createElement()` 這個方法去建立 virtaul DOM 的節點：
+
+```jsx
+function Greeting({ name }) {
+  return createElement(
+    'h1', // HTML標籤
+    { className: 'greeting' }, //屬性
+    'Hello' // 子元素
+  );
+}
+```
+
+而這些微小的解點構成了一個頁面的樣子，同時在 Component 上能夠描述各式的標籤：
+
+```jsx
+function App() {
+  return (
+    <div>
+      <Greeting name="Amy" />
+      <Greeting name="Sam" />
+      <Greeting name="Johnny" />
+    </div>
+  );
+}
+```
+
+然而我們的瀏覽器或編譯器並不真的認識 `<Greeting/>` 這個標籤，而是在 build time 時，透過轉譯器（如：Babel），將 `<Greeting/>` 轉譯成：
+
+```jsx
+ createElement(’hi’, {className: “greeting”}, "Hello")
+```
+
+並在瀏覽器運行時（run time）運作這些方法：
+
+```jsx
+ createElement(’hi’, {className: “greeting”}, "Hello")
+ createElement(’hi’, {className: “greeting”}, "Hello")
+ createElement(’hi’, {className: “greeting”}, "Hello")
+
+  ...（假如有很多節點的話）
+```
+
+## 參考資料
+
+1. **React 思維進化：一次打破常見的觀念誤解，躍升專業前端開發者**
