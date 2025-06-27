@@ -3,7 +3,6 @@ description: Guidelines for creating and maintaining Cursor rules to ensure cons
 globs: .cursor/rules/*.mdc
 alwaysApply: true
 ---
-
 - **Required Rule Structure:**
   ```markdown
   ---
@@ -50,4 +49,25 @@ alwaysApply: true
   - Keep descriptions concise
   - Include both DO and DON'T examples
   - Reference actual code over theoretical examples
-  - Use consistent formatting across rules 
+  - Use consistent formatting across rules
+
+- **Always check the result in the browser or via tests before confirming and committing changes to git.**
+  - This ensures that your changes work as expected and prevents broken code from being committed.
+  - For UI changes, preview in the browser and verify all affected components.
+  - For backend or logic changes, run all relevant tests.
+  - Only proceed with `git commit` after successful verification.
+
+- **All git commit messages must follow the Conventional Commits specification.**
+  - Example: `feat(layout): add dark mode toggle to header`
+  - See https://www.conventionalcommits.org/en/v1.0.0/ for full details.
+
+---
+- **在確認並提交（commit）到 git 之前，務必先在瀏覽器或測試中檢查結果。**
+  - 這可確保你的變更如預期運作，避免提交有問題的程式碼。
+  - UI 變更請務必在瀏覽器預覽並檢查所有受影響元件。
+  - 後端或邏輯變更請執行所有相關測試。
+  - 僅在驗證無誤後才進行 `git commit`。
+
+- **所有 git commit 訊息必須遵循 Conventional Commits 規範。**
+  - 範例：`feat(layout): add dark mode toggle to header`
+  - 詳細規範請參考 https://www.conventionalcommits.org/zh-hant/v1.0.0/ 

@@ -1,0 +1,311 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout>
+	<Header />
+   <section id="relume" class="relative px-[5%] py-16 md:py-24 lg:py-28">
+      <div class="relative z-10 container max-w-lg text-center">
+        <p class="mb-3 text-sm font-semibold text-text-alternative md:mb-4">博客</p>
+        <h1
+          class="mb-5 text-5xl font-bold text-text-alternative md:text-7xl lg:text-8xl"
+        >
+          探索前端開發的世界
+        </h1>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-4 md:mt-12">
+          <div class="rb-4 flex items-center">
+            <div class="rb-4 flex flex-col items-center sm:mb-0">
+              <div class="mb-3 shrink-0 md:mb-4">
+                <img
+                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+                  alt="Relume placeholder avatar"
+                  class="size-14 min-h-14 min-w-14 rounded-full object-cover"
+                />
+              </div>
+              <div class="text-text-alternative">
+                <h6 class="font-semibold">張三</h6>
+                <div class="mt-1 flex">
+                  <p class="text-sm">11 一月 2022</p>
+                  <span class="mx-2">•</span>
+                  <p class="text-sm">5 分鐘閱讀</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-0 z-0">
+        <img
+          src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+          class="size-full object-cover"
+          alt="Relume placeholder image"
+        />
+        <div class="absolute inset-0 bg-black/50"></div>
+      </div>
+    </section>
+    
+    <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+      <div class="container">
+        <div class="rb-12 mb-12 w-full max-w-lg md:mb-18 lg:mb-20">
+          <p class="mb-3 font-semibold md:mb-4">部落格</p>
+          <h2 class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+            最新技術與生活
+          </h2>
+          <p class="md:text-md">探索前端開發的世界與個人生活</p>
+        </div>
+        <div
+          class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 md:gap-y-16 lg:grid-cols-2 lg:gap-x-12"
+        >
+          <div class="flex size-full flex-col items-start justify-start text-start">
+            <a href="#" class="mb-6 w-full"
+              ><img
+                src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+                alt="Relume placeholder image 1"
+                class="aspect-video size-full rounded-image object-cover"
+            /></a>
+            <div class="rb-4 mb-4 flex w-full items-center justify-start">
+              <div
+                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+              >
+                技術
+              </div>
+              <p class="inline text-sm font-semibold">約 5 分鐘</p>
+            </div>
+            <a href="#" class="mb-2"
+              ><h2 class="text-xl font-bold md:text-2xl">
+                深入了解 React 的最佳實踐
+              </h2></a
+            >
+            <p>這篇文章將介紹 React 中的狀態管理技巧</p>
+            <button
+              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+              title="閱讀更多"
+            >
+              閱讀更多<svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="0"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex size-full flex-col items-start justify-start text-start">
+            <a href="#" class="mb-6 w-full"
+              ><img
+                src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+                alt="Relume placeholder image 1"
+                class="aspect-video size-full rounded-image object-cover"
+            /></a>
+            <div class="rb-4 mb-4 flex w-full items-center justify-start">
+              <div
+                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+              >
+                生活
+              </div>
+              <p class="inline text-sm font-semibold">約 5 分鐘</p>
+            </div>
+            <a href="#" class="mb-2"
+              ><h2 class="text-xl font-bold md:text-2xl">我的台灣自行車之旅</h2></a
+            >
+            <p>分享我在台灣騎行的美好經歷與風景</p>
+            <button
+              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+              title="閱讀更多"
+            >
+              閱讀更多<svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="0"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center justify-end">
+          <button
+            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3 mt-10 md:mt-14 lg:mt-16"
+          >
+            查看全部
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+      <div class="container">
+        <div class="mb-12 md:mb-18 lg:mb-20">
+          <div class="w-full max-w-lg">
+            <p class="mb-3 font-semibold md:mb-4">部落格</p>
+            <h2
+              class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
+            >
+              技術筆記分類
+            </h2>
+            <p class="md:text-md">探索不同的技術領域與主題</p>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 md:gap-y-16 lg:grid-cols-3"
+        >
+          <div class="flex size-full flex-col items-start justify-start text-start">
+            <a href="#" class="mb-6 w-full"
+              ><img
+                src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+                alt="Relume placeholder image"
+                class="aspect-[3/2] size-full rounded-image object-cover"
+            /></a>
+            <div class="rb-4 mb-4 flex w-full items-center justify-start">
+              <div
+                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+              >
+                類別
+              </div>
+              <p class="inline text-sm font-semibold">5 分鐘閱讀</p>
+            </div>
+            <a class="mb-2 flex justify-start text-start" href="#"
+              ><h2 class="text-xl font-bold md:text-2xl">
+                深入了解 React 的運用
+              </h2></a
+            >
+            <p>學習如何使用 React 創建互動式應用程式</p>
+            <button
+              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+              title="閱讀更多"
+            >
+              閱讀更多<svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="0"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex size-full flex-col items-start justify-start text-start">
+            <a href="#" class="mb-6 w-full"
+              ><img
+                src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+                alt="Relume placeholder image"
+                class="aspect-[3/2] size-full rounded-image object-cover"
+            /></a>
+            <div class="rb-4 mb-4 flex w-full items-center justify-start">
+              <div
+                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+              >
+                類別
+              </div>
+              <p class="inline text-sm font-semibold">5 分鐘閱讀</p>
+            </div>
+            <a class="mb-2 flex justify-start text-start" href="#"
+              ><h2 class="text-xl font-bold md:text-2xl">
+                功能性程式設計的基礎
+              </h2></a
+            >
+            <p>探討功能性程式設計的核心概念與實踐</p>
+            <button
+              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+              title="閱讀更多"
+            >
+              閱讀更多<svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="0"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex size-full flex-col items-start justify-start text-start">
+            <a href="#" class="mb-6 w-full"
+              ><img
+                src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+                alt="Relume placeholder image"
+                class="aspect-[3/2] size-full rounded-image object-cover"
+            /></a>
+            <div class="rb-4 mb-4 flex w-full items-center justify-start">
+              <div
+                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+              >
+                類別
+              </div>
+              <p class="inline text-sm font-semibold">5 分鐘閱讀</p>
+            </div>
+            <a class="mb-2 flex justify-start text-start" href="#"
+              ><h2 class="text-xl font-bold md:text-2xl">如何開始使用 Kotlin</h2></a
+            >
+            <p>學習 Kotlin 語言的基本語法與應用</p>
+            <button
+              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+              title="閱讀更多"
+            >
+              閱讀更多<svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="0"
+                viewBox="0 0 15 15"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center justify-end">
+          <button
+            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3 mt-10 md:mt-14 lg:mt-16"
+          >
+            查看全部
+          </button>
+        </div>
+      </div>
+    </section>    
+  <Footer />
+</BaseLayout>

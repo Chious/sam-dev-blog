@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* 基本 dark mode 樣式覆蓋 */
+html,
+body {
+  @apply bg-white text-gray-900;
+}
+body.dark {
+  @apply bg-gray-900 text-gray-100;
+}
