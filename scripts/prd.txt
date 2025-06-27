@@ -1,0 +1,109 @@
+## 🧾 Product Requirements Document (PRD): Personal Blog for Frontend Developer
+
+### 1. 🎯 **Project Summary**
+
+A personal blog site for showcasing technical notes, primarily written in Markdown. The blog should support syntax-highlighted code, diagram rendering (PlantUML, Mermaid), and clean modern design, with Git-based content management. Analytics and comments may be added in later phases.
+
+---
+
+### 2. 📄 **Core Features**
+
+#### 2.1 Home Page
+
+* Short personal introduction
+* Tech stack (list or icons)
+* Personal habits/philosophy (e.g., "Functional programming advocate", "Loves clean code")
+* Social links (GitHub, LinkedIn, Email)
+* Avatar or profile image
+
+#### 2.2 Notes Listing Page
+
+* Lists all notes with:
+  * Title
+  * Excerpt / preview
+  * Publish date
+  * Category or tags (e.g., React, FP)
+* Filter or group by category
+* Optional: Search bar (future)
+
+#### 2.3 Note Detail Page
+
+* Render Markdown content
+* Syntax highlighting for code blocks
+* Render diagrams (Mermaid, PlantUML)
+* Table of contents (TOC) auto-generated for long notes
+* Tags and publish date
+* Optional: Show related notes
+
+---
+
+### 3. 🛠️ **Content Management**
+
+* All notes written as Markdown (`.md` or `.mdx`) files stored in Git repository
+
+* Each file contains frontmatter for metadata:
+
+  ```yaml
+  ---
+  title: "Functional Composition in JavaScript"
+  date: "2025-06-27"
+  category: "Functional Programming"
+  tags: ["javascript", "fp", "compose"]
+  ---
+  ```
+
+* Folder structure suggestion:
+
+  ```
+  /content/
+    react/
+      useEffect-tips.md
+    functional-programming/
+      monads-explained.md
+  ```
+
+* User can serch content by tags
+---
+
+### 4. 🎨 **Design & User Experience**
+
+* Clean and modern UI
+* Responsive (mobile, tablet, desktop)
+* Dark mode toggle
+* Elegant typography (e.g., Inter or Fira Code)
+* Minimal and dev-focused visual style
+
+---
+
+### 5. 🔧 **Tech Stack Proposal**
+
+| Area        | Tech Choice             |
+| ----------- | ----------------------- |
+| Framework   | Astro                   |
+| Styling     | TailwindCSS             |
+| Markdown    | MDX, or contentlayer    |
+| Diagrams    | Mermaid, PlantUML       |
+| Code syntax | Shiki or Prism          |
+| Deploy      | Vercel or Netlify       |
+| Versioning  | GitHub (manual editing) |
+| Comments    | Giscus (future)         |
+| Analytics   | Plausible / GA (future) |
+
+---
+
+### 6. 📈 **Future Enhancements (Non-blocking)**
+
+* Add Giscus for comments
+* Add Plausible or Google Analytics
+* Add RSS feed and sitemap.xml
+* Implement search (e.g., Algolia)
+
+---
+
+### 7. ✅ **Out of Scope**
+
+* No CMS or GUI admin interface (everything through Git and markdown)
+* No backend database
+* No login/auth
+
+---

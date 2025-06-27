@@ -1,0 +1,228 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository with Astro",
+        "description": "Initialize the project repository with Astro framework and configure basic project structure",
+        "details": "1. Create a new GitHub repository for the blog\n2. Initialize Astro project: `npm create astro@latest`\n3. Configure basic project structure:\n   - `/src/pages/` for route pages\n   - `/src/layouts/` for layout components\n   - `/src/components/` for reusable components\n   - `/public/` for static assets\n   - `/content/` for markdown files\n4. Setup `.gitignore` file\n5. Create initial README.md with project description\n6. Configure `astro.config.mjs` with basic settings\n7. Make initial commit and push to GitHub",
+        "testStrategy": "Verify that the Astro project builds successfully with `npm run build` and runs locally with `npm run dev`. Ensure all directories are properly created and the project structure follows Astro conventions.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Install and Configure TailwindCSS",
+        "description": "Set up TailwindCSS for styling the blog with responsive design support",
+        "details": "1. Install TailwindCSS and its dependencies:\n   ```bash\n   npm install -D tailwindcss postcss autoprefixer\n   npx tailwindcss init -p\n   ```\n2. Configure Tailwind in `tailwind.config.js`:\n   ```javascript\n   module.exports = {\n     content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],\n     theme: {\n       extend: {\n         fontFamily: {\n           sans: ['Inter', 'sans-serif'],\n           mono: ['Fira Code', 'monospace'],\n         },\n       },\n     },\n     plugins: [],\n     darkMode: 'class',\n   }\n   ```\n3. Create a base CSS file in `src/styles/global.css` with Tailwind directives\n4. Import the CSS file in the main layout component",
+        "testStrategy": "Verify that TailwindCSS classes work properly by applying some basic styles to a test component. Test that responsive design works by resizing the browser window. Ensure dark mode toggle functionality works correctly.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Create Base Layout Components",
+        "description": "Develop the base layout components including header, footer, and main layout with dark mode support",
+        "details": "1. Create `src/layouts/BaseLayout.astro` with:\n   - HTML5 boilerplate\n   - Meta tags for SEO\n   - Dark mode class handling\n   - Slot for page content\n2. Create `src/components/Header.astro` with:\n   - Site title/logo\n   - Navigation links\n   - Dark mode toggle button\n3. Create `src/components/Footer.astro` with:\n   - Copyright information\n   - Social links\n4. Implement dark mode toggle functionality using localStorage\n5. Make all components responsive using TailwindCSS classes",
+        "testStrategy": "Test the layout on different screen sizes to ensure responsiveness. Verify that the dark mode toggle correctly switches between light and dark themes and persists the preference. Check that all navigation links work correctly.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Setup Markdown Processing with MDX",
+        "description": "Configure MDX for processing markdown content with frontmatter support",
+        "details": "1. Install MDX integration for Astro:\n   ```bash\n   npm install @astrojs/mdx\n   ```\n2. Configure MDX in `astro.config.mjs`:\n   ```javascript\n   import mdx from '@astrojs/mdx';\n   \n   export default defineConfig({\n     integrations: [mdx()],\n     markdown: {\n       shikiConfig: {\n         theme: 'github-dark',\n         langs: ['js', 'html', 'css', 'typescript', 'jsx', 'tsx', 'json', 'yaml'],\n         wrap: true,\n       },\n     },\n   });\n   ```\n3. Create a content collection schema for blog posts\n4. Setup frontmatter validation for markdown files\n5. Create utility functions for parsing and sorting content by date, category, etc.",
+        "testStrategy": "Create test markdown files with various frontmatter configurations and verify they are correctly processed. Test code blocks with syntax highlighting. Ensure frontmatter validation works by intentionally creating invalid frontmatter and checking for appropriate errors.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Home Page",
+        "description": "Create the home page with personal introduction, tech stack, philosophy, social links, and profile image",
+        "details": "1. Create `src/pages/index.astro` using the BaseLayout\n2. Design a clean, modern hero section with:\n   - Profile image/avatar (with responsive sizing)\n   - Name and brief introduction\n   - Tech stack icons or list using TailwindCSS\n   - Personal philosophy/habits section\n3. Add social links section with icons for GitHub, LinkedIn, Email\n4. Implement responsive design for all screen sizes\n5. Add subtle animations for improved UX (optional)\n6. Ensure proper semantic HTML structure for accessibility",
+        "testStrategy": "Test the home page on different devices and screen sizes to ensure responsiveness. Verify that all social links work correctly. Check accessibility using tools like Lighthouse or axe. Ensure the page loads quickly and animations (if any) don't affect performance.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Setup Content Directory Structure",
+        "description": "Establish the content directory structure for organizing markdown files by category",
+        "details": "1. Create the main content directory structure:\n   ```\n   /content/\n     react/\n     functional-programming/\n     javascript/\n     css/\n     etc...\n   ```\n2. Create sample markdown files with proper frontmatter:\n   ```yaml\n   ---\n   title: \"Functional Composition in JavaScript\"\n   date: \"2023-11-15\"\n   category: \"Functional Programming\"\n   tags: [\"javascript\", \"fp\", \"compose\"]\n   ---\n   ```\n3. Implement a script to validate frontmatter in all markdown files\n4. Document the content structure in the README.md for future reference",
+        "testStrategy": "Verify that the directory structure is created correctly. Test the frontmatter validation script with both valid and invalid frontmatter. Ensure the sample markdown files are properly organized and accessible.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Notes Listing Page",
+        "description": "Create the notes listing page that displays all blog posts with title, excerpt, publish date, and categories/tags",
+        "details": "1. Create `src/pages/notes/index.astro`\n2. Fetch all markdown files and sort by date (newest first)\n3. Design a card component for each note preview:\n   - Title with link to full post\n   - Excerpt (first 150 characters or custom excerpt from frontmatter)\n   - Publish date (formatted nicely)\n   - Category and tags with appropriate styling\n4. Implement responsive grid layout using TailwindCSS\n5. Add category/tag filtering functionality\n6. Implement pagination if number of posts is large (optional)",
+        "testStrategy": "Test the listing page with various numbers of posts to ensure proper layout. Verify that sorting works correctly with different dates. Test filtering by category and tags. Check that links to individual posts work correctly. Test responsiveness on different screen sizes.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Note Detail Page",
+        "description": "Create the note detail page that renders markdown content with syntax highlighting, diagrams, and table of contents",
+        "details": "1. Create `src/pages/notes/[...slug].astro` for dynamic routing\n2. Fetch and render markdown content based on slug\n3. Implement syntax highlighting for code blocks using Shiki\n4. Add styling for markdown elements (headings, lists, blockquotes, etc.)\n5. Generate table of contents for long notes\n6. Display metadata (publish date, tags, category)\n7. Add previous/next post navigation (optional)\n8. Implement responsive design for all screen sizes",
+        "testStrategy": "Test with various markdown content including different heading levels, code blocks with different languages, lists, blockquotes, etc. Verify that syntax highlighting works correctly. Test the table of contents generation and ensure it links to the correct sections. Check responsiveness on different screen sizes.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Diagram Rendering",
+        "description": "Add support for rendering Mermaid and PlantUML diagrams in markdown content",
+        "details": "1. Install necessary packages:\n   ```bash\n   npm install mermaid\n   ```\n2. Create a custom component for rendering Mermaid diagrams:\n   ```jsx\n   // src/components/MermaidDiagram.astro\n   ---\n   const { code } = Astro.props;\n   ---\n   <div class=\"mermaid\">{code}</div>\n   <script>\n     import mermaid from 'mermaid';\n     mermaid.initialize({ startOnLoad: true });\n   </script>\n   ```\n3. For PlantUML, use an external service or setup a local server\n4. Create a remark plugin to transform code blocks with language 'mermaid' or 'plantuml' into the appropriate component\n5. Update the MDX configuration to use the custom remark plugin",
+        "testStrategy": "Create test markdown files with various Mermaid and PlantUML diagrams. Verify that diagrams render correctly in the browser. Test with complex diagrams to ensure proper rendering. Check for any performance issues with multiple diagrams on a single page.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Tag Search Functionality",
+        "description": "Add the ability to search content by tags",
+        "details": "1. Create a tags collection page at `src/pages/tags/index.astro` that lists all available tags\n2. Create a tag detail page at `src/pages/tags/[tag].astro` that shows all posts with a specific tag\n3. Implement a tag cloud or list component that shows all tags with post counts\n4. Add tag links to the note cards in the listing page\n5. Implement a simple client-side filtering mechanism for quick tag filtering\n6. Ensure proper URL structure for tag pages (e.g., `/tags/javascript`)",
+        "testStrategy": "Test the tag pages with various tags to ensure proper filtering. Verify that tag links work correctly from both the tag cloud and note cards. Test edge cases like tags with special characters or spaces. Check that the tag cloud accurately reflects the number of posts per tag.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Table of Contents Component",
+        "description": "Create a table of contents component that automatically generates a navigation menu from markdown headings",
+        "details": "1. Create a TOC component that extracts headings from markdown content\n2. Implement a recursive function to handle nested headings (h2, h3, etc.)\n3. Add smooth scrolling to heading locations when TOC links are clicked\n4. Style the TOC with appropriate indentation and hover effects\n5. Make the TOC sticky on desktop for better navigation\n6. Add a collapse/expand toggle for mobile devices\n7. Only show TOC for posts with a minimum number of headings",
+        "testStrategy": "Test the TOC with various heading structures to ensure proper nesting. Verify that clicking TOC links scrolls to the correct heading. Test on different screen sizes to ensure responsive behavior. Check that the sticky positioning works correctly on desktop and the collapse/expand toggle works on mobile.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Optimize Images and Assets",
+        "description": "Implement image optimization for profile pictures and any images in markdown content",
+        "details": "1. Install Astro's image integration:\n   ```bash\n   npm install @astrojs/image\n   ```\n2. Configure the image integration in `astro.config.mjs`\n3. Create an optimized image component for use in markdown\n4. Implement lazy loading for images\n5. Add appropriate width, height, and alt attributes for accessibility\n6. Create different image sizes for responsive design\n7. Optimize SVG icons for social links and other UI elements",
+        "testStrategy": "Test image loading performance using tools like Lighthouse. Verify that images are properly sized for different screen sizes. Check that lazy loading works correctly. Ensure all images have proper alt text for accessibility. Test with various image formats (jpg, png, webp, etc.).",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Setup Deployment to Vercel or Netlify",
+        "description": "Configure automatic deployment to Vercel or Netlify from the GitHub repository",
+        "details": "1. Create an account on Vercel or Netlify if not already available\n2. Connect the GitHub repository to the deployment platform\n3. Configure build settings:\n   - Build command: `npm run build`\n   - Output directory: `dist`\n   - Node.js version: Latest LTS\n4. Set up environment variables if needed\n5. Configure custom domain if available\n6. Enable HTTPS\n7. Set up preview deployments for pull requests\n8. Configure build caching for faster deployments",
+        "testStrategy": "Test the deployment process by making a small change and pushing to GitHub. Verify that the build completes successfully and the site is accessible. Check that preview deployments work for pull requests. Test the site on the production URL to ensure everything works as expected.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement SEO Optimization",
+        "description": "Add SEO metadata, Open Graph tags, and Twitter cards for better discoverability",
+        "details": "1. Create an SEO component that can be used in the base layout\n2. Add metadata for each page:\n   - Title\n   - Description\n   - Canonical URL\n   - Open Graph tags (og:title, og:description, og:image, etc.)\n   - Twitter card tags\n3. Generate dynamic metadata based on page content\n4. Add structured data (JSON-LD) for blog posts\n5. Create a robots.txt file\n6. Implement proper heading hierarchy for accessibility\n7. Add meta description from frontmatter or generate from content",
+        "testStrategy": "Test SEO metadata using tools like the Facebook Sharing Debugger, Twitter Card Validator, and Google's Structured Data Testing Tool. Verify that all pages have appropriate titles and descriptions. Check that Open Graph images are properly sized and displayed. Ensure canonical URLs are correct for all pages.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Add Documentation and Final Testing",
+        "description": "Create comprehensive documentation for the project and perform final testing",
+        "details": "1. Update the README.md with:\n   - Project overview\n   - Installation instructions\n   - Content management guide\n   - Deployment process\n   - Technology stack details\n2. Document the content structure and frontmatter requirements\n3. Add comments to complex code sections\n4. Create a CONTRIBUTING.md file if open to contributions\n5. Perform comprehensive testing on different devices and browsers\n6. Run accessibility audits and fix any issues\n7. Check performance using Lighthouse and optimize if needed\n8. Test all user flows and interactions",
+        "testStrategy": "Review all documentation for accuracy and completeness. Test the installation process by following the instructions on a fresh environment. Perform cross-browser testing on Chrome, Firefox, Safari, and Edge. Run accessibility audits using tools like axe or Lighthouse. Test performance and optimize any slow-loading pages or components.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-27T04:13:16.341Z",
+      "updated": "2025-06-27T04:13:16.341Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
