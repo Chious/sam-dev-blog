@@ -9,7 +9,7 @@
         "testStrategy": "Verify that the Astro project builds successfully with `npm run build` and runs locally with `npm run dev`. Ensure all directories are properly created and the project structure follows Astro conventions.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -22,7 +22,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -221,7 +221,7 @@
     ],
     "metadata": {
       "created": "2025-06-27T04:13:16.341Z",
-      "updated": "2025-06-27T04:13:16.341Z",
+      "updated": "2025-06-27T04:41:36.399Z",
       "description": "Tasks for master context"
     }
   }
