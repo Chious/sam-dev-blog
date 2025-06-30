@@ -5,6 +5,12 @@ import path from "path";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://chious.github.io",
+  base: "/sam-dev-blog",
+  output: "static",
+  build: {
+    assets: "assets",
+  },
   vite: {
     plugins: [tailwindcss()],
     resolve: {
