@@ -1,8 +1,5 @@
 ---
-import '../../styles/global.css';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
   return [
@@ -15,7 +12,6 @@ const { postId } = Astro.params;
 ---
 
 <BaseLayout>
-	<Header />
   <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <div
@@ -347,6 +343,4 @@ const { postId } = Astro.params;
       </div>
     </div>
   </section>
-  
- <Footer/>    
 </BaseLayout>

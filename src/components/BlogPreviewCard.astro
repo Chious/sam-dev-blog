@@ -1,0 +1,101 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  slug: string;
+  category: string;
+  tags?: string[];
+  readingTime?: string;
+  image?: string;
+  date?: Date;
+}
+
+const { 
+  title, 
+  description = "", 
+  slug, 
+  category,
+  tags = [],
+  readingTime = "5分鐘閱讀",
+  image = "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg",
+  date
+} = Astro.props;
+
+// 生成文章鏈接
+const articleUrl = `/notes/${category}/${slug}`;
+
+// 獲取主要標籤作為顯示標籤
+const primaryTag = tags[0] || category;
+
+// 格式化類別名稱為中文
+const getCategoryLabel = (cat: string) => {
+  const categoryMap: Record<string, string> = {
+    'ai': 'AI',
+    'algorithms': '演算法',
+    'app': '應用開發',
+    'aws': 'AWS',
+    'css': 'CSS',
+    'deploy': '部署',
+    'functional-programming': '函數式程式設計',
+    'internet': '網路技術',
+    'react': 'React',
+    'webgl': 'WebGL',
+    'xss': '資安'
+  };
+  return categoryMap[cat] || '技術';
+};
+
+const categoryLabel = getCategoryLabel(category);
+---
+
+<div
+  class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex size-full flex-col items-center justify-start"
+>
+  <a href={articleUrl} class="w-full">
+    <img
+      src={image}
+      alt={title}
+      class="aspect-[3/2] size-full object-cover"
+    />
+  </a>
+  <div class="px-5 py-6 md:p-6">
+    <div class="rb-4 mb-4 flex w-full items-center justify-start">
+      <div
+        class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
+      >
+        {categoryLabel}
+      </div>
+      <p class="inline text-sm font-semibold">{readingTime}</p>
+    </div>
+    <a class="mb-2" href={articleUrl} class="cursor-pointer">
+      <h2 class="text-xl font-bold md:text-2xl">
+        {title}
+      </h2>
+    </a>
+    <p>{description}</p>
+    <a href={articleUrl} class=" hover:text-blue-500 transition cursor-pointer">
+    <button
+      class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
+      title="閱讀更多"
+    >
+      閱讀更多
+      <svg
+        stroke="currentColor"
+        fill="none"
+        stroke-width="0"
+        viewBox="0 0 15 15"
+        height="1em"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </button>
+    <a/>
+  </div>
+</div> 

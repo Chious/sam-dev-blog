@@ -1,34 +1,108 @@
 ---
-import '../styles/global.css';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import TechStack from '@/components/TechStack.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import BlogPreviewCard from '@/components/BlogPreviewCard.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// 獲取所有 notes
+const allNotes = await getCollection('notes');
+
+// 按日期排序（有日期的優先，然後按時間倒序）並取前3篇
+const sortedNotes = allNotes
+  .sort((a, b) => {
+    // 如果都有日期，按日期倒序
+    if (a.data.date && b.data.date) {
+      return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+    }
+    // 有日期的排在前面
+    if (a.data.date && !b.data.date) return -1;
+    if (!a.data.date && b.data.date) return 1;
+    // 都沒有日期時按標題排序
+    return a.data.title.localeCompare(b.data.title);
+  })
+  .slice(0, 3);
+
+// 假資料，當沒有足夠的文章時使用
+const fallbackArticles = [
+  {
+    title: "深入了解前端開發的技巧",
+    description: "這篇文章將介紹最新的React功能和最佳實踐",
+    slug: "frontend-dev-tips",
+    category: "react",
+    tags: ["React", "前端", "技術"],
+    readingTime: "5分鐘閱讀",
+    image: undefined,
+    date: undefined
+  },
+  {
+    title: "我的編程旅程分享",
+    description: "分享我在開發過程中的學習與挑戰",
+    slug: "my-coding-journey",
+    category: "personal",
+    tags: ["個人", "經驗分享"],
+    readingTime: "5分鐘閱讀",
+    image: undefined,
+    date: undefined
+  },
+  {
+    title: "我的興趣與愛好",
+    description: "探索我在業餘時間的各種活動與創作",
+    slug: "my-hobbies",
+    category: "life",
+    tags: ["生活", "興趣"],
+    readingTime: "5分鐘閱讀",
+    image: undefined,
+    date: undefined
+  }
+];
+
+// 準備顯示的文章數據
+const articlesToShow = [];
+
+// 添加真實文章
+for (const note of sortedNotes) {
+  // 從 slug 中提取 category (第一級目錄)
+  const pathParts = note.slug.split('/');
+  const category = pathParts[0];
+  const slug = pathParts[pathParts.length - 1];
+  
+  articlesToShow.push({
+    title: note.data.title,
+    description: note.data.description,
+    slug: slug,
+    category: category,
+    tags: note.data.tags,
+    readingTime: note.data.readingTime,
+    image: note.data.image,
+    date: note.data.date
+  });
+}
+
+// 如果文章不夠3篇，用假資料補足
+while (articlesToShow.length < 3) {
+  const fallbackIndex: number = articlesToShow.length;
+  if (fallbackIndex < fallbackArticles.length) {
+    articlesToShow.push(fallbackArticles[fallbackIndex]);
+  } else {
+    break;
+  }
+}
 ---
 
 <BaseLayout>
-	<Header />
   <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <div
         class="grid grid-cols-1 gap-x-20 gap-y-12 md:gap-y-16 lg:grid-cols-2 lg:items-center"
       >
         <div>
-          <h1 class="mb-5 text-6xl font-bold md:mb-6 md:text-9xl lg:text-10xl">
-            前端開發者的知識花園
+          <h1 class="mb-5 text-6xl font-bold md:mb-6 md:text-9xl lg:text-7xl">
+            Hi, <br/>This is Sam
           </h1>
           <p class="md:text-md">
             我是一名熱愛前端開發的工程師，專注於使用React和TypeScript創建優雅的用戶界面。我喜歡分享我的技術筆記和個人經歷，讓更多人受益。
           </p>
-          <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
-            <button
-              class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-6 py-3"
-              title="了解更多"
-            >
-              了解更多</button
-            ><button
+          <div class="mt-6 flex flex-wrap gap-4 md:mt-8"><button
               class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
               title="聯繫我"
             >
@@ -38,7 +112,7 @@ import Footer from '../components/Footer.astro';
         </div>
         <div>
           <img
-            src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+            src="/images/profolio-picture.png"
             class="w-full rounded-image object-cover"
             alt="Relume placeholder image"
           />
@@ -46,8 +120,10 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
   </section>
+
+  <TechStack/>
   
-  <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+  <section id="relume blog" class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <div class="mb-12 md:mb-18 lg:mb-20">
         <div class="w-full max-w-lg">
@@ -63,143 +139,18 @@ import Footer from '../components/Footer.astro';
       <div
         class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 md:gap-y-16 lg:grid-cols-3"
       >
-        <div
-          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex size-full flex-col items-center justify-start"
-        >
-          <a href="#" class="w-full"
-            ><img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image"
-              class="aspect-[3/2] size-full object-cover"
-          /></a>
-          <div class="px-5 py-6 md:p-6">
-            <div class="rb-4 mb-4 flex w-full items-center justify-start">
-              <div
-                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
-              >
-                技術
-              </div>
-              <p class="inline text-sm font-semibold">5分鐘閱讀</p>
-            </div>
-            <a class="mb-2" href="#"
-              ><h2 class="text-xl font-bold md:text-2xl">
-                深入了解前端開發的技巧
-              </h2></a
-            >
-            <p>這篇文章將介紹最新的React功能和最佳實踐</p>
-            <button
-              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
-              title="閱讀更多"
-            >
-              閱讀更多<svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="0"
-                viewBox="0 0 15 15"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div
-          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex size-full flex-col items-center justify-start"
-        >
-          <a href="#" class="w-full"
-            ><img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image"
-              class="aspect-[3/2] size-full object-cover"
-          /></a>
-          <div class="px-5 py-6 md:p-6">
-            <div class="rb-4 mb-4 flex w-full items-center justify-start">
-              <div
-                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
-              >
-                個人
-              </div>
-              <p class="inline text-sm font-semibold">5分鐘閱讀</p>
-            </div>
-            <a class="mb-2" href="#"
-              ><h2 class="text-xl font-bold md:text-2xl">我的編程旅程分享</h2></a
-            >
-            <p>分享我在開發過程中的學習與挑戰</p>
-            <button
-              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
-              title="閱讀更多"
-            >
-              閱讀更多<svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="0"
-                viewBox="0 0 15 15"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div
-          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex size-full flex-col items-center justify-start"
-        >
-          <a href="#" class="w-full"
-            ><img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image"
-              class="aspect-[3/2] size-full object-cover"
-          /></a>
-          <div class="px-5 py-6 md:p-6">
-            <div class="rb-4 mb-4 flex w-full items-center justify-start">
-              <div
-                class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
-              >
-                生活
-              </div>
-              <p class="inline text-sm font-semibold">5分鐘閱讀</p>
-            </div>
-            <a class="mb-2" href="#"
-              ><h2 class="text-xl font-bold md:text-2xl">我的興趣與愛好</h2></a
-            >
-            <p>探索我在業餘時間的各種活動與創作</p>
-            <button
-              class="rounded-button whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0 mt-6 flex items-center justify-center gap-x-2"
-              title="閱讀更多"
-            >
-              閱讀更多<svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="0"
-                viewBox="0 0 15 15"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+        {articlesToShow.map((article) => (
+          <BlogPreviewCard
+            title={article.title}
+            description={article.description}
+            slug={article.slug}
+            category={article.category}
+            tags={article.tags}
+            readingTime={article.readingTime}
+            image={article.image}
+            date={article.date}
+          />
+        ))}
       </div>
       <div class="flex items-center justify-end">
         <button
@@ -210,437 +161,4 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
   </section>
-  
-  <section id="relume" class="relative z-0">
-    <div class="relative -z-30">
-      <div>
-        <div class="bg-neutral-white px-[5%] py-16 md:py-24 lg:py-28">
-          <div class="container">
-            <div class="mx-auto max-w-lg text-center">
-              <p class="mb-3 font-semibold md:mb-4">標語</p>
-              <h1 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
-                可視化的經歷與愛好
-              </h1>
-              <p class="md:text-md">
-                在這裡，我將分享我的經歷和愛好。從社會學研究助理到環台騎行，這些都是我生活的一部分。
-              </p>
-              <div
-                class="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8"
-              >
-                <button
-                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                  title="查看"
-                >
-                  查看</button
-                ><button
-                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                  title="探索"
-                >
-                  探索<svg
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-width="0"
-                    viewBox="0 0 15 15"
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-[5%]">
-          <div class="container">
-            <div class="relative flex flex-col items-center justify-center">
-              <div
-                class="absolute left-1.5 -z-20 h-full w-[3px] bg-neutral-lighter md:left-auto"
-              >
-                <div
-                  class="fixed top-0 bottom-[50vh] -z-10 h-[50vh] w-[3px] bg-neutral-black"
-                ></div>
-                <div
-                  class="absolute top-0 right-0 left-0 z-10 h-24 w-full bg-gradient-to-b from-white to-transparent"
-                ></div>
-                <div
-                  class="absolute right-0 bottom-0 left-0 z-10 h-24 w-full bg-gradient-to-t from-white to-transparent"
-                ></div>
-              </div>
-              <div
-                class="relative z-20 grid w-full auto-cols-fr grid-cols-[3rem_1fr] gap-y-6 py-16 sm:grid-cols-[4rem_1fr] md:w-auto md:grid-cols-[1fr_10rem_1fr] md:gap-y-0 lg:grid-cols-[1fr_12rem_1fr]"
-              >
-                <div
-                  class="[grid-area:1/2/2/3] md:text-right md:[grid-area:auto]"
-                  style="opacity:0"
-                >
-                  <h3
-                    class="text-4xl leading-[1.2] font-bold md:text-5xl lg:text-6xl"
-                  >
-                    日期
-                  </h3>
-                </div>
-                <div
-                  class="flex justify-start [grid-area:1/1/3/2] md:justify-center md:[grid-area:auto]"
-                >
-                  <div
-                    class="sticky top-[50vh] size-[0.9375rem] rounded-full shadow-[0_0_0_8px_white]"
-                    style="background-color:rgba(204, 204, 204, 1)"
-                  ></div>
-                </div>
-                <div style="opacity:0">
-                  <div class="mb-10 md:mb-14 lg:mb-16">
-                    <p class="md:text-md">
-                      這是我在社會學領域的研究助理經歷。這段時間讓我學到了很多關於數據分析的知識。
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-                      <button
-                        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                        title="詳情"
-                      >
-                        詳情</button
-                      ><button
-                        class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                        title="詳情"
-                      >
-                        詳情<svg
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-width="0"
-                          viewBox="0 0 15 15"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                      alt="Relume placeholder image 1"
-                      class="rounded-image"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative z-20 grid w-full auto-cols-fr grid-cols-[3rem_1fr] gap-y-6 py-16 sm:grid-cols-[4rem_1fr] md:w-auto md:grid-cols-[1fr_10rem_1fr] md:gap-y-0 lg:grid-cols-[1fr_12rem_1fr]"
-              >
-                <div
-                  class="[grid-area:1/2/2/3] md:text-right md:[grid-area:auto]"
-                  style="opacity:0"
-                >
-                  <h3
-                    class="text-4xl leading-[1.2] font-bold md:text-5xl lg:text-6xl"
-                  >
-                    日期
-                  </h3>
-                </div>
-                <div
-                  class="flex justify-start [grid-area:1/1/3/2] md:justify-center md:[grid-area:auto]"
-                >
-                  <div
-                    class="sticky top-[50vh] size-[0.9375rem] rounded-full shadow-[0_0_0_8px_white]"
-                    style="background-color:rgba(204, 204, 204, 1)"
-                  ></div>
-                </div>
-                <div style="opacity:0">
-                  <div class="mb-10 md:mb-14 lg:mb-16">
-                    <p class="md:text-md">
-                      這是我在社會學領域的研究助理經歷。這段時間讓我學到了很多關於數據分析的知識。
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-                      <button
-                        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                        title="詳情"
-                      >
-                        詳情</button
-                      ><button
-                        class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                        title="詳情"
-                      >
-                        詳情<svg
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-width="0"
-                          viewBox="0 0 15 15"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                      alt="Relume placeholder image 2"
-                      class="rounded-image"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative z-20 grid w-full auto-cols-fr grid-cols-[3rem_1fr] gap-y-6 py-16 sm:grid-cols-[4rem_1fr] md:w-auto md:grid-cols-[1fr_10rem_1fr] md:gap-y-0 lg:grid-cols-[1fr_12rem_1fr]"
-              >
-                <div
-                  class="[grid-area:1/2/2/3] md:text-right md:[grid-area:auto]"
-                  style="opacity:0"
-                >
-                  <h3
-                    class="text-4xl leading-[1.2] font-bold md:text-5xl lg:text-6xl"
-                  >
-                    日期
-                  </h3>
-                </div>
-                <div
-                  class="flex justify-start [grid-area:1/1/3/2] md:justify-center md:[grid-area:auto]"
-                >
-                  <div
-                    class="sticky top-[50vh] size-[0.9375rem] rounded-full shadow-[0_0_0_8px_white]"
-                    style="background-color:rgba(204, 204, 204, 1)"
-                  ></div>
-                </div>
-                <div style="opacity:0">
-                  <div class="mb-10 md:mb-14 lg:mb-16">
-                    <p class="md:text-md">
-                      這是我在社會學領域的研究助理經歷。這段時間讓我學到了很多關於數據分析的知識。
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-                      <button
-                        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                        title="詳情"
-                      >
-                        詳情</button
-                      ><button
-                        class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                        title="詳情"
-                      >
-                        詳情<svg
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-width="0"
-                          viewBox="0 0 15 15"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                      alt="Relume placeholder image 3"
-                      class="rounded-image"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative z-20 grid w-full auto-cols-fr grid-cols-[3rem_1fr] gap-y-6 py-16 sm:grid-cols-[4rem_1fr] md:w-auto md:grid-cols-[1fr_10rem_1fr] md:gap-y-0 lg:grid-cols-[1fr_12rem_1fr]"
-              >
-                <div
-                  class="[grid-area:1/2/2/3] md:text-right md:[grid-area:auto]"
-                  style="opacity:0"
-                >
-                  <h3
-                    class="text-4xl leading-[1.2] font-bold md:text-5xl lg:text-6xl"
-                  >
-                    日期
-                  </h3>
-                </div>
-                <div
-                  class="flex justify-start [grid-area:1/1/3/2] md:justify-center md:[grid-area:auto]"
-                >
-                  <div
-                    class="sticky top-[50vh] size-[0.9375rem] rounded-full shadow-[0_0_0_8px_white]"
-                    style="background-color:rgba(204, 204, 204, 1)"
-                  ></div>
-                </div>
-                <div style="opacity:0">
-                  <div class="mb-10 md:mb-14 lg:mb-16">
-                    <p class="md:text-md">
-                      這是我在社會學領域的研究助理經歷。這段時間讓我學到了很多關於數據分析的知識。
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-                      <button
-                        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                        title="詳情"
-                      >
-                        詳情</button
-                      ><button
-                        class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                        title="詳情"
-                      >
-                        詳情<svg
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-width="0"
-                          viewBox="0 0 15 15"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                      alt="Relume placeholder image 4"
-                      class="rounded-image"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="relative z-20 grid w-full auto-cols-fr grid-cols-[3rem_1fr] gap-y-6 py-16 sm:grid-cols-[4rem_1fr] md:w-auto md:grid-cols-[1fr_10rem_1fr] md:gap-y-0 lg:grid-cols-[1fr_12rem_1fr]"
-              >
-                <div
-                  class="[grid-area:1/2/2/3] md:text-right md:[grid-area:auto]"
-                  style="opacity:0"
-                >
-                  <h3
-                    class="text-4xl leading-[1.2] font-bold md:text-5xl lg:text-6xl"
-                  >
-                    日期
-                  </h3>
-                </div>
-                <div
-                  class="flex justify-start [grid-area:1/1/3/2] md:justify-center md:[grid-area:auto]"
-                >
-                  <div
-                    class="sticky top-[50vh] size-[0.9375rem] rounded-full shadow-[0_0_0_8px_white]"
-                    style="background-color:rgba(204, 204, 204, 1)"
-                  ></div>
-                </div>
-                <div style="opacity:0">
-                  <div class="mb-10 md:mb-14 lg:mb-16">
-                    <p class="md:text-md">
-                      這是我在社會學領域的研究助理經歷。這段時間讓我學到了很多關於數據分析的知識。
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-                      <button
-                        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                        title="詳情"
-                      >
-                        詳情</button
-                      ><button
-                        class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                        title="詳情"
-                      >
-                        詳情<svg
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-width="0"
-                          viewBox="0 0 15 15"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                      alt="Relume placeholder image 4"
-                      class="rounded-image"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="bg-neutral-white px-[5%] py-16 md:py-24 lg:py-28">
-          <div class="container">
-            <div class="mx-auto max-w-lg text-center">
-              <p class="mb-3 font-semibold md:mb-4">標語</p>
-              <h1 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
-                探索我的經歷與愛好
-              </h1>
-              <p class="md:text-md">
-                這裡是我生活中重要的片段。希望這些分享能讓您更了解我。
-              </p>
-              <div
-                class="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8"
-              >
-                <button
-                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                  title="查看"
-                >
-                  查看</button
-                ><button
-                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                  title="探索"
-                >
-                  探索<svg
-                    stroke="currentColor"
-                    fill="none"
-                    stroke-width="0"
-                    viewBox="0 0 15 15"
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                      fill="currentColor"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-	<Footer />
 </BaseLayout>

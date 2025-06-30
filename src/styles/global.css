@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* 基本 dark mode 樣式覆蓋 */
 html,

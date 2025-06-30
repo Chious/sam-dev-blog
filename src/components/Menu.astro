@@ -1,0 +1,96 @@
+---
+const navLinks = [
+  { href: '/', label: '首頁' },
+  { href: '/notes', label: '技術筆記' },
+  { href: '/travel', label: '札記' },
+];
+---
+
+<!-- Mobile Menu Button -->
+<button id="mobile-menu-button" class="flex size-12 flex-col justify-center lg:hidden">
+  <img src="/images/menu.svg" alt="Menu" class="w-6 h-6" />
+</button>
+
+<!-- Mobile Menu Overlay -->
+<div
+  id="mobile-menu"
+  class="absolute top-0 left-0 z-50 h-dvh w-[90%] flex-col border-r border-border-primary bg-white px-[5%] pb-4 md:w-[80%] lg:visible lg:static lg:-ml-4 lg:flex lg:h-auto lg:w-auto lg:flex-row lg:border-none lg:px-0 lg:pb-0 lg:[--opacity-closed:100%] lg:[--x-closed:0%] hidden lg:flex"
+>
+  <!-- Close button for mobile -->
+  <div class="flex justify-between items-center mt-4 mb-8 lg:hidden">
+    <a href="#" class="flex flex-shrink-0">
+      <img
+        src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
+        alt="Logo image"
+      />
+    </a>
+    <button id="mobile-menu-close" class="p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Menu Links -->
+  <nav class="flex flex-col lg:flex-row gap-4 lg:gap-8">
+    {navLinks.map((link) => (
+      <a href={link.href} class="text-text-primary hover:text-blue-600 transition-colors py-2 lg:py-0">
+        {link.label}
+      </a>
+    ))}
+  </nav>
+
+  <!-- Mobile only button -->
+  <div class="mt-6 lg:hidden">
+    <button
+      class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-5 py-2 w-full"
+      title="菜單"
+    >
+      菜單
+    </button>
+  </div>
+</div>
+
+<!-- Background overlay -->
+<div
+  id="mobile-menu-backdrop"
+  class="fixed inset-0 z-40 bg-black/50 lg:hidden hidden"
+></div>
+
+<script>
+  // Mobile menu functionality
+  const menuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuBackdrop = document.getElementById('mobile-menu-backdrop');
+  const closeButton = document.getElementById('mobile-menu-close');
+
+  function openMenu() {
+    mobileMenu?.classList.remove('hidden');
+    menuBackdrop?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+  }
+
+  function closeMenu() {
+    mobileMenu?.classList.add('hidden');
+    menuBackdrop?.classList.add('hidden');
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+
+  // Event listeners
+  menuButton?.addEventListener('click', openMenu);
+  closeButton?.addEventListener('click', closeMenu);
+  menuBackdrop?.addEventListener('click', closeMenu);
+
+  // Close menu when clicking on links (for mobile)
+  const menuLinks = mobileMenu?.querySelectorAll('a');
+  menuLinks?.forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMenu();
+    }
+  });
+</script>

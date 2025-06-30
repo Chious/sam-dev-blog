@@ -1,0 +1,19 @@
+---
+import type { TechItem } from '@/data/techStack';
+
+export interface Props {
+  technologies: TechItem[];
+}
+
+const { technologies } = Astro.props;
+---
+
+<div class="tech-grid">
+  {technologies.map((tech) => (
+    <div class="tech-item">
+      <span class="tech-icon">{tech.icon}</span>
+      <h3 class="tech-name">{tech.name}</h3>
+      <p class="tech-desc">{tech.description}</p>
+    </div>
+  ))}
+</div> 

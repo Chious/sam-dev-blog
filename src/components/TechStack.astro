@@ -1,0 +1,239 @@
+---
+import "@styles/TechStack.css"
+import TechGrid from './TechGrid.astro';
+import { techStackData } from '@/data/techStack';
+
+// 動態生成菱形數量
+const totalLayers = techStackData.length;
+---
+<section id="tech-stack" class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>技術檻</h1>
+      <p>這裡是我常用的技術組合</p>
+      <div class="scroll-hint">向下滾動探索 ↓</div>
+    </section>
+
+    <!-- 主要容器 -->
+    <div class="main-container">
+      <!-- 菱形堆疊 -->
+      <div class="diamond-stack">
+        {techStackData.map((_, index) => (
+          <div class="diamond invisible" data-layer={index}></div>
+        ))}
+      </div>
+
+      <!-- 動態技術層級 -->
+      {techStackData.map((layer, index) => (
+        <div class={`tech-info ${layer.position} invisible`} data-layer={index}>
+          <h2 class="tech-title">{layer.title}</h2>
+          <p class="tech-subtitle">{layer.subtitle}</p>
+          <TechGrid technologies={layer.technologies} />
+        </div>
+      ))}
+    </div>
+</section>
+
+    <script define:vars={{ totalLayers }}>
+      // 滾動控制變數
+      let currentLayer = -1;
+
+      // 檢測是否為移動設備
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+
+      // 計算 TechStack section 的開始位置
+      function getTechStackOffset() {
+        const techStackElement = document.getElementById('tech-stack');
+        return techStackElement ? techStackElement.offsetTop : 0;
+      }
+
+      // 更新進度條
+      function updateProgressBar() {
+        const scrollTop = window.pageYOffset;
+        const techStackOffset = getTechStackOffset();
+        const techStackElement = document.getElementById('tech-stack');
+        
+        if (techStackElement) {
+          const windowHeight = window.innerHeight;
+          const heroHeight = windowHeight;
+          const layerScrollHeight = windowHeight * 1.2;
+          const effectiveHeight = heroHeight + (totalLayers * layerScrollHeight);
+          
+          const progress = Math.max(0, Math.min(1, (scrollTop - techStackOffset) / effectiveHeight));
+          const progressFill = techStackElement.querySelector('.progress-fill');
+          if (progressFill) {
+            progressFill.style.width = (progress * 100) + '%';
+          }
+        }
+      }
+
+      // 顯示指定層級
+      function showLayer(layerIndex) {
+        if (layerIndex === currentLayer) return;
+
+        currentLayer = layerIndex;
+
+        // 在移動設備上的邏輯
+        if (isMobile()) {
+          const diamonds = document.querySelectorAll('#tech-stack .diamond');
+          const techInfos = document.querySelectorAll('#tech-stack .tech-info');
+          
+          if (layerIndex >= 0) {
+            // 顯示所有層級
+            diamonds.forEach((diamond) => {
+              diamond.classList.add('visible');
+              diamond.classList.remove('invisible');
+            });
+            
+            techInfos.forEach((info) => {
+              info.classList.add('visible');
+              info.classList.remove('invisible');
+            });
+          } else {
+            // 隱藏所有層級（超出 section 範圍）
+            diamonds.forEach((diamond) => {
+              diamond.classList.remove('visible');
+              diamond.classList.add('invisible');
+            });
+            
+            techInfos.forEach((info) => {
+              info.classList.remove('visible');
+              info.classList.add('invisible');
+            });
+          }
+          return;
+        }
+
+        // 桌面版的原有邏輯
+        // 顯示菱形
+        const diamonds = document.querySelectorAll('#tech-stack .diamond');
+        diamonds.forEach((diamond, index) => {
+          if (layerIndex >= 0 && index <= layerIndex) {
+            diamond.classList.add('visible');
+            diamond.classList.remove('invisible');
+          } else {
+            diamond.classList.remove('visible');
+            diamond.classList.add('invisible');
+          }
+        });
+
+        // 顯示對應的技術資訊
+        const techInfos = document.querySelectorAll('#tech-stack .tech-info');
+        techInfos.forEach((info, index) => {
+          if (layerIndex >= 0 && index === layerIndex) {
+            info.classList.add('visible');
+            info.classList.remove('invisible');
+
+          } else {
+            info.classList.remove('visible');
+            info.classList.add('invisible');
+          }
+        });
+      }
+
+      // 滾動事件處理
+      function handleScroll() {
+        const scrollTop = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        const techStackOffset = getTechStackOffset();
+        const techStackElement = document.getElementById('tech-stack');
+        
+        if (!techStackElement) return;
+
+        // 計算 TechStack 的有效滾動範圍（不使用整個 section 的高度）
+        const heroHeight = windowHeight;
+        const layerScrollHeight = windowHeight * 1.2; // 每層大約 1.2 個螢幕高度
+        const effectiveHeight = heroHeight + (totalLayers * layerScrollHeight);
+        const techStackBottom = techStackOffset + effectiveHeight;
+
+                  // 更新進度條，但只在 TechStack section 範圍內顯示
+          if (scrollTop >= techStackOffset && scrollTop <= techStackBottom) {
+            updateProgressBar();
+            const progressBar = techStackElement.querySelector('.progress-bar');
+            if (progressBar) {
+              progressBar.style.display = 'block';
+            }
+          } else {
+            const progressBar = techStackElement.querySelector('.progress-bar');
+            if (progressBar) {
+              progressBar.style.display = 'none';
+            }
+          }
+
+        // 移動設備簡化邏輯：一旦進入 TechStack section 就顯示所有內容
+        if (isMobile()) {
+          if (scrollTop >= techStackOffset && scrollTop <= techStackBottom) {
+            showLayer(0); // 觸發移動版顯示邏輯
+          } else {
+            showLayer(-1);
+          }
+          return;
+        }
+
+        // 如果還沒滾動到 TechStack section 或已經超出 TechStack 有效範圍
+        if (scrollTop < techStackOffset || scrollTop > techStackBottom) {
+          showLayer(-1);
+          return;
+        }
+
+        // 如果在 TechStack 的 hero 區域
+        if (scrollTop < techStackOffset + heroHeight) {
+          showLayer(-1);
+          return;
+        }
+
+        // 計算當前應該顯示的層級
+        const techStackScrolled = scrollTop - (techStackOffset + heroHeight);
+        const mainScrollHeight = effectiveHeight - heroHeight;
+        const scrollProgress = techStackScrolled / mainScrollHeight;
+        const targetLayer = Math.floor(scrollProgress * totalLayers);
+        const clampedLayer = Math.max(0, Math.min(totalLayers - 1, targetLayer));
+
+        showLayer(clampedLayer);
+      }
+
+      // 窗口大小改變時重新初始化
+      function handleResize() {
+        // 重置當前層級，強制重新計算
+        currentLayer = -1;
+        handleScroll();
+      }
+
+      // 初始化
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', handleResize);
+
+      // 初始檢查
+      handleScroll();
+
+      // 平滑滾動到第一層
+      const scrollHint = document.querySelector('#tech-stack .scroll-hint');
+      if (scrollHint) {
+        scrollHint.addEventListener('click', () => {
+          const techStackOffset = getTechStackOffset();
+          window.scrollTo({
+            top: techStackOffset + window.innerHeight,
+            behavior: 'smooth',
+          });
+        });
+      }
+
+      // 菱形旋轉動畫
+      function animateDiamonds() {
+        const diamonds = document.querySelectorAll('#tech-stack .diamond.visible');
+        diamonds.forEach((diamond, index) => {
+          diamond.style.transform = `rotate(${
+            45 + Math.sin(Date.now() * 0.001 + index) * 5
+          }deg)`;
+        });
+        requestAnimationFrame(animateDiamonds);
+      }
+
+      animateDiamonds();
+    </script>

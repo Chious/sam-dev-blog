@@ -1,56 +1,36 @@
 ---
+import Menu from './Menu.astro';
+
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/notes', label: 'Notes' },
+  { href: '/travel', label: 'Travel' },
 ];
 ---
 <header
 id="relume"
 class="z-[999] grid w-full grid-cols-[1fr_max-content_1fr] items-center justify-between border-b border-border-primary bg-background-primary px-[5%] md:min-h-18"
 >
-<button class="flex size-12 flex-col justify-center lg:hidden">
-  <span class="my-[3px] h-0.5 w-6 bg-black lg:hidden"></span
-  ><span class="my-[3px] h-0.5 w-6 bg-black lg:hidden"></span
-  ><span class="my-[3px] h-0.5 w-6 bg-black lg:hidden"></span>
-</button>
-<div
-  data-initial="closed"
-  data-animate="close"
-  data-exit="closed"
-  data-variants="[object Object]"
-  class="absolute top-0 left-0 z-50 flex h-dvh w-[90%] flex-col border-r border-border-primary bg-white px-[5%] pb-4 md:w-[80%] lg:visible lg:static lg:-ml-4 lg:flex lg:h-auto lg:w-auto lg:flex-row lg:border-none lg:px-0 lg:pb-0 lg:[--opacity-closed:100%] lg:[--x-closed:0%]"
->
-  <a href="#" class="mt-10 mb-8 flex flex-shrink-0 lg:hidden"
-    ><img
+<!-- Mobile Menu Component -->
+<Menu />
+
+<!-- Desktop Navigation -->
+<div class="flex flex-row gap-x-4">
+  <a href="/" class="flex flex-shrink-0">
+    <img
       src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
       alt="Logo image"
-  /></a>
-  <div class="mt-6 lg:hidden">
-    <button
-      class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-5 py-2 w-full"
-      title="菜單"
-    >
-      菜單
-    </button>
-  </div>
+    />
+  </a>
 </div>
-<div
-  class="fixed inset-0 z-40 bg-black lg:hidden hidden"
-  style="opacity:0"
-></div>
-<a href="#" class="flex min-h-16 flex-shrink-0 items-center"
-  ><img
-    src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
-    alt="Logo image"
-/></a>
-<div class="flex min-h-16 items-center justify-end gap-x-4">
-  <div>
-    <button
-      class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-4 py-1 md:px-6 md:py-2"
-      title="登入"
-    >
-      登入
-    </button>
-  </div>
+
+<!-- Social Links -->
+<div class="w-full flex flex-row min-h-16 items-center justify-end gap-x-4">
+    <a href="#" target="_blank">
+      <img src="/images/github.svg" alt="GitHub" class="w-6 h-6" />
+    </a>
+    <a href="#" target="_blank">
+      <img src="/images/linkedin.svg" alt="LinkedIn" class="w-6 h-6" />
+    </a>
 </div>
 </header>

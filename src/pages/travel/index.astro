@@ -1,0 +1,301 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+<section id="relume" class="relative px-[5%]">
+  <div class="relative z-10 container">
+    <div
+      class="flex max-h-[60rem] min-h-svh items-center justify-center py-16 text-center md:py-24 lg:py-28"
+    >
+      <div class="w-full max-w-lg">
+        <h1
+          class="mb-5 text-6xl font-bold text-text-alternative md:mb-6 md:text-9xl lg:text-10xl"
+        >
+          旅行札記
+        </h1>
+        <p class="text-text-alternative md:text-md">
+          旅行 -- 是為了探尋記憶所攜之處。
+        </p>
+        <div class="mt-6 flex items-center justify-center gap-x-4 md:mt-8">
+          <button
+            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-6 py-3"
+            title="了解更多"
+          >
+            了解更多</button
+          ><button
+            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-alternative text-text-alternative px-6 py-3"
+            title="聯絡我"
+          >
+            聯絡我
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute inset-0 z-0">
+    <img
+      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+      class="size-full object-cover"
+      alt="Relume placeholder image"
+    />
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+</section>
+
+<section id="relume">
+  <div class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="container">
+      <div class="rb-12 mb-12 text-center md:mb-18 lg:mb-20">
+        <h2
+          class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
+        >
+          旅行地圖
+        </h2>
+        <p class="md:text-md">探索各地旅行的精彩瞬間</p>
+      </div>
+      <div class="relative" role="region" aria-roledescription="carousel">
+        <div class="relative">
+          <div>
+            <div class="flex ml-0">
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
+              >
+                <div class="w-full">
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+                    alt="Relume placeholder image 1"
+                    class="aspect-square size-full rounded-image object-cover"
+                  />
+                </div>
+              </div>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
+              >
+                <div class="w-full">
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+                    alt="Relume placeholder image 2"
+                    class="aspect-square size-full rounded-image object-cover"
+                  />
+                </div>
+              </div>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
+              >
+                <div class="w-full">
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+                    alt="Relume placeholder image 3"
+                    class="aspect-square size-full rounded-image object-cover"
+                  />
+                </div>
+              </div>
+              <div
+                role="group"
+                aria-roledescription="slide"
+                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
+              >
+                <div class="w-full">
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+                    alt="Relume placeholder image 4"
+                    class="aspect-square size-full rounded-image object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="rounded-button gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary absolute size-14 rounded-full bg-neutral-white left-0 top-1/2 -translate-y-1/2 hidden md:flex md:size-12 lg:size-14"
+            disabled=""
+          >
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              class="size-6"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"
+              ></path></svg
+            ><span class="sr-only">Previous slide</span></button
+          ><button
+            class="rounded-button gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary absolute size-14 rounded-full bg-neutral-white right-0 top-1/2 -translate-y-1/2 hidden md:flex md:size-12 lg:size-14"
+            disabled=""
+          >
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              class="size-6"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
+              ></path></svg
+            ><span class="sr-only">Next slide</span>
+          </button>
+        </div>
+        <div class="mt-[30px] flex items-center justify-center md:mt-[46px]">
+          <button
+            class="relative mx-[3px] inline-block size-2 rounded-full bg-black"
+          ></button
+          ><button
+            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
+          ></button
+          ><button
+            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
+          ></button
+          ><button
+            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+  <div class="container">
+    <div class="mb-12 md:mb-18 lg:mb-20">
+      <div class="mx-auto w-full max-w-lg text-center">
+        <p class="mb-3 font-semibold md:mb-4">博客</p>
+        <h2
+          class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
+        >
+          旅行文章總覽
+        </h2>
+        <p class="md:text-md">探索台灣的美麗風景與文化</p>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 md:gap-y-12 lg:grid-cols-3"
+    >
+      <div>
+        <a href="#" class="mb-6 inline-block w-full max-w-full"
+          ><div class="w-full overflow-hidden">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+              alt="Relume placeholder image 1"
+              class="aspect-[3/2] size-full rounded-image object-cover"
+            /></div></a
+        ><a
+          href="#"
+          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
+          >旅行</a
+        ><a href="#" class="mb-2 block max-w-full"
+          ><h5 class="text-xl font-bold md:text-2xl">台灣環島之旅</h5></a
+        >
+        <p>分享我在台灣環島的精彩經歷與美食</p>
+        <div class="mt-6 flex items-center">
+          <div class="mr-4 shrink-0">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              alt="Relume placeholder avatar 3"
+              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
+            />
+          </div>
+          <div>
+            <h6 class="text-sm font-semibold">小明</h6>
+            <div class="flex items-center">
+              <p class="text-sm">11 Jan 2022</p>
+              <span class="mx-2">•</span>
+              <p class="text-sm">5 min read</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <a href="#" class="mb-6 inline-block w-full max-w-full"
+          ><div class="w-full overflow-hidden">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+              alt="Relume placeholder image 1"
+              class="aspect-[3/2] size-full rounded-image object-cover"
+            /></div></a
+        ><a
+          href="#"
+          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
+          >美食</a
+        ><a href="#" class="mb-2 block max-w-full"
+          ><h5 class="text-xl font-bold md:text-2xl">台北夜市美食探險</h5></a
+        >
+        <p>在台北夜市品嚐各式地道小吃的樂趣</p>
+        <div class="mt-6 flex items-center">
+          <div class="mr-4 shrink-0">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              alt="Relume placeholder avatar 3"
+              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
+            />
+          </div>
+          <div>
+            <h6 class="text-sm font-semibold">小華</h6>
+            <div class="flex items-center">
+              <p class="text-sm">15 Feb 2022</p>
+              <span class="mx-2">•</span>
+              <p class="text-sm">7 min read</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <a href="#" class="mb-6 inline-block w-full max-w-full"
+          ><div class="w-full overflow-hidden">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+              alt="Relume placeholder image 1"
+              class="aspect-[3/2] size-full rounded-image object-cover"
+            /></div></a
+        ><a
+          href="#"
+          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
+          >文化</a
+        ><a href="#" class="mb-2 block max-w-full"
+          ><h5 class="text-xl font-bold md:text-2xl">探索台灣傳統文化</h5></a
+        >
+        <p>了解台灣的傳統節慶與民俗風情</p>
+        <div class="mt-6 flex items-center">
+          <div class="mr-4 shrink-0">
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              alt="Relume placeholder avatar 3"
+              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
+            />
+          </div>
+          <div>
+            <h6 class="text-sm font-semibold">小美</h6>
+            <div class="flex items-center">
+              <p class="text-sm">20 Mar 2022</p>
+              <span class="mx-2">•</span>
+              <p class="text-sm">6 min read</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-center">
+      <button
+        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3 mt-10 md:mt-14 lg:mt-16"
+        title="查看全部"
+      >
+        查看全部
+      </button>
+    </div>
+  </div>
+</section>
+</BaseLayout>

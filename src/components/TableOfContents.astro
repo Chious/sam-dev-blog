@@ -1,0 +1,115 @@
+---
+export interface Props {
+  headings?: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
+}
+
+const { headings = [] } = Astro.props;
+
+// 如果沒有傳入 headings，則使用預設的示例標題
+const defaultHeadings = [
+  { depth: 2, slug: "heading-2", text: "Heading 2" },
+  { depth: 3, slug: "heading-3", text: "Heading 3" },
+  { depth: 4, slug: "heading-4", text: "Heading 4" },
+  { depth: 5, slug: "heading-5", text: "Heading 5" },
+  { depth: 6, slug: "heading-6", text: "Heading 6" },
+];
+
+const tocHeadings = headings.length > 0 ? headings : defaultHeadings;
+---
+
+<div class="lg:sticky lg:top-24">
+  <div class="lg:block" data-orientation="vertical">
+    <div
+      data-state="open"
+      data-orientation="vertical"
+      class="border-b border-border-primary first:border-t border-none"
+    >
+      <h3
+        data-orientation="vertical"
+        data-state="open"
+        class="flex w-full"
+      >
+        <button
+          type="button"
+          aria-controls="toc-content"
+          aria-expanded="true"
+          data-state="open"
+          data-orientation="vertical"
+          id="toc-button"
+          class="flex-1 font-bold transition-all focus-visible:outline-none focus-visible:ring-0 [&[data-state=open]>svg]:rotate-180 flex cursor-pointer items-center justify-between gap-3 border border-border-primary px-4 py-3 lg:pointer-events-none lg:cursor-auto lg:border-none lg:p-0 [&_svg]:size-4 [&_svg]:lg:hidden"
+        >
+          <h3 class="text-lg leading-[1.4] font-bold md:text-2xl">
+            目錄
+          </h3>
+          <svg
+            stroke="currentColor"
+            fill="none"
+            stroke-width="0"
+            viewBox="0 0 15 15"
+            class="size-7 shrink-0 text-text-primary transition-transform duration-300 md:size-8"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </button>
+      </h3>
+      <div
+        data-state="open"
+        id="toc-content"
+        role="region"
+        aria-labelledby="toc-button"
+        data-orientation="vertical"
+        class="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        style="--radix-accordion-content-height:var(--radix-collapsible-content-height);--radix-accordion-content-width:var(--radix-collapsible-content-width)"
+      >
+        <div class="pb-0">
+          <div class="mt-3 md:mt-4">
+            {tocHeadings.map((heading) => {
+              // 計算縮排：depth 2 = 0px, depth 3 = 16px, depth 4 = 32px, etc.
+              const marginLeft = (heading.depth - 2) * 16;
+              return (
+                <a
+                  href={`#${heading.slug}`}
+                  class="block px-4 py-3 md:text-md hover:text-blue-600 transition-colors"
+                  style={`margin-left:${marginLeft}px`}
+                >
+                  {heading.text}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 添加目錄展開/收合功能
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('toc-button');
+    const content = document.getElementById('toc-content');
+    
+    if (button && content) {
+      button.addEventListener('click', () => {
+        const isOpen = button.getAttribute('data-state') === 'open';
+        const newState = isOpen ? 'closed' : 'open';
+        
+        button.setAttribute('data-state', newState);
+        button.setAttribute('aria-expanded', (!isOpen).toString());
+        content.setAttribute('data-state', newState);
+      });
+    }
+  });
+</script> 
