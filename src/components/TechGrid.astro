@@ -1,5 +1,6 @@
 ---
 import type { TechItem } from '@/data/techStack';
+import styles from '@/styles/TechStack.module.css';
 
 export interface Props {
   technologies: TechItem[];
@@ -8,12 +9,12 @@ export interface Props {
 const { technologies } = Astro.props;
 ---
 
-<div class="tech-grid">
+<div class={styles.techGrid}>
   {technologies.map((tech) => (
-    <div class="tech-item">
-      <span class="tech-icon">{tech.icon}</span>
-      <h3 class="tech-name">{tech.name}</h3>
-      <p class="tech-desc">{tech.description}</p>
+    <div class={styles.techItem}>
+      <span class={styles.techIcon}>{tech.icon}</span>
+      <h3 class={styles.techName}>{tech.name}</h3>
+      <p class={styles.techDesc}>{tech.description}</p>
     </div>
   ))}
 </div> 

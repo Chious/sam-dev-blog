@@ -63,7 +63,7 @@ const categories = Array.from(categoriesMap.entries()).map(([category, categoryN
       <!-- 分類列表 -->
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
-          <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div class="border border-border-primary bg-background-primary p-6 hover:shadow-lg transition-shadow">
             <h2 class="text-xl font-semibold mb-3">
               <a href={`/notes/${category.slug}/`} class="hover:text-blue-600 transition-colors">
                 {category.name}

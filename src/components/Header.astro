@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Menu from './Menu.astro';
 
 const navLinks = [
@@ -27,10 +28,10 @@ class="z-[999] grid w-full grid-cols-[1fr_max-content_1fr] items-center justify-
 <!-- Social Links -->
 <div class="w-full flex flex-row min-h-16 items-center justify-end gap-x-4">
     <a href="#" target="_blank">
-      <img src="/images/github.svg" alt="GitHub" class="w-6 h-6" />
+      <Image src={`/images/github.svg`} alt="GitHub" width={24} height={24} />
     </a>
     <a href="#" target="_blank">
-      <img src="/images/linkedin.svg" alt="LinkedIn" class="w-6 h-6" />
+      <Image src={`/images/linkedin.svg`} alt="LinkedIn" width={24} height={24} />
     </a>
 </div>
 </header>

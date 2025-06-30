@@ -1,10 +1,11 @@
-#tech-stack * {
+/* TechStack CSS Module */
+.container * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-#tech-stack {
+.container {
   font-family: "Arial", sans-serif;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   color: white;
@@ -12,7 +13,7 @@
   position: relative;
 }
 
-#tech-stack .hero {
+.hero {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,7 +23,7 @@
   position: relative;
 }
 
-#tech-stack .hero h1 {
+.hero h1 {
   font-size: 4rem;
   font-weight: 800;
   background: linear-gradient(45deg, #00f5ff, #0080ff, #8000ff);
@@ -42,13 +43,13 @@
   }
 }
 
-#tech-stack .hero p {
+.hero p {
   font-size: 1.5rem;
   opacity: 0.8;
   margin-bottom: 3rem;
 }
 
-#tech-stack .scroll-hint {
+.scrollHint {
   position: absolute;
   bottom: 2rem;
   font-size: 0.9rem;
@@ -73,12 +74,12 @@
   }
 }
 
-#tech-stack .main-container {
+.mainContainer {
   position: relative;
   min-height: 700vh;
 }
 
-#tech-stack .diamond-stack {
+.diamondStack {
   position: fixed;
   left: 50%;
   top: 50%;
@@ -86,7 +87,7 @@
   z-index: 10;
 }
 
-#tech-stack .diamond {
+.diamond {
   width: 120px;
   height: 120px;
   background: linear-gradient(45deg, #00f5ff, #0080ff);
@@ -98,52 +99,52 @@
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-#tech-stack .diamond.visible {
+.diamond.visible {
   opacity: 1;
   transform: rotate(45deg) scale(1);
 }
 
-#tech-stack .diamond.invisible {
+.diamond.invisible {
   opacity: 0;
   pointer-events: none;
   transform: rotate(45deg) scale(0.8);
 }
 
-#tech-stack .diamond:nth-child(1) {
+.diamond:nth-child(1) {
   background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
   box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
   z-index: 5;
 }
 
-#tech-stack .diamond:nth-child(2) {
+.diamond:nth-child(2) {
   background: linear-gradient(45deg, #4ecdc4, #44a08d);
   box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
   top: 60px;
   z-index: 4;
 }
 
-#tech-stack .diamond:nth-child(3) {
+.diamond:nth-child(3) {
   background: linear-gradient(45deg, #45b7d1, #96c93d);
   box-shadow: 0 0 30px rgba(69, 183, 209, 0.5);
   top: 120px;
   z-index: 3;
 }
 
-#tech-stack .diamond:nth-child(4) {
+.diamond:nth-child(4) {
   background: linear-gradient(45deg, #f093fb, #f5576c);
   box-shadow: 0 0 30px rgba(240, 147, 251, 0.5);
   top: 180px;
   z-index: 2;
 }
 
-#tech-stack .diamond:nth-child(5) {
+.diamond:nth-child(5) {
   background: linear-gradient(45deg, #ffecd2, #fcb69f);
   box-shadow: 0 0 30px rgba(255, 236, 210, 0.5);
   top: 240px;
   z-index: 1;
 }
 
-#tech-stack .tech-info {
+.techInfo {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
@@ -153,26 +154,26 @@
   z-index: 20;
 }
 
-#tech-stack .tech-info.visible {
+.techInfo.visible {
   opacity: 1;
   transform: translateY(-50%) scale(1);
 }
 
-#tech-stack .tech-info.invisible {
+.techInfo.invisible {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-50%) scale(0.9);
 }
 
-#tech-stack .tech-info.left {
+.techInfo.left {
   left: 10%;
 }
 
-#tech-stack .tech-info.right {
+.techInfo.right {
   right: 10%;
 }
 
-#tech-stack .tech-title {
+.techTitle {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -182,19 +183,19 @@
   -webkit-text-fill-color: transparent;
 }
 
-#tech-stack .tech-subtitle {
+.techSubtitle {
   font-size: 1.2rem;
   opacity: 0.8;
   margin-bottom: 2rem;
 }
 
-#tech-stack .tech-grid {
+.techGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
-#tech-stack .tech-item {
+.techItem {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -205,27 +206,27 @@
   opacity: 0;
 }
 
-#tech-stack .tech-info.visible .tech-item {
+.techInfo.visible .techItem {
   animation: itemSlideIn 0.6s ease forwards;
 }
 
-#tech-stack .tech-info.visible .tech-item:nth-child(1) {
+.techInfo.visible .techItem:nth-child(1) {
   animation-delay: 0.1s;
 }
 
-#tech-stack .tech-info.visible .tech-item:nth-child(2) {
+.techInfo.visible .techItem:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-#tech-stack .tech-info.visible .tech-item:nth-child(3) {
+.techInfo.visible .techItem:nth-child(3) {
   animation-delay: 0.3s;
 }
 
-#tech-stack .tech-info.visible .tech-item:nth-child(4) {
+.techInfo.visible .techItem:nth-child(4) {
   animation-delay: 0.4s;
 }
 
-#tech-stack .tech-item:hover {
+.techItem:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 245, 255, 0.3);
   border-color: rgba(0, 245, 255, 0.5);
@@ -238,25 +239,25 @@
   }
 }
 
-#tech-stack .tech-icon {
+.techIcon {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   display: block;
 }
 
-#tech-stack .tech-name {
+.techName {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.3rem;
 }
 
-#tech-stack .tech-desc {
+.techDesc {
   font-size: 0.8rem;
   opacity: 0.7;
   line-height: 1.4;
 }
 
-#tech-stack .progress-bar {
+.progressBar {
   position: fixed;
   top: 0;
   left: 0;
@@ -266,7 +267,7 @@
   z-index: 100;
 }
 
-#tech-stack .progress-fill {
+.progressFill {
   height: 100%;
   background: linear-gradient(90deg, #00f5ff, #0080ff, #8000ff);
   width: 0%;
@@ -275,45 +276,45 @@
 
 /* 響應式設計 */
 @media (max-width: 1024px) {
-  #tech-stack .tech-info.left {
+  .techInfo.left {
     left: 5%;
   }
-  #tech-stack .tech-info.right {
+  .techInfo.right {
     right: 5%;
   }
-  #tech-stack .tech-info {
+  .techInfo {
     max-width: 300px;
   }
-  #tech-stack .diamond {
+  .diamond {
     width: 100px;
     height: 100px;
   }
 }
 
 @media (max-width: 768px) {
-  #tech-stack .hero h1 {
+  .hero h1 {
     font-size: 2.5rem;
   }
-  #tech-stack .hero p {
+  .hero p {
     font-size: 1.2rem;
   }
-  #tech-stack .diamond {
+  .diamond {
     width: 80px;
     height: 80px;
   }
-  #tech-stack .diamond:nth-child(2) {
+  .diamond:nth-child(2) {
     top: 50px;
   }
-  #tech-stack .diamond:nth-child(3) {
+  .diamond:nth-child(3) {
     top: 100px;
   }
-  #tech-stack .diamond:nth-child(4) {
+  .diamond:nth-child(4) {
     top: 150px;
   }
-  #tech-stack .diamond:nth-child(5) {
+  .diamond:nth-child(5) {
     top: 200px;
   }
-  #tech-stack .tech-info {
+  .techInfo {
     position: relative;
     top: auto;
     left: auto !important;
@@ -322,17 +323,17 @@
     max-width: none;
   }
 
-  #tech-stack .tech-info.visible {
+  .techInfo.visible {
     transform: none;
   }
 
-  #tech-stack .tech-info.invisible {
+  .techInfo.invisible {
     transform: scale(0.9);
   }
-  #tech-stack .tech-title {
+  .techTitle {
     font-size: 2rem;
   }
-  #tech-stack .tech-grid {
+  .techGrid {
     grid-template-columns: 1fr;
   }
 }

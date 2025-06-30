@@ -1,44 +1,44 @@
 ---
-import "@styles/TechStack.css"
+import styles from '@/styles/TechStack.module.css';
 import TechGrid from './TechGrid.astro';
 import { techStackData } from '@/data/techStack';
 
 // 動態生成菱形數量
 const totalLayers = techStackData.length;
 ---
-<section id="tech-stack" class="px-[5%] py-16 md:py-24 lg:py-28">
-    <div class="progress-bar">
-      <div class="progress-fill"></div>
+<section id="tech-stack" class={`${styles.container} px-[5%] py-16 md:py-24 lg:py-28`}>
+    <div class={styles.progressBar}>
+      <div class={styles.progressFill}></div>
     </div>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class={styles.hero}>
       <h1>技術檻</h1>
       <p>這裡是我常用的技術組合</p>
-      <div class="scroll-hint">向下滾動探索 ↓</div>
+      <div class={styles.scrollHint}>向下滾動探索 ↓</div>
     </section>
 
     <!-- 主要容器 -->
-    <div class="main-container">
+    <div class={styles.mainContainer}>
       <!-- 菱形堆疊 -->
-      <div class="diamond-stack">
+      <div class={styles.diamondStack}>
         {techStackData.map((_, index) => (
-          <div class="diamond invisible" data-layer={index}></div>
+          <div class={`${styles.diamond} ${styles.invisible}`} data-diamond-layer={index}></div>
         ))}
       </div>
 
       <!-- 動態技術層級 -->
       {techStackData.map((layer, index) => (
-        <div class={`tech-info ${layer.position} invisible`} data-layer={index}>
-          <h2 class="tech-title">{layer.title}</h2>
-          <p class="tech-subtitle">{layer.subtitle}</p>
+        <div class={`${styles.techInfo} ${styles[layer.position]} ${styles.invisible} sm:mt-20`} data-info-layer={index}>
+          <h2 class={styles.techTitle}>{layer.title}</h2>
+          <p class={styles.techSubtitle}>{layer.subtitle}</p>
           <TechGrid technologies={layer.technologies} />
         </div>
       ))}
     </div>
 </section>
 
-    <script define:vars={{ totalLayers }}>
+    <script define:vars={{ totalLayers, styles }}>
       // 滾動控制變數
       let currentLayer = -1;
 
@@ -66,7 +66,7 @@ const totalLayers = techStackData.length;
           const effectiveHeight = heroHeight + (totalLayers * layerScrollHeight);
           
           const progress = Math.max(0, Math.min(1, (scrollTop - techStackOffset) / effectiveHeight));
-          const progressFill = techStackElement.querySelector('.progress-fill');
+          const progressFill = techStackElement.querySelector('[class*="progressFill"]');
           if (progressFill) {
             progressFill.style.width = (progress * 100) + '%';
           }
@@ -81,30 +81,40 @@ const totalLayers = techStackData.length;
 
         // 在移動設備上的邏輯
         if (isMobile()) {
-          const diamonds = document.querySelectorAll('#tech-stack .diamond');
-          const techInfos = document.querySelectorAll('#tech-stack .tech-info');
+          const diamonds = document.querySelectorAll('#tech-stack [data-diamond-layer]');
+          const techInfos = document.querySelectorAll('#tech-stack [data-info-layer]');
           
           if (layerIndex >= 0) {
-            // 顯示所有層級
-            diamonds.forEach((diamond) => {
-              diamond.classList.add('visible');
-              diamond.classList.remove('invisible');
+            // 根據層級顯示對應數量的 diamond 和 tech-info
+            diamonds.forEach((diamond, index) => {
+              if (index <= layerIndex) {
+                diamond.classList.add(styles.visible);
+                diamond.classList.remove(styles.invisible);
+              } else {
+                diamond.classList.remove(styles.visible);
+                diamond.classList.add(styles.invisible);
+              }
             });
             
-            techInfos.forEach((info) => {
-              info.classList.add('visible');
-              info.classList.remove('invisible');
+            techInfos.forEach((info, index) => {
+              if (index <= layerIndex) {
+                info.classList.add(styles.visible);
+                info.classList.remove(styles.invisible);
+              } else {
+                info.classList.remove(styles.visible);
+                info.classList.add(styles.invisible);
+              }
             });
           } else {
-            // 隱藏所有層級（超出 section 範圍）
+            // 隱藏所有層級（超出 section 範圍或在 hero 區域）
             diamonds.forEach((diamond) => {
-              diamond.classList.remove('visible');
-              diamond.classList.add('invisible');
+              diamond.classList.remove(styles.visible);
+              diamond.classList.add(styles.invisible);
             });
             
             techInfos.forEach((info) => {
-              info.classList.remove('visible');
-              info.classList.add('invisible');
+              info.classList.remove(styles.visible);
+              info.classList.add(styles.invisible);
             });
           }
           return;
@@ -112,27 +122,27 @@ const totalLayers = techStackData.length;
 
         // 桌面版的原有邏輯
         // 顯示菱形
-        const diamonds = document.querySelectorAll('#tech-stack .diamond');
+        const diamonds = document.querySelectorAll('#tech-stack [data-diamond-layer]');
         diamonds.forEach((diamond, index) => {
           if (layerIndex >= 0 && index <= layerIndex) {
-            diamond.classList.add('visible');
-            diamond.classList.remove('invisible');
+            diamond.classList.add(styles.visible);
+            diamond.classList.remove(styles.invisible);
           } else {
-            diamond.classList.remove('visible');
-            diamond.classList.add('invisible');
+            diamond.classList.remove(styles.visible);
+            diamond.classList.add(styles.invisible);
           }
         });
 
         // 顯示對應的技術資訊
-        const techInfos = document.querySelectorAll('#tech-stack .tech-info');
+        const techInfos = document.querySelectorAll('#tech-stack [data-info-layer]');
         techInfos.forEach((info, index) => {
           if (layerIndex >= 0 && index === layerIndex) {
-            info.classList.add('visible');
-            info.classList.remove('invisible');
+            info.classList.add(styles.visible);
+            info.classList.remove(styles.invisible);
 
           } else {
-            info.classList.remove('visible');
-            info.classList.add('invisible');
+            info.classList.remove(styles.visible);
+            info.classList.add(styles.invisible);
           }
         });
       }
@@ -155,24 +165,39 @@ const totalLayers = techStackData.length;
                   // 更新進度條，但只在 TechStack section 範圍內顯示
           if (scrollTop >= techStackOffset && scrollTop <= techStackBottom) {
             updateProgressBar();
-            const progressBar = techStackElement.querySelector('.progress-bar');
+            const progressBar = techStackElement.querySelector('[class*="progressBar"]');
             if (progressBar) {
               progressBar.style.display = 'block';
             }
           } else {
-            const progressBar = techStackElement.querySelector('.progress-bar');
+            const progressBar = techStackElement.querySelector('[class*="progressBar"]');
             if (progressBar) {
               progressBar.style.display = 'none';
             }
           }
 
-        // 移動設備簡化邏輯：一旦進入 TechStack section 就顯示所有內容
+        // 移動設備邏輯：根據滾動進度逐步顯示 diamond
         if (isMobile()) {
-          if (scrollTop >= techStackOffset && scrollTop <= techStackBottom) {
-            showLayer(0); // 觸發移動版顯示邏輯
-          } else {
+          // 如果還沒滾動到 TechStack section 或已經超出 TechStack 有效範圍
+          if (scrollTop < techStackOffset || scrollTop > techStackBottom) {
             showLayer(-1);
+            return;
           }
+
+          // 如果在 TechStack 的 hero 區域，不顯示任何 diamond
+          if (scrollTop < techStackOffset + heroHeight) {
+            showLayer(-1);
+            return;
+          }
+
+          // 計算當前應該顯示的層級（hero 區域結束後開始）
+          const techStackScrolled = scrollTop - (techStackOffset + heroHeight);
+          const mainScrollHeight = effectiveHeight - heroHeight;
+          const scrollProgress = techStackScrolled / mainScrollHeight;
+          const targetLayer = Math.floor(scrollProgress * totalLayers);
+          const clampedLayer = Math.max(0, Math.min(totalLayers - 1, targetLayer));
+
+          showLayer(clampedLayer);
           return;
         }
 
@@ -213,7 +238,7 @@ const totalLayers = techStackData.length;
       handleScroll();
 
       // 平滑滾動到第一層
-      const scrollHint = document.querySelector('#tech-stack .scroll-hint');
+      const scrollHint = document.querySelector('#tech-stack [class*="scrollHint"]');
       if (scrollHint) {
         scrollHint.addEventListener('click', () => {
           const techStackOffset = getTechStackOffset();
@@ -226,7 +251,7 @@ const totalLayers = techStackData.length;
 
       // 菱形旋轉動畫
       function animateDiamonds() {
-        const diamonds = document.querySelectorAll('#tech-stack .diamond.visible');
+        const diamonds = document.querySelectorAll(`#tech-stack [data-diamond-layer][class*="${styles.visible}"]`);
         diamonds.forEach((diamond, index) => {
           diamond.style.transform = `rotate(${
             45 + Math.sin(Date.now() * 0.001 + index) * 5
