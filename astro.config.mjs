@@ -3,11 +3,11 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
-import vercel from "@astrojs/vercel/serverless";
+import vercelStatic from "@astrojs/vercel/static";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server",
+  output: "static",
 
   build: {
     assets: "assets",
@@ -26,10 +26,5 @@ export default defineConfig({
     },
   },
 
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-    maxDuration: 8,
-  }),
+  adapter: vercelStatic(),
 });
