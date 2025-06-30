@@ -23,13 +23,13 @@ const totalLayers = techStackData.length;
       <!-- 菱形堆疊 -->
       <div class={styles.diamondStack}>
         {techStackData.map((_, index) => (
-          <div class={`${styles.diamond} ${styles.invisible}`} data-diamond-layer={index}></div>
+          <div class={`${styles.diamond} ${styles.invisible} tech-stack-hidden`} data-diamond-layer={index} style="opacity: 0; visibility: hidden;"></div>
         ))}
       </div>
 
       <!-- 動態技術層級 -->
       {techStackData.map((layer, index) => (
-        <div class={`${styles.techInfo} ${styles[layer.position]} ${styles.invisible} sm:mt-20`} data-info-layer={index}>
+        <div class={`${styles.techInfo} ${styles[layer.position]} ${styles.invisible} tech-stack-hidden`} data-info-layer={index} style="opacity: 0; visibility: hidden;">
           <h2 class={styles.techTitle}>{layer.title}</h2>
           <p class={styles.techSubtitle}>{layer.subtitle}</p>
           <TechGrid technologies={layer.technologies} />
@@ -73,9 +73,37 @@ const totalLayers = techStackData.length;
         }
       }
 
+      // 檢測元素在視窗中的可見度百分比
+      function getElementVisibility(element) {
+        if (!element) return 0;
+        
+        const rect = element.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // 如果元素完全在視窗上方或下方，可見度為 0
+        if (rect.bottom <= 0 || rect.top >= windowHeight) {
+          return 0;
+        }
+        
+        // 計算元素在視窗內的可見高度
+        const visibleTop = Math.max(0, rect.top);
+        const visibleBottom = Math.min(windowHeight, rect.bottom);
+        const visibleHeight = visibleBottom - visibleTop;
+        const elementHeight = rect.height;
+        
+        // 返回可見度百分比 (0-1)
+        return elementHeight > 0 ? visibleHeight / elementHeight : 0;
+      }
+
+      // 移除初始隱藏狀態
+      function removeInitialHidden(element) {
+        element.classList.remove('tech-stack-hidden');
+        element.style.visibility = '';
+      }
+
       // 顯示指定層級
-      function showLayer(layerIndex) {
-        if (layerIndex === currentLayer) return;
+      function showLayer(layerIndex, nextLayerProgress = 0) {
+        if (layerIndex === currentLayer && nextLayerProgress === 0) return;
 
         currentLayer = layerIndex;
 
@@ -87,34 +115,58 @@ const totalLayers = techStackData.length;
           if (layerIndex >= 0) {
             // 根據層級顯示對應數量的 diamond 和 tech-info
             diamonds.forEach((diamond, index) => {
+              removeInitialHidden(diamond);
               if (index <= layerIndex) {
                 diamond.classList.add(styles.visible);
                 diamond.classList.remove(styles.invisible);
+                diamond.style.opacity = '';
+              } else if (index === layerIndex + 1 && nextLayerProgress > 0) {
+                // 下一個 diamond 根據進度慢慢顯示
+                diamond.classList.add(styles.visible);
+                diamond.classList.remove(styles.invisible);
+                diamond.style.opacity = nextLayerProgress;
               } else {
                 diamond.classList.remove(styles.visible);
                 diamond.classList.add(styles.invisible);
+                diamond.style.opacity = '0';
               }
             });
             
             techInfos.forEach((info, index) => {
+              removeInitialHidden(info);
               if (index <= layerIndex) {
                 info.classList.add(styles.visible);
                 info.classList.remove(styles.invisible);
+                info.style.opacity = '';
+                info.style.transform = '';
+              } else if (index === layerIndex + 1 && nextLayerProgress > 0) {
+                // 下一個 tech-info 根據進度慢慢顯示
+                info.classList.add(styles.visible);
+                info.classList.remove(styles.invisible);
+                info.style.opacity = nextLayerProgress;
+                info.style.transform = `scale(${0.9 + nextLayerProgress * 0.1})`;
               } else {
                 info.classList.remove(styles.visible);
                 info.classList.add(styles.invisible);
+                info.style.opacity = '0';
+                info.style.transform = '';
               }
             });
           } else {
             // 隱藏所有層級（超出 section 範圍或在 hero 區域）
             diamonds.forEach((diamond) => {
+              removeInitialHidden(diamond);
               diamond.classList.remove(styles.visible);
               diamond.classList.add(styles.invisible);
+              diamond.style.opacity = '0';
             });
             
             techInfos.forEach((info) => {
+              removeInitialHidden(info);
               info.classList.remove(styles.visible);
               info.classList.add(styles.invisible);
+              info.style.opacity = '0';
+              info.style.transform = '';
             });
           }
           return;
@@ -124,25 +176,43 @@ const totalLayers = techStackData.length;
         // 顯示菱形
         const diamonds = document.querySelectorAll('#tech-stack [data-diamond-layer]');
         diamonds.forEach((diamond, index) => {
+          removeInitialHidden(diamond);
           if (layerIndex >= 0 && index <= layerIndex) {
             diamond.classList.add(styles.visible);
             diamond.classList.remove(styles.invisible);
+            diamond.style.opacity = '';
+          } else if (index === layerIndex + 1 && nextLayerProgress > 0) {
+            // 下一個 diamond 根據進度慢慢顯示
+            diamond.classList.add(styles.visible);
+            diamond.classList.remove(styles.invisible);
+            diamond.style.opacity = nextLayerProgress;
           } else {
             diamond.classList.remove(styles.visible);
             diamond.classList.add(styles.invisible);
+            diamond.style.opacity = '0';
           }
         });
 
         // 顯示對應的技術資訊
         const techInfos = document.querySelectorAll('#tech-stack [data-info-layer]');
         techInfos.forEach((info, index) => {
+          removeInitialHidden(info);
           if (layerIndex >= 0 && index === layerIndex) {
             info.classList.add(styles.visible);
             info.classList.remove(styles.invisible);
-
+            info.style.opacity = '';
+            info.style.transform = '';
+          } else if (index === layerIndex + 1 && nextLayerProgress > 0) {
+            // 下一個 tech-info 根據進度慢慢顯示
+            info.classList.add(styles.visible);
+            info.classList.remove(styles.invisible);
+            info.style.opacity = nextLayerProgress;
+            info.style.transform = `translateY(-50%) scale(${0.9 + nextLayerProgress * 0.1})`;
           } else {
             info.classList.remove(styles.visible);
             info.classList.add(styles.invisible);
+            info.style.opacity = '0';
+            info.style.transform = '';
           }
         });
       }
@@ -197,7 +267,22 @@ const totalLayers = techStackData.length;
           const targetLayer = Math.floor(scrollProgress * totalLayers);
           const clampedLayer = Math.max(0, Math.min(totalLayers - 1, targetLayer));
 
-          showLayer(clampedLayer);
+          // 檢測當前顯示的 techGrid 可見度
+          let nextLayerProgress = 0;
+          const currentTechInfo = document.querySelector(`#tech-stack [data-info-layer="${clampedLayer}"]`);
+          if (currentTechInfo && clampedLayer < totalLayers - 1) {
+            const currentTechGrid = currentTechInfo.querySelector('[class*="techGrid"]');
+            if (currentTechGrid) {
+              const visibility = getElementVisibility(currentTechGrid);
+              // 當可見度降到 20% 以下（即消失 80%）時，開始顯示下一個區塊
+              if (visibility <= 0.2) {
+                // 計算下一個區塊的顯示進度 (0-1)
+                nextLayerProgress = Math.max(0, (0.2 - visibility) / 0.2);
+              }
+            }
+          }
+
+          showLayer(clampedLayer, nextLayerProgress);
           return;
         }
 
@@ -220,7 +305,40 @@ const totalLayers = techStackData.length;
         const targetLayer = Math.floor(scrollProgress * totalLayers);
         const clampedLayer = Math.max(0, Math.min(totalLayers - 1, targetLayer));
 
-        showLayer(clampedLayer);
+        // 檢測當前顯示的 techGrid 可見度（桌面版）
+        let nextLayerProgress = 0;
+        const currentTechInfo = document.querySelector(`#tech-stack [data-info-layer="${clampedLayer}"]`);
+        if (currentTechInfo && clampedLayer < totalLayers - 1) {
+          const currentTechGrid = currentTechInfo.querySelector('[class*="techGrid"]');
+          if (currentTechGrid) {
+            const visibility = getElementVisibility(currentTechGrid);
+            // 當可見度降到 20% 以下（即消失 80%）時，開始顯示下一個區塊
+            if (visibility <= 0.2) {
+              // 計算下一個區塊的顯示進度 (0-1)
+              nextLayerProgress = Math.max(0, (0.2 - visibility) / 0.2);
+            }
+          }
+        }
+
+        showLayer(clampedLayer, nextLayerProgress);
+      }
+
+      // 初始化組件 - 移除所有初始隱藏狀態
+      function initializeComponent() {
+        const diamonds = document.querySelectorAll('#tech-stack [data-diamond-layer]');
+        const techInfos = document.querySelectorAll('#tech-stack [data-info-layer]');
+        
+        diamonds.forEach(diamond => {
+          removeInitialHidden(diamond);
+          diamond.classList.add(styles.invisible);
+          diamond.style.opacity = '0';
+        });
+        
+        techInfos.forEach(info => {
+          removeInitialHidden(info);
+          info.classList.add(styles.invisible);
+          info.style.opacity = '0';
+        });
       }
 
       // 窗口大小改變時重新初始化
@@ -231,6 +349,7 @@ const totalLayers = techStackData.length;
       }
 
       // 初始化
+      initializeComponent(); // 立即移除 FOUC 保護類
       window.addEventListener('scroll', handleScroll);
       window.addEventListener('resize', handleResize);
 

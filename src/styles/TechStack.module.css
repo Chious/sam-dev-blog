@@ -96,7 +96,7 @@
   border: 2px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
   opacity: 0;
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
 }
 
 .diamond.visible {
@@ -149,7 +149,7 @@
   top: 50%;
   transform: translateY(-50%);
   opacity: 0;
-  transition: all 0.8s ease;
+  transition: all 0.8s ease, opacity 0.3s ease, transform 0.3s ease;
   max-width: 400px;
   z-index: 20;
 }

@@ -9,3 +9,9 @@ body {
 body.dark {
   @apply bg-gray-900 text-gray-100;
 }
+
+/* 防止 FOUC - 確保 tech-stack 元素在 JavaScript 載入前保持隱藏 */
+.tech-stack-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
