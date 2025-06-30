@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  
+  // 按分類分組
+  const categoriesMap = new Map();
+  notes.forEach((note) => {
+    const category = note.id.split('/')[0];
+    if (!categoriesMap.has(category)) {
+      categoriesMap.set(category, []);
+    }
+    categoriesMap.get(category).push(note);
+  });
+  
+  // 為每個分類生成頁面
+  return Array.from(categoriesMap.entries()).map(([category, categoryNotes]) => ({
+    params: { category },
+    props: { category, notes: categoryNotes },
+  }));
+}
+
+const { category, notes } = Astro.props;
+
+// 分類名稱映射（可自訂）
+const categoryNames: Record<string, string> = {
+  'ai': 'AI 人工智慧',
+  'algorithms': '演算法',
+  'app': 'Android 開發',
+  'aws': 'AWS 雲端服務',
+  'css': 'CSS 樣式',
+  'deploy': '部署與運維',
+  'functional-programming': '函式程式設計',
+  'internet': '網路技術',
+  'react': 'React 開發',
+  'webgl': 'WebGL 圖形',
+  'xss': '資安防護'
+};
+
+const displayName = categoryNames[category] || category;
+---
+
+<BaseLayout> 
+  <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="container">
+      <!-- 麵包屑導航 -->
+      <nav aria-label="breadcrumb" class="mb-8">
+        <ol class="flex items-center gap-2 text-sm text-gray-600">
+          <li><a href="/" class="hover:text-gray-900">首頁</a></li>
+          <li class="before:content-['/'] before:mx-2">
+            <a href="/notes" class="hover:text-gray-900">筆記</a>
+          </li>
+          <li class="before:content-['/'] before:mx-2 text-gray-900">
+            {displayName}
+          </li>
+        </ol>
+      </nav>
+
+      <!-- 分類標題 -->
+      <div class="mb-12">
+        <h1 class="text-4xl font-bold mb-4 md:text-5xl lg:text-6xl">
+          {displayName}
+        </h1>
+        <p class="text-lg text-gray-600">
+          共 {notes.length} 篇文章
+        </p>
+      </div>
+
+      <!-- 文章列表 -->
+      <div class="grid gap-6 md:gap-8">
+        {notes.map((note: any) => {
+          const filename = note.id.split('/')[1].replace(/\.md$/, '');
+          const articleUrl = `/notes/${category}/${filename}`;
+          
+          return (
+            <article class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <h2 class="text-xl font-semibold mb-3 md:text-2xl">
+                <a href={articleUrl} class="hover:text-blue-600 transition-colors">
+                  {note.data.title || filename}
+                </a>
+              </h2>
+              
+              {note.data.description && (
+                <p class="text-gray-600 mb-4">
+                  {note.data.description}
+                </p>
+              )}
+              
+              <div class="flex items-center justify-between text-sm text-gray-500">
+                <div class="flex items-center gap-4">
+                  {note.data.date && (
+                    <time datetime={note.data.date.toISOString()}>
+                      {note.data.date.toLocaleDateString('zh-TW')}
+                    </time>
+                  )}
+                  {note.data.readingTime && (
+                    <span>{note.data.readingTime}</span>
+                  )}
+                </div>
+                
+                {note.data.tags && (
+                  <div class="flex gap-2">
+                    {note.data.tags.slice(0, 3).map((tag: string) => (
+                      <span class="px-2 py-1 bg-gray-100 rounded-md text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

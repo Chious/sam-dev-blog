@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const notes = await getCollection('notes');
+
+// 按分類分組並計算文章數量
+const categoriesMap = new Map();
+notes.forEach((note) => {
+  const category = note.id.split('/')[0];
+  if (!categoriesMap.has(category)) {
+    categoriesMap.set(category, []);
+  }
+  categoriesMap.get(category).push(note);
+});
+
+// 分類名稱映射
+const categoryNames: Record<string, string> = {
+  'ai': 'AI 人工智慧',
+  'algorithms': '演算法',
+  'app': 'Android 開發',
+  'aws': 'AWS 雲端服務',
+  'css': 'CSS 樣式',
+  'deploy': '部署與運維',
+  'functional-programming': '函式程式設計',
+  'internet': '網路技術',
+  'react': 'React 開發',
+  'webgl': 'WebGL 圖形',
+  'xss': '資安防護'
+};
+
+const categories = Array.from(categoriesMap.entries()).map(([category, categoryNotes]) => ({
+  slug: category,
+  name: categoryNames[category] || category,
+  count: categoryNotes.length,
+  notes: categoryNotes.slice(0, 3) // 只顯示前3篇作為預覽
+}));
+---
+
+<BaseLayout>
+  <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="container">
+      <!-- 麵包屑導航 -->
+      <nav aria-label="breadcrumb" class="mb-8">
+        <ol class="flex items-center gap-2 text-sm text-gray-600">
+          <li><a href="/" class="hover:text-gray-900">首頁</a></li>
+          <li class="before:content-['/'] before:mx-2 text-gray-900">
+            筆記
+          </li>
+        </ol>
+      </nav>
+
+      <!-- 頁面標題 -->
+      <div class="mb-12">
+        <h1 class="text-4xl font-bold mb-4 md:text-5xl lg:text-6xl">
+          技術筆記
+        </h1>
+        <p class="text-lg text-gray-600">
+          探索各種技術領域的學習筆記與心得分享
+        </p>
+      </div>
+
+      <!-- 分類列表 -->
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {categories.map((category) => (
+          <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            <h2 class="text-xl font-semibold mb-3">
+              <a href={`/notes/${category.slug}/`} class="hover:text-blue-600 transition-colors">
+                {category.name}
+              </a>
+            </h2>
+            
+            <p class="text-gray-600 mb-4">
+              共 {category.count} 篇文章
+            </p>
+
+            <!-- 最新文章預覽 -->
+            {category.notes.length > 0 && (
+              <div class="space-y-2">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">最新文章</h3>
+                {category.notes.map((note: any) => {
+                  const filename = note.id.split('/')[1].replace(/\.md$/, '');
+                  const articleUrl = `/notes/${category.slug}/${filename}`;
+                  
+                  return (
+                    <div class="text-sm">
+                      <a href={articleUrl} class="text-gray-700 hover:text-blue-600 transition-colors line-clamp-1">
+                        {note.data.title || filename}
+                      </a>
+                    </div>
+                  );
+                })}
+                
+                {category.count > 3 && (
+                  <div class="pt-2">
+                    <a href={`/notes/${category.slug}/`} class="text-sm text-blue-600 hover:text-blue-800">
+                      查看全部 {category.count} 篇 →
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout> 

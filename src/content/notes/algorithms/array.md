@@ -1,6 +1,7 @@
 ---
 title: 【草稿】Array
-position: 1
+pubDate: 2025-06-28
+description: Array 是什麼？
 tags: ["algorithms", "array"]
 ---
 

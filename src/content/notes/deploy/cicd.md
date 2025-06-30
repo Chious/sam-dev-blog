@@ -1,11 +1,8 @@
 ---
 title: 【Gitlab】環境建置及 CI 初嘗試
-sidebar_position: '1'
+sidebar_position: 1
 description: 因此最近趁著專案的空檔，透過一些小服務來熟悉環境建置的流程。這篇週間札記就來分享一下我在環境建置及 CI 上的初嘗試
-tags:
-  - React
-  - Virtual DOM
-id: '2'
+tags: ["React", "Virtual DOM"]
 ---
 
 ## 前言

@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from 'astro:content';
+import MarkdownPostLayout from '@layouts/MarkdownPostLayout.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => {
+    // note.id 格式: "category/filename.md"
+    const parts = note.id.split('/');
+    const category = parts[0];
+    const filename = parts[1];
+    const slug = filename.replace(/\.md$/, ''); // 去掉 .md 副檔名
+    
+    return {
+      params: { 
+        category: category,
+        slug: slug 
+      },
+      props: { note },
+    };
+  });
+}
+
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+---
+
+<MarkdownPostLayout frontmatter={note.data} headings={headings}>
+  <Content />
+</MarkdownPostLayout>

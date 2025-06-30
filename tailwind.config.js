@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{html,js,ts,jsx,tsx}", // update paths as needed
+    "./src/**/*.{html,js,ts,jsx,tsx,astro}", // update paths as needed
   ],
   theme: {
     extend: {
@@ -44,7 +44,52 @@ module.exports = {
           darkest: "#4B023D",
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            "max-width": "none",
+            code: {
+              "overflow-x": "auto",
+              "white-space": "pre-wrap",
+              "word-break": "break-word",
+            },
+            pre: {
+              "overflow-x": "auto",
+              "white-space": "pre",
+              "word-wrap": "normal",
+            },
+            "pre code": {
+              "overflow-x": "auto",
+              "white-space": "pre",
+            },
+            table: {
+              "overflow-x": "auto",
+              display: "block",
+              "white-space": "nowrap",
+            },
+          },
+        },
+        lg: {
+          css: {
+            "max-width": "none",
+            code: {
+              "overflow-x": "auto",
+              "white-space": "pre-wrap",
+              "word-break": "break-word",
+            },
+            pre: {
+              "overflow-x": "auto",
+              "white-space": "pre",
+              "word-wrap": "normal",
+            },
+            "pre code": {
+              "overflow-x": "auto",
+              "white-space": "pre",
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
