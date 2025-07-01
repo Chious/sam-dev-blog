@@ -2,11 +2,18 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-
-import vercelStatic from "@astrojs/vercel/static";
+import vercelStatic from "@astrojs/vercel";
+import rehypeMermaid from "rehype-mermaid";
 
 // https://astro.build/config
 export default defineConfig({
+  markdown: {
+    syntaxHighlight: {
+      type: "shiki",
+      excludeLangs: ["mermaid", "math"],
+    },
+    rehypePlugins: [rehypeMermaid],
+  },
   output: "static",
 
   build: {
@@ -22,9 +29,10 @@ export default defineConfig({
         "@layouts": path.resolve("./src/layouts"),
         "@pages": path.resolve("./src/pages"),
         "@styles": path.resolve("./src/styles"),
+        "@data": path.resolve("./src/data"),
       },
     },
   },
 
-  adapter: vercelStatic(),
+  adapter: vercelStatic({}),
 });

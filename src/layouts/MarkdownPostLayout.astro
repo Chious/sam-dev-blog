@@ -1,22 +1,9 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { categoryNames } from '@data/noteCategoryNames';
 
 const { frontmatter, headings = [] } = Astro.props;
 
-// 分類名稱映射（與 index.astro 保持一致）
-const categoryNames: Record<string, string> = {
-  'ai': 'AI 人工智慧',
-  'algorithms': '演算法',
-  'app': 'Android 開發',
-  'aws': 'AWS 雲端服務',
-  'css': 'CSS 樣式',
-  'deploy': '部署與運維',
-  'functional-programming': '函式程式設計',
-  'internet': '網路技術',
-  'react': 'React 開發',
-  'webgl': 'WebGL 圖形',
-  'xss': '資安防護'
-};
 
 // 從 URL 中獲取分類（假設 URL 格式為 /notes/{category}/{slug}）
 const currentPath = Astro.url.pathname;

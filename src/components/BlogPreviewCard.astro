@@ -3,26 +3,28 @@ export interface Props {
   title: string;
   description?: string;
   slug: string;
-  category: string;
+  category?: string;
   tags?: string[];
   readingTime?: string;
   image?: string;
   date?: Date;
+  type?: 'note' | 'blog';
 }
 
 const { 
   title, 
   description = "", 
   slug, 
-  category,
+  category = "",
   tags = [],
   readingTime = "5分鐘閱讀",
   image = "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg",
-  date
+  date,
+  type = 'note'
 } = Astro.props;
 
-// 生成文章鏈接
-const articleUrl = `/notes/${category}/${slug}`;
+// 根據類型生成文章鏈接
+const articleUrl = type === 'blog' ? `/blog/${slug}` : `/notes/${category}/${slug}`;
 
 // 獲取主要標籤作為顯示標籤
 const primaryTag = tags[0] || category;
@@ -40,12 +42,19 @@ const getCategoryLabel = (cat: string) => {
     'internet': '網路技術',
     'react': 'React',
     'webgl': 'WebGL',
-    'xss': '資安'
+    'xss': '資安',
+    // 部落格標籤
+    'astro': 'Astro',
+    'blog': '部落格',
+    'tech': '技術',
+    'life': '生活'
   };
   return categoryMap[cat] || '技術';
 };
 
-const categoryLabel = getCategoryLabel(category);
+const displayLabel = type === 'blog' && primaryTag 
+  ? getCategoryLabel(primaryTag) 
+  : getCategoryLabel(category);
 ---
 
 <div
@@ -63,7 +72,7 @@ const categoryLabel = getCategoryLabel(category);
       <div
         class="inline-flex items-center rounded-badge px-2 py-1 text-sm font-semibold focus:outline-none border border-transparent bg-background-secondary text-text-primary mr-4"
       >
-        {categoryLabel}
+        {displayLabel}
       </div>
       <p class="inline text-sm font-semibold">{readingTime}</p>
     </div>
@@ -96,6 +105,6 @@ const categoryLabel = getCategoryLabel(category);
         ></path>
       </svg>
     </button>
-    <a/>
+    </a>
   </div>
 </div> 

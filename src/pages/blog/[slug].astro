@@ -1,0 +1,61 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '@layouts/BlogPostLayout.astro';
+
+export async function getStaticPaths() {
+  const blogs = await getCollection('blog');
+  
+  return blogs.map((blog) => {
+    // 解析檔案名稱中的日期和 slug
+    function parseFilename(filename: string) {
+      // 移除 .md 後綴
+      const nameWithoutExt = filename.replace(/\.md$/, '');
+      
+      // 檢查是否符合 YYYY-MM-DD-slug 格式
+      const dateRegex = /^(\d{4}-\d{2}-\d{2})-(.+)$/;
+      const match = nameWithoutExt.match(dateRegex);
+      
+      if (match) {
+        const [, dateStr, slug] = match;
+        return {
+          date: new Date(dateStr),
+          slug: slug
+        };
+      }
+      
+      // 如果不符合格式，直接使用檔案名作為 slug
+      return {
+        date: undefined,
+        slug: nameWithoutExt
+      };
+    }
+    
+    const parsed = parseFilename(blog.id);
+    const computedSlug = blog.data.slug || parsed.slug;
+    const computedDate = blog.data.date || parsed.date;
+    
+    return {
+      params: { 
+        slug: computedSlug 
+      },
+      props: { 
+        blog,
+        computedDate
+      },
+    };
+  });
+}
+
+const { blog, computedDate } = Astro.props;
+const { Content, headings } = await render(blog);
+
+// 創建一個包含計算日期的 frontmatter 物件
+const frontmatter = {
+  ...blog.data,
+  date: computedDate
+};
+---
+
+<BlogPostLayout frontmatter={frontmatter} headings={headings}>
+  <Content />
+</BlogPostLayout> 
