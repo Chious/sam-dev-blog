@@ -36,7 +36,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # 暴露端口
-EXPOSE 80
-
+ENV PORT=${PORT:-80}
+EXPOSE $PORT
 # 啟動 nginx
 CMD ["nginx", "-g", "daemon off;"] 
