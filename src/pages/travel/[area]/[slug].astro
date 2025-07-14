@@ -1,0 +1,74 @@
+---
+import { getCollection, render } from 'astro:content';
+import MarkdownPostLayout from '@layouts/MarkdownPostLayout.astro';
+
+export async function getStaticPaths() {
+  const travels = await getCollection('travel' as any) as any[];
+  
+  return travels.map((travel: any) => {
+    // 解析檔案名稱中的日期和 slug
+    function parseFilename(filename: string) {
+      // 移除 .md 後綴
+      const nameWithoutExt = filename.replace(/\.md$/, '');
+      
+      // 檢查是否符合 YYYY-MM-DD-slug 格式
+      const dateRegex = /^(\d{4}-\d{2}-\d{2})-(.+)$/;
+      const match = nameWithoutExt.match(dateRegex);
+      
+      if (match) {
+        const [, dateStr, slug] = match;
+        return {
+          date: new Date(dateStr),
+          slug: slug
+        };
+      }
+      
+      // 如果不符合格式，直接使用檔案名作為 slug
+      return {
+        date: undefined,
+        slug: nameWithoutExt
+      };
+    }
+    
+    const parsed = parseFilename(travel.id);
+    const computedSlug = travel.data.slug || parsed.slug;
+    const computedDate = travel.data.date || parsed.date;
+    const area = travel.data.area || 'other'; // 如果沒有 area 則標記為 other
+    
+    return {
+      params: { 
+        area: area,
+        slug: computedSlug 
+      },
+      props: { 
+        travel,
+        computedDate
+      },
+    };
+  });
+}
+
+const { travel, computedDate } = Astro.props;
+const { Content, headings } = await render(travel);
+
+// 地區映射
+const areaLabels: Record<string, string> = {
+  north: '北部',
+  central: '中部',
+  south: '南部',
+  east: '東部',
+  other: '其他'
+};
+
+// 創建一個包含計算日期的 frontmatter 物件
+const frontmatter = {
+  ...travel.data,
+  date: computedDate,
+  category: areaLabels[travel.data.area || 'other'] || '旅行',
+  type: 'travel'
+};
+---
+
+<MarkdownPostLayout frontmatter={frontmatter} headings={headings}>
+  <Content />
+</MarkdownPostLayout> 

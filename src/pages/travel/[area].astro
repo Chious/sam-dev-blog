@@ -1,0 +1,230 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  return [
+    {params: {area: 'north'}},
+    {params: {area: 'central'}},
+    {params: {area: 'south'}},
+    {params: {area: 'east'}},
+    {params: {area: 'other'}},
+  ];
+}
+
+const { area } = Astro.params;
+
+// 取得該地區的所有旅遊文章
+const allTravelPosts = await getCollection('travel' as any) as any[];
+const areaPosts = allTravelPosts
+  .filter((post: any) => post.data.area === area)
+  .sort((a: any, b: any) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+  });
+
+// 地區資料定義
+const areaData = {
+  north: {
+    title: '北部旅行',
+    emoji: '🏙️',
+    description: '繁華都市與自然山景的完美結合',
+    tagline: '在城市與自然間找到平衡',
+    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+  },
+  central: {
+    title: '中部旅行',
+    emoji: '🏔️',
+    description: '高山美景與傳統文化的深度體驗',
+    tagline: '探索台灣的心臟地帶',
+    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+  },
+  south: {
+    title: '南部旅行',
+    emoji: '🌴',
+    description: '熱情陽光與海洋文化的美好時光',
+    tagline: '感受南國的熱情與活力',
+    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+  },
+  east: {
+    title: '東部旅行',
+    emoji: '🌊',
+    description: '壯麗山海與原住民文化的深度探索',
+    tagline: '在山海間尋找心靈的歸宿',
+    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+  },
+  other: {
+    title: '其他旅行',
+    emoji: '🗺️',
+    description: '更多精彩的旅行體驗等著你發現',
+    tagline: '探索無界限的旅行可能',
+    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+  }
+};
+
+const currentArea = areaData[area as keyof typeof areaData];
+
+// 解析檔案名稱以獲取 slug
+function getSlugFromId(id: string) {
+  return id.replace(/\.md$/, '');
+}
+---
+
+<BaseLayout>
+<!-- Hero Section -->
+<section id="hero" class="relative px-[5%]">
+  <div class="relative z-10 container">
+    <div
+      class="flex max-h-[60rem] min-h-svh items-center justify-center py-16 text-center md:py-24 lg:py-28"
+    >
+      <div class="w-full max-w-lg">
+        <div class="mb-5 text-6xl md:text-8xl">{currentArea.emoji}</div>
+        <h1
+          class="mb-5 text-6xl font-bold text-text-alternative md:mb-6 md:text-9xl lg:text-10xl"
+        >
+          {currentArea.title}
+        </h1>
+        <p class="text-text-alternative md:text-md mb-6">
+          {currentArea.tagline}
+        </p>
+        <p class="text-text-alternative/80 text-sm md:text-base mb-8">
+          {currentArea.description}
+        </p>
+        
+        <!-- 地區導航 -->
+        <div class="flex justify-center">
+          <div class="flex gap-2 rounded-lg bg-white/10 backdrop-blur-sm p-2">
+            <a href="/travel/north" class={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${area === 'north' ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}>
+              🏙️ 北部
+            </a>
+            <a href="/travel/central" class={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${area === 'central' ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}>
+              🏔️ 中部
+            </a>
+            <a href="/travel/south" class={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${area === 'south' ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}>
+              🌴 南部
+            </a>
+            <a href="/travel/east" class={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${area === 'east' ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}>
+              🌊 東部
+            </a>
+            <a href="/travel/other" class={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${area === 'other' ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}>
+              🗺️ 其他
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute inset-0 z-0">
+    <img
+      src={currentArea.heroImage}
+      class="size-full object-cover"
+      alt={`${currentArea.title} 風景`}
+    />
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+</section>
+
+<!-- 旅行記錄 Gallery -->
+{areaPosts.length > 0 ? (
+<section class="px-[5%] py-16 md:py-24 lg:py-28 bg-background-alternative">
+  <div class="container">
+    <div class="mb-12 text-center">
+      <h2 class="mb-5 text-4xl font-bold md:text-5xl lg:text-6xl">
+        {currentArea.title.replace('旅行', '')}旅行記錄
+      </h2>
+      <p class="text-gray-600">共 {areaPosts.length} 篇旅行記錄</p>
+    </div>
+    
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {areaPosts.map((post: any) => {
+        const slug = getSlugFromId(post.id);
+        
+        return (
+          <div class="group relative overflow-hidden rounded-lg bg-white shadow-sm transition-transform hover:scale-105">
+            <div class="aspect-[4/3] overflow-hidden">
+              <img
+                src={post.data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
+                alt={post.data.title}
+                class="h-full w-full object-cover transition-transform group-hover:scale-110"
+              />
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="mb-2 flex items-center gap-2">
+                {post.data.date && (
+                  <span class="rounded bg-blue-500/90 px-2 py-1 text-xs font-semibold">
+                    {new Date(post.data.date).toLocaleDateString('zh-TW')}
+                  </span>
+                )}
+                {post.data.duration && (
+                  <span class="rounded bg-green-500/90 px-2 py-1 text-xs font-semibold">
+                    {post.data.duration}
+                  </span>
+                )}
+              </div>
+              <h3 class="mb-2 text-xl font-bold">{post.data.title}</h3>
+              {post.data.description && (
+                <p class="mb-3 text-sm opacity-90 line-clamp-2">{post.data.description}</p>
+              )}
+              <div class="flex items-center gap-4 text-xs">
+                {post.data.budget && (
+                  <span>💰 {post.data.budget.toLocaleString()} 元</span>
+                )}
+                {post.data.difficulty && (
+                  <span>
+                    {post.data.difficulty === 'easy' && '⭐ 輕鬆'}
+                    {post.data.difficulty === 'medium' && '⭐⭐ 中等'}
+                    {post.data.difficulty === 'hard' && '⭐⭐⭐ 困難'}
+                  </span>
+                )}
+              </div>
+              <div class="mt-3">
+                <a 
+                  href={`/travel/${area}/${slug}`}
+                  class="inline-flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white transition-colors"
+                >
+                  閱讀更多 →
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+) : (
+<section class="px-[5%] py-16 md:py-24 lg:py-28 bg-background-alternative">
+  <div class="container text-center">
+    <div class="mx-auto max-w-md">
+      <div class="mb-6 text-6xl opacity-50">{currentArea.emoji}</div>
+      <h2 class="mb-4 text-2xl font-bold text-gray-600">
+        尚無{currentArea.title.replace('旅行', '')}旅行記錄
+      </h2>
+      <p class="text-gray-500">
+        這個地區的旅行記錄還在整理中，敬請期待！
+      </p>
+    </div>
+  </div>
+</section>
+)}
+
+<!-- 返回總覽 -->
+<section class="px-[5%] py-16 md:py-24 lg:py-28">
+  <div class="container text-center">
+    <h2 class="mb-6 text-3xl font-bold md:text-4xl">
+      探索更多地區
+    </h2>
+    <p class="mb-8 text-gray-600">
+      台灣各地都有獨特的風景與文化等著你發現
+    </p>
+    <a 
+      href="/travel"
+      class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-8 py-4 text-lg"
+    >
+      返回旅行總覽
+    </a>
+  </div>
+</section>
+</BaseLayout> 

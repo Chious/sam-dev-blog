@@ -27,7 +27,26 @@ const blogCollection = defineCollection({
   }),
 });
 
+const travelCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    description: z.string().optional(),
+    date: z.date().optional(),
+    area: z.enum(["north", "central", "south", "east", "other"]),
+    tags: z.array(z.string()).optional(),
+    image: z.string().optional(),
+    duration: z.string().optional(),
+    budget: z.number().optional(),
+    difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+    hasPdf: z.boolean().optional(),
+    pdfUrl: z.string().optional(),
+  }),
+});
+
 export const collections = {
   notes: notesCollection,
   blog: blogCollection,
+  travel: travelCollection,
 };

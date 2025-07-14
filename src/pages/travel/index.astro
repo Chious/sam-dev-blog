@@ -1,8 +1,52 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const travelPoints = ["國聖燈塔","鵝鑾鼻燈塔","三貂角燈塔","富貴角燈塔"]
+const wishes = [
+            "考浮潛證照、去參加浮潛",
+            "租一台腳踏車、單車東環",
+            "報名馬拉松比賽：萬金石、金剛",
+            "到山上泡湯、露營",
+            "台東看星星",
+            "出國"
+        ];
+
+// 取得所有旅遊文章，按日期排序
+const travelPosts = await getCollection('travel' as any) as any[];
+const sortedPosts = travelPosts
+  .filter((post: any) => post.data.date)
+  .sort((a: any, b: any) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+  })
+  .slice(0, 6); // 只取前6篇
+
+// 地區映射
+const areaLabels: Record<string, string> = {
+  north: '北部',
+  central: '中部',
+  south: '南部',
+  east: '東部'
+};
+
+// 地區顏色
+const areaColors: Record<string, string> = {
+  north: 'bg-blue-500',
+  central: 'bg-green-500',
+  south: 'bg-orange-500',
+  east: 'bg-purple-500'
+};
+
+// 解析檔案名稱以獲取 slug
+function getSlugFromId(id: string) {
+  return id.replace(/\.md$/, '');
+}
 ---
 
 <BaseLayout>
+<!-- Hero Section -->
 <section id="relume" class="relative px-[5%]">
   <div class="relative z-10 container">
     <div
@@ -17,19 +61,6 @@ import BaseLayout from '@layouts/BaseLayout.astro';
         <p class="text-text-alternative md:text-md">
           旅行 -- 是為了探尋記憶所攜之處。
         </p>
-        <div class="mt-6 flex items-center justify-center gap-x-4 md:mt-8">
-          <button
-            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-6 py-3"
-            title="了解更多"
-          >
-            了解更多</button
-          ><button
-            class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-alternative text-text-alternative px-6 py-3"
-            title="聯絡我"
-          >
-            聯絡我
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -43,259 +74,514 @@ import BaseLayout from '@layouts/BaseLayout.astro';
   </div>
 </section>
 
-<section id="relume">
-  <div class="px-[5%] py-16 md:py-24 lg:py-28">
-    <div class="container">
-      <div class="rb-12 mb-12 text-center md:mb-18 lg:mb-20">
-        <h2
-          class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
-        >
-          旅行地圖
-        </h2>
-        <p class="md:text-md">探索各地旅行的精彩瞬間</p>
+<!-- 環島記錄 -->
+
+<section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+  <div class="relative container">
+    <div
+      class="absolute bottom-[99px] z-10 h-[3px] bg-neutral-black transition-[width] duration-300 md:bottom-[3.5625rem]"
+      style="width:10%"
+    ></div>
+    <div dir="ltr" data-orientation="horizontal" class="relative flex flex-col">
+      <div
+        data-state="active"
+        data-orientation="horizontal"
+        role="tabpanel"
+        aria-labelledby="radix-:R2:-trigger-tab-one"
+        id="radix-:R2:-content-tab-one"
+        tabindex="0"
+        class="focus-visible:outline-none grid grid-cols-1 gap-x-12 gap-y-12 data-[state=active]:animate-tabs md:grid-cols-2 md:items-center md:gap-y-16 lg:gap-x-20"
+        style="animation-duration:0s"
+      >
+        <div>
+          <h3
+            class="mb-3 text-4xl leading-[1.2] font-bold md:mb-4 md:text-5xl lg:text-6xl"
+          >
+            鐵馬行旅
+          </h3>
+          <p class="md:text-md">
+            一個人、一台腳踏車，走遍台灣。
+          </p>
+          <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
+            <a href="/travel/other/bike-cycling"
+              class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+              title="查看更多"
+            >
+              查看更多</a>
+          </div>
+        </div>
+        <div>
+          <img
+            src="/img/bike.png"
+            alt="鐵馬行旅"
+            class="w-full object-contain aspect-square"
+          />
+        </div>
       </div>
-      <div class="relative" role="region" aria-roledescription="carousel">
-        <div class="relative">
-          <div>
-            <div class="flex ml-0 overflow-scroll">
-              <div
-                role="group"
-                aria-roledescription="slide"
-                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
+      <div
+        data-state="inactive"
+        data-orientation="horizontal"
+        role="tabpanel"
+        aria-labelledby="radix-:R2:-trigger-tab-two"
+        hidden=""
+        id="radix-:R2:-content-tab-two"
+        tabindex="0"
+        class="focus-visible:outline-none grid grid-cols-1 gap-x-12 gap-y-12 data-[state=active]:animate-tabs md:grid-cols-2 md:items-center md:gap-y-16 lg:gap-x-20"
+      ></div>
+      <div
+        data-state="inactive"
+        data-orientation="horizontal"
+        role="tabpanel"
+        aria-labelledby="radix-:R2:-trigger-tab-three"
+        hidden=""
+        id="radix-:R2:-content-tab-three"
+        tabindex="0"
+        class="focus-visible:outline-none grid grid-cols-1 gap-x-12 gap-y-12 data-[state=active]:animate-tabs md:grid-cols-2 md:items-center md:gap-y-16 lg:gap-x-20"
+      ></div>
+      <div
+        data-state="inactive"
+        data-orientation="horizontal"
+        role="tabpanel"
+        aria-labelledby="radix-:R2:-trigger-tab-four"
+        hidden=""
+        id="radix-:R2:-content-tab-four"
+        tabindex="0"
+        class="focus-visible:outline-none grid grid-cols-1 gap-x-12 gap-y-12 data-[state=active]:animate-tabs md:grid-cols-2 md:items-center md:gap-y-16 lg:gap-x-20"
+      ></div>
+      <div
+        data-state="inactive"
+        data-orientation="horizontal"
+        role="tabpanel"
+        aria-labelledby="radix-:R2:-trigger-tab-five"
+        hidden=""
+        id="radix-:R2:-content-tab-five"
+        tabindex="0"
+        class="focus-visible:outline-none grid grid-cols-1 gap-x-12 gap-y-12 data-[state=active]:animate-tabs md:grid-cols-2 md:items-center md:gap-y-16 lg:gap-x-20"
+      ></div>
+      <div
+        role="tablist"
+        aria-orientation="horizontal"
+        class="relative mt-16 mb-12 ml-[-5vw] flex no-scrollbar w-screen items-center justify-start border-b border-b-transparent px-[5vw] md:mb-0 md:ml-0 md:w-auto md:justify-between md:px-0"
+        tabindex="-1"
+        data-orientation="horizontal"
+        style="outline:none"
+      >
+      {
+        travelPoints.map((point) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="radix-:R2:-content-tab-one"
+          data-state="active"
+          id="radix-:R2:-trigger-tab-one"
+          class="group whitespace-nowrap border-border-primary bg-background-primary py-2 text-text-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 relative flex flex-1 flex-col items-center justify-center gap-2 border-0 px-0 transition-colors duration-300 data-[state=active]:bg-transparent data-[state=active]:text-text-primary hover:scale-105"
+          tabindex="-1"
+          data-orientation="horizontal"
+          data-radix-collection-item=""
+        >
+          <div
+            class="absolute top-3.5 left-0 z-20 h-[6px] w-16 bg-gradient-to-l from-transparent to-background-primary"
+          ></div>
+          <div class="flex w-full items-center">
+            <div class="h-[3px] w-full bg-neutral-lighter"></div>
+            <div
+              class="z-20 size-6 flex-none shadow-[0_0_0_8px_white] transition-all duration-300 bg-black group-hover:bg-amber-500"
+              style="mask: url('/images/lighthouse.png') no-repeat center; mask-size: contain; -webkit-mask: url('/images/lighthouse.png') no-repeat center; -webkit-mask-size: contain;"
+            ></div>
+            <div class="h-[3px] w-full bg-neutral-lighter"></div>
+          </div>
+          <span class="text-xl font-bold md:text-2xl">{point}</span></button>
+        ))
+      }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 文章列表 -->
+<section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+  <div class="container">
+    <div class="mx-auto mb-12 w-full max-w-lg text-center md:mb-18 lg:mb-20">
+      <p class="mb-3 font-semibold md:mb-4">探索</p>
+      <h1 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+        旅行札記
+      </h1>
+      <p class="md:text-md">分享我對未來旅行的期待</p>
+    </div>
+    <div class="grid auto-cols-fr grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
+      <div class="grid auto-cols-fr grid-cols-1 gap-6 md:gap-8">
+        <div
+          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex flex-col sm:col-span-2"
+        >
+          <div
+            class="block flex-1 p-6 sm:flex sm:flex-col sm:justify-center md:p-8 lg:p-12"
+          >
+            <div>
+              <p class="mb-2 font-semibold">{sortedPosts[0] ? areaLabels[(sortedPosts[0].data as any).area] || '旅行' : '旅行'}</p>
+              <h2
+                class="rb-5 mb-5 text-4xl leading-[1.2] font-bold md:mb-6 md:text-5xl lg:text-6xl"
               >
-                <div class="w-full">
-                  <img
-                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                    alt="Relume placeholder image 1"
-                    class="aspect-square size-full rounded-image object-cover"
-                  />
-                </div>
-              </div>
-              <div
-                role="group"
-                aria-roledescription="slide"
-                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
-              >
-                <div class="w-full">
-                  <img
-                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                    alt="Relume placeholder image 2"
-                    class="aspect-square size-full rounded-image object-cover"
-                  />
-                </div>
-              </div>
-              <div
-                role="group"
-                aria-roledescription="slide"
-                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
-              >
-                <div class="w-full">
-                  <img
-                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                    alt="Relume placeholder image 3"
-                    class="aspect-square size-full rounded-image object-cover"
-                  />
-                </div>
-              </div>
-              <div
-                role="group"
-                aria-roledescription="slide"
-                class="min-w-0 shrink-0 grow-0 basis-full px-3 md:basis-1/2 md:px-4"
-              >
-                <div class="w-full">
-                  <img
-                    src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                    alt="Relume placeholder image 4"
-                    class="aspect-square size-full rounded-image object-cover"
-                  />
-                </div>
-              </div>
+                {sortedPosts[0] ? sortedPosts[0].data.title : '一日遊的精彩回顧'}
+              </h2>
+              <p>
+                {sortedPosts[0] ? (sortedPosts[0].data.description || '記錄我最新的旅行回顧') : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.'}
+              </p>
+            </div>
+            <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
+              {sortedPosts[0] ? (
+                <a
+                  href={`/travel/${(sortedPosts[0].data as any).area || 'other'}/${getSlugFromId(sortedPosts[0].id)}`}
+                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+                  title="查看"
+                >
+                  查看</a
+                >
+              ) : (
+                <button
+                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+                  title="查看"
+                >
+                  查看</button>
+              )}
+              {sortedPosts[0] ? (
+                <a
+                  href={`/travel/${(sortedPosts[0].data as any).area || 'other'}/${getSlugFromId(sortedPosts[0].id)}`}
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="閱讀"
+                >
+                  閱讀<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="閱讀"
+                >
+                  閱讀<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
-          <button
-            class="rounded-button gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary absolute size-14 rounded-full bg-neutral-white left-0 top-1/2 -translate-y-1/2 hidden md:flex md:size-12 lg:size-14"
-            disabled=""
+          <div
+            class="flex w-full flex-col items-center justify-center self-start"
           >
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              class="size-6"
-              height="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"
-              ></path></svg
-            ><span class="sr-only">Previous slide</span></button
-          ><button
-            class="rounded-button gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary absolute size-14 rounded-full bg-neutral-white right-0 top-1/2 -translate-y-1/2 hidden md:flex md:size-12 lg:size-14"
-            disabled=""
-          >
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              class="size-6"
-              height="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
-              ></path></svg
-            ><span class="sr-only">Next slide</span>
-          </button>
+            <img
+              src={sortedPosts[0] ? (sortedPosts[0].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
+              alt={sortedPosts[0] ? sortedPosts[0].data.title : "Relume placeholder image 2"}
+            />
+          </div>
         </div>
-        <div class="mt-[30px] flex items-center justify-center md:mt-[46px]">
-          <button
-            class="relative mx-[3px] inline-block size-2 rounded-full bg-black"
-          ></button
-          ><button
-            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
-          ></button
-          ><button
-            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
-          ></button
-          ><button
-            class="relative mx-[3px] inline-block size-2 rounded-full bg-neutral-darker/40"
-          ></button>
+        <div
+          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex flex-col"
+        >
+          <div class="flex h-full flex-col justify-between p-6 md:p-8 lg:p-6">
+            <div>
+              <div class="mb-3 md:mb-4">
+                {sortedPosts[1] ? (
+                  <div class={`size-12 rounded-full flex items-center justify-center text-white ${areaColors[(sortedPosts[1].data as any).area] || 'bg-gray-500'}`}>
+                    {(sortedPosts[1].data as any).area === 'north' ? '🏙️' : 
+                     (sortedPosts[1].data as any).area === 'central' ? '🏔️' : 
+                     (sortedPosts[1].data as any).area === 'south' ? '🌴' : '🌊'}
+                  </div>
+                ) : (
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
+                    alt="Relume logo 1"
+                    class="size-12"
+                  />
+                )}
+              </div>
+              <h3 class="mb-2 text-xl font-bold md:text-2xl">
+                {sortedPosts[1] ? sortedPosts[1].data.title : '多日遊的難忘經歷'}
+              </h3>
+              <p>{sortedPosts[1] ? (sortedPosts[1].data.description || '記錄我短暫而美好的旅行') : '記錄我短暫而美好的旅行'}</p>
+            </div>
+            <div class="mt-5 flex items-center gap-4 md:mt-6">
+                              {sortedPosts[1] ? (
+                  <a
+                    href={`/travel/${(sortedPosts[1].data as any).area || 'other'}/${getSlugFromId(sortedPosts[1].id)}`}
+                    class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                    title="探索"
+                  >
+                  探索<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="探索"
+                >
+                  探索<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div
+          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex flex-col"
+        >
+          <div class="flex h-full flex-col justify-between p-6 md:p-8 lg:p-6">
+            <div>
+              <div class="mb-3 md:mb-4">
+                <img
+                  src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
+                  alt="Relume logo 2"
+                  class="size-12"
+                />
+              </div>
+              <h3 class="mb-2 text-xl font-bold md:text-2xl">
+                多日遊的難忘經歷
+              </h3>
+              <p>記錄我短暫而美好的旅行</p>
+            </div>
+            <div class="mt-5 flex items-center gap-4 md:mt-6">
+              <button
+                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                title="探索"
+              >
+                探索<svg
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="0"
+                  viewBox="0 0 15 15"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid auto-cols-fr grid-cols-1 gap-6 md:gap-8">
+        <div
+          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex flex-col sm:col-span-2 sm:grid sm:auto-cols-fr sm:grid-cols-2"
+        >
+          <div
+            class="flex size-full flex-col items-center justify-center self-start"
+          >
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg"
+              alt="Relume placeholder image 1"
+            />
+          </div>
+          <div class="block flex-col justify-center p-6 sm:flex">
+            <p class="mb-2 font-semibold">冒險</p>
+            <h2 class="mb-2 text-xl font-bold md:text-2xl">
+              Medium length section heading goes here
+            </h2>
+            <p>分享我的單車冒險故事</p>
+            <div class="mt-5 md:mt-6">
+              <button
+                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                title="Button"
+              >
+                Button<svg
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="0"
+                  viewBox="0 0 15 15"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary flex flex-col sm:col-span-2"
+        >
+          <div
+            class="block flex-1 p-6 sm:flex sm:flex-col sm:justify-center md:p-8 lg:p-12"
+          >
+            <div>
+              <p class="mb-2 font-semibold">單車</p>
+              <h2
+                class="rb-5 mb-5 text-4xl leading-[1.2] font-bold md:mb-6 md:text-5xl lg:text-6xl"
+              >
+                Medium length section heading goes here
+              </h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Suspendisse varius enim in eros elementum tristique.
+              </p>
+            </div>
+            <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
+              <button
+                class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+                title="Button"
+              >
+                Button</button
+              ><button
+                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                title="Button"
+              >
+                Button<svg
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="0"
+                  viewBox="0 0 15 15"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div
+            class="flex w-full flex-col items-center justify-center self-start"
+          >
+            <img
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
+              alt="Relume placeholder image 2"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
+<!-- 未來旅行規劃 -->
+<section id="future-plans" class="px-[5%] py-16 md:py-24 lg:py-28">
   <div class="container">
-    <div class="mb-12 md:mb-18 lg:mb-20">
-      <div class="mx-auto w-full max-w-lg text-center">
-        <p class="mb-3 font-semibold md:mb-4">博客</p>
-        <h2
-          class="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl"
-        >
-          旅行文章總覽
-        </h2>
-        <p class="md:text-md">探索台灣的美麗風景與文化</p>
-      </div>
+    <div class="mb-12 text-center md:mb-18 lg:mb-20">
+      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+        今天我想...
+      </h2>
     </div>
-    <div
-      class="grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 md:gap-y-12 lg:grid-cols-3"
-    >
-      <div>
-        <a href="#" class="mb-6 inline-block w-full max-w-full"
-          ><div class="w-full overflow-hidden">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image 1"
-              class="aspect-[3/2] size-full rounded-image object-cover"
-            /></div></a
-        ><a
-          href="#"
-          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
-          >旅行</a
-        ><a href="#" class="mb-2 block max-w-full"
-          ><h5 class="text-xl font-bold md:text-2xl">台灣環島之旅</h5></a
-        >
-        <p>分享我在台灣環島的精彩經歷與美食</p>
-        <div class="mt-6 flex items-center">
-          <div class="mr-4 shrink-0">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-              alt="Relume placeholder avatar 3"
-              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
-            />
-          </div>
-          <div>
-            <h6 class="text-sm font-semibold">小明</h6>
-            <div class="flex items-center">
-              <p class="text-sm">11 Jan 2022</p>
-              <span class="mx-2">•</span>
-              <p class="text-sm">5 min read</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <a href="#" class="mb-6 inline-block w-full max-w-full"
-          ><div class="w-full overflow-hidden">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image 1"
-              class="aspect-[3/2] size-full rounded-image object-cover"
-            /></div></a
-        ><a
-          href="#"
-          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
-          >美食</a
-        ><a href="#" class="mb-2 block max-w-full"
-          ><h5 class="text-xl font-bold md:text-2xl">台北夜市美食探險</h5></a
-        >
-        <p>在台北夜市品嚐各式地道小吃的樂趣</p>
-        <div class="mt-6 flex items-center">
-          <div class="mr-4 shrink-0">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-              alt="Relume placeholder avatar 3"
-              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
-            />
-          </div>
-          <div>
-            <h6 class="text-sm font-semibold">小華</h6>
-            <div class="flex items-center">
-              <p class="text-sm">15 Feb 2022</p>
-              <span class="mx-2">•</span>
-              <p class="text-sm">7 min read</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <a href="#" class="mb-6 inline-block w-full max-w-full"
-          ><div class="w-full overflow-hidden">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image 1"
-              class="aspect-[3/2] size-full rounded-image object-cover"
-            /></div></a
-        ><a
-          href="#"
-          class="mr-4 mb-2 inline-block max-w-full text-sm font-semibold"
-          >文化</a
-        ><a href="#" class="mb-2 block max-w-full"
-          ><h5 class="text-xl font-bold md:text-2xl">探索台灣傳統文化</h5></a
-        >
-        <p>了解台灣的傳統節慶與民俗風情</p>
-        <div class="mt-6 flex items-center">
-          <div class="mr-4 shrink-0">
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-              alt="Relume placeholder avatar 3"
-              class="size-12 min-h-12 min-w-12 rounded-full object-cover"
-            />
-          </div>
-          <div>
-            <h6 class="text-sm font-semibold">小美</h6>
-            <div class="flex items-center">
-              <p class="text-sm">20 Mar 2022</p>
-              <span class="mx-2">•</span>
-              <p class="text-sm">6 min read</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex items-center justify-center">
-      <button
-        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3 mt-10 md:mt-14 lg:mt-16"
-        title="查看全部"
+    
+    <div class="max-w-2xl mx-auto text-center">
+      <!-- 願望顯示區塊 -->
+      <div 
+        id="wish-display" 
+        class="min-h-[120px] mb-8 p-8 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center transition-all duration-500 opacity-50"
       >
-        查看全部
+        <p class="text-gray-400 text-lg">點擊按鈕，看看今天想做什麼...</p>
+      </div>
+      
+      <!-- 按鈕 -->
+      <button
+        id="wish-button"
+        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-8 py-4 text-lg hover:scale-105 hover:shadow-lg"
+        title="給我一個靈感"
+      >
+        ✨ 給我一個靈感
       </button>
     </div>
   </div>
 </section>
+
+
+<script define:vars={{ wishes }}>
+  document.addEventListener('DOMContentLoaded', function() {
+    const wishDisplay = document.getElementById('wish-display');
+    const wishButton = document.getElementById('wish-button');
+    
+    if (!wishDisplay || !wishButton) return;
+    
+    wishButton.addEventListener('click', function() {
+      // 先淡出
+      wishDisplay.style.opacity = '0';
+      wishDisplay.style.transform = 'scale(0.95)';
+      
+      setTimeout(() => {
+        // 隨機選擇願望
+        const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+        
+        // 更新內容和樣式
+        wishDisplay.innerHTML = `<p class="text-2xl font-bold text-amber-600">💫 ${randomWish}</p>`;
+        wishDisplay.className = "min-h-[120px] mb-8 p-8 rounded-lg border-2 border-amber-300 bg-amber-50 flex items-center justify-center transition-all duration-500";
+        
+        // 淡入
+        wishDisplay.style.opacity = '1';
+        wishDisplay.style.transform = 'scale(1)';
+        
+        // 更新按鈕文字
+        wishButton.innerHTML = '🎲 再來一個';
+      }, 250);
+    });
+  });
+</script>
 </BaseLayout>

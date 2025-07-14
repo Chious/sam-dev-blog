@@ -1,15 +1,43 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/Breadcrumb.astro';
+import PdfViewer from '@components/PdfViewer.astro';
 import { categoryNames } from '@data/noteCategoryNames';
 
 const { frontmatter, headings = [] } = Astro.props;
 
-
-// 從 URL 中獲取分類（假設 URL 格式為 /notes/{category}/{slug}）
+// 從 URL 中獲取路徑資訊
 const currentPath = Astro.url.pathname;
 const pathParts = currentPath.split('/');
-const category = pathParts[2]; // /notes/{category}/{slug}
-const displayCategoryName = categoryNames[category] || category;
+
+// 根據頁面類型生成麵包屑
+let breadcrumbItems = [{ label: '首頁', href: '/' }];
+
+if (frontmatter.type === 'travel') {
+  // 旅行頁面: /travel/{area}/{slug}
+  const area = pathParts[2];
+  const areaLabels: Record<string, string> = {
+    north: '北部',
+    central: '中部',
+    south: '南部',
+    east: '東部',
+    other: '其他'
+  };
+  
+  breadcrumbItems.push(
+    { label: '旅行', href: '/travel' },
+    { label: areaLabels[area] || area, href: `/travel/${area}` }
+  );
+} else {
+  // 筆記頁面: /notes/{category}/{slug}
+  const category = pathParts[2];
+  const displayCategoryName = categoryNames[category] || category;
+  
+  breadcrumbItems.push(
+    { label: '筆記', href: '/notes' },
+    { label: displayCategoryName, href: `/notes/${category}/` }
+  );
+}
 ---
 
 <BaseLayout>
@@ -18,65 +46,7 @@ const displayCategoryName = categoryNames[category] || category;
        <div
          class="mx-auto mb-12 flex w-full max-w-lg flex-col items-start justify-start md:mb-16 lg:mb-20"
        >
-         <nav aria-label="breadcrumb" class="mb-6 flex w-full items-center">
-           <ol
-             class="flex flex-wrap items-center gap-1.5 break-words text-text-primary sm:gap-2"
-           >
-             <li class="inline-flex items-center gap-1.5">
-               <a class="hover:text-dodger-DEFAULT transition-colors" href="/">首頁</a>
-             </li>
-             <li
-               role="presentation"
-               aria-hidden="true"
-               class="text-text-primary [&amp;&gt;svg]:size-4"
-             >
-               <svg
-                 stroke="currentColor"
-                 fill="none"
-                 stroke-width="0"
-                 viewBox="0 0 15 15"
-                 height="1em"
-                 width="1em"
-                 xmlns="http://www.w3.org/2000/svg"
-               >
-                 <path
-                   fill-rule="evenodd"
-                   clip-rule="evenodd"
-                   d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                   fill="currentColor"
-                 ></path>
-               </svg>
-             </li>
-             <li class="inline-flex items-center gap-1.5">
-               <a class="hover:text-dodger-DEFAULT transition-colors" href="/notes">筆記</a>
-             </li>
-             <li
-               role="presentation"
-               aria-hidden="true"
-               class="text-text-primary [&amp;&gt;svg]:size-4"
-             >
-               <svg
-                 stroke="currentColor"
-                 fill="none"
-                 stroke-width="0"
-                 viewBox="0 0 15 15"
-                 height="1em"
-                 width="1em"
-                 xmlns="http://www.w3.org/2000/svg"
-               >
-                 <path
-                   fill-rule="evenodd"
-                   clip-rule="evenodd"
-                   d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                   fill="currentColor"
-                 ></path>
-               </svg>
-             </li>
-             <li class="inline-flex items-center gap-1.5">
-               <a class="hover:text-dodger-DEFAULT transition-colors" href={`/notes/${category}/`}>{displayCategoryName}</a>
-             </li>
-           </ol>
-         </nav>
+         <Breadcrumb items={breadcrumbItems} />
          <h1
            class="mb-8 text-3xl font-bold md:mb-10 md:text-5xl lg:mb-12 lg:text-5xl"
          >
@@ -262,6 +232,13 @@ const displayCategoryName = categoryNames[category] || category;
            </div>
          </div>
          <div class="min-w-0 w-full">
+           {frontmatter.hasPdf && frontmatter.pdfUrl && (
+             <PdfViewer 
+               pdfUrl={frontmatter.pdfUrl} 
+               title={frontmatter.title}
+               height="800px"
+             />
+           )}
            <article class="prose prose-lg max-w-none w-full overflow-x-auto">
             <slot />
            </article>

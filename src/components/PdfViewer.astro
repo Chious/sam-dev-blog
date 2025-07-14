@@ -1,0 +1,166 @@
+---
+interface Props {
+  pdfUrl: string;
+  title?: string;
+  height?: string;
+}
+
+const { pdfUrl, title = "PDF 文件", height = "600px" } = Astro.props;
+---
+
+<div class="pdf-viewer-container mb-8">
+  <div class="flex items-center justify-between mb-4 p-4 bg-background-secondary rounded-lg">
+    <div class="flex items-center gap-3">
+      <svg
+        class="w-6 h-6 text-red-600"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <h3 class="text-lg font-semibold">{title}</h3>
+    </div>
+    <div class="flex gap-2">
+      <a
+        href={pdfUrl}
+        download
+        class="rounded-button inline-flex gap-2 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-primary text-text-primary px-4 py-2 text-sm hover:bg-background-secondary"
+        title="下載 PDF"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        下載
+      </a>
+      <button
+        type="button"
+        onclick="toggleFullscreen()"
+        class="rounded-button inline-flex gap-2 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-4 py-2 text-sm hover:bg-background-secondary"
+        title="全螢幕預覽"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+          />
+        </svg>
+        全螢幕
+      </button>
+    </div>
+  </div>
+
+  <!-- PDF 嵌入顯示 -->
+  <div class="pdf-embed-container rounded-lg overflow-hidden border border-border-primary">
+    <iframe
+      id="pdf-iframe"
+      src={pdfUrl}
+      class="w-full border-0"
+      style={`height: ${height}`}
+      title={title}
+      allow="fullscreen"
+    >
+    </iframe>
+    
+    <!-- 備用內容（當 iframe 不支援時顯示） -->
+    <noscript>
+      <div class="p-8 text-center bg-background-secondary">
+        <p class="text-text-primary mb-4">您的瀏覽器不支援 PDF 預覽</p>
+        <a
+          href={pdfUrl}
+          download
+          class="rounded-button inline-flex gap-2 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-6 py-3"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          下載 PDF
+        </a>
+      </div>
+    </noscript>
+  </div>
+
+  <!-- 響應式提示 -->
+  <div class="mt-3 text-sm text-text-primary opacity-70 text-center">
+    <p>💡 在手機上觀看效果更佳，可點擊「全螢幕」或「下載」按鈕獲得更好的閱讀體驗</p>
+  </div>
+</div>
+
+<script>
+  function toggleFullscreen() {
+    const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
+    if (iframe) {
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if ((iframe as any).webkitRequestFullscreen) {
+        (iframe as any).webkitRequestFullscreen();
+      } else if ((iframe as any).mozRequestFullScreen) {
+        (iframe as any).mozRequestFullScreen();
+      } else if ((iframe as any).msRequestFullscreen) {
+        (iframe as any).msRequestFullscreen();
+      }
+    }
+  }
+</script>
+
+<style>
+  .pdf-viewer-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .pdf-embed-container {
+    position: relative;
+    background: #f5f5f5;
+  }
+
+  #pdf-iframe {
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    #pdf-iframe {
+      height: 500px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #pdf-iframe {
+      height: 400px !important;
+    }
+  }
+</style> 
