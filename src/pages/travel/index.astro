@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { createApi } from 'unsplash-js';
 
 const travelPoints = ["國聖燈塔","鵝鑾鼻燈塔","三貂角燈塔","富貴角燈塔"]
 const wishes = [
@@ -11,6 +13,69 @@ const wishes = [
             "台東看星星",
             "出國"
         ];
+
+// 願望對應的搜索關鍵字
+const wishKeywords = [
+  "diving snorkeling underwater",
+  "cycling bicycle mountain",
+  "marathon running sport",
+  "hot spring camping mountain",
+  "stargazing night sky astronomy",
+  "travel airplane wanderlust"
+];
+
+// 預設背景圖片
+const defaultImage = {
+  url: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+  photographer: 'Alistair MacRobert',
+  photographerUrl: 'https://unsplash.com/@alistairmacrobert'
+};
+
+// Unsplash API 初始化和圖片獲取 (SSR 階段)
+let wishImages: Array<{url: string, photographer: string, photographerUrl: string}> = [];
+
+try {
+  // 使用 Unsplash API
+  const unsplash = createApi({
+    accessKey: import.meta.env.UNSPLASH_ACCESS_KEY || 'YOUR_UNSPLASH_ACCESS_KEY',
+  });
+
+  // 為每個願望獲取對應圖片
+  const imagePromises = wishKeywords.map(async (keyword) => {
+    try {
+      const result = await unsplash.search.getPhotos({
+        query: keyword,
+        page: 1,
+        perPage: 1,
+        orientation: 'landscape'
+      });
+      
+      if (result.response && result.response.results.length > 0) {
+        const photo = result.response.results[0];
+        return {
+          url: photo.urls.regular,
+          photographer: photo.user.name,
+          photographerUrl: photo.user.links.html
+        };
+      }
+      return null;
+    } catch (error) {
+      console.warn(`Failed to fetch image for keyword: ${keyword}`, error);
+      return null;
+    }
+  });
+
+  const images = await Promise.all(imagePromises);
+  wishImages = images.filter(img => img !== null) as Array<{url: string, photographer: string, photographerUrl: string}>;
+} catch (error) {
+  console.warn('Unsplash API initialization failed:', error);
+  // 使用備用圖片
+  wishImages = wishes.map(() => ({
+    url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    photographer: 'Unsplash',
+    photographerUrl: 'https://unsplash.com'
+  }));
+}
 
 // 取得所有旅遊文章，按日期排序
 const travelPosts = await getCollection('travel' as any) as any[];
@@ -43,9 +108,17 @@ const areaColors: Record<string, string> = {
 function getSlugFromId(id: string) {
   return id.replace(/\.md$/, '');
 }
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: "旅行足跡",
+  description: "探索台灣各地的旅行足跡與經驗分享。從北部的山海美景到南部的熱帶風情，記錄每一次旅程的精彩時刻。包含旅行規劃、景點推薦、美食探索等內容。",
+  image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+  type: "website"
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
 <!-- Hero Section -->
 <section id="relume" class="relative px-[5%]">
   <div class="relative z-10 container">
@@ -54,11 +127,11 @@ function getSlugFromId(id: string) {
     >
       <div class="w-full max-w-lg">
         <h1
-          class="mb-5 text-6xl font-bold text-text-alternative md:mb-6 md:text-9xl lg:text-10xl"
+          class="mb-5 text-6xl font-bold text-text-alternative md:mb-6 md:text-9xl lg:text-10xl text-white/50 bg-shadow-lg"
         >
           旅行札記
         </h1>
-        <p class="text-text-alternative md:text-md">
+        <p class="text-text-alternative md:text-md text-white/50 bg-shadow-lg">
           旅行 -- 是為了探尋記憶所攜之處。
         </p>
       </div>
@@ -66,9 +139,9 @@ function getSlugFromId(id: string) {
   </div>
   <div class="absolute inset-0 z-0">
     <img
-      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+      src="/img/blog/72689.jpg"
       class="size-full object-cover"
-      alt="Relume placeholder image"
+      alt="台灣美麗風景"
     />
     <div class="absolute inset-0 bg-black/50"></div>
   </div>
@@ -382,22 +455,32 @@ function getSlugFromId(id: string) {
           <div class="flex h-full flex-col justify-between p-6 md:p-8 lg:p-6">
             <div>
               <div class="mb-3 md:mb-4">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
-                  alt="Relume logo 2"
-                  class="size-12"
-                />
+                {sortedPosts[2] ? (
+                  <div class={`size-12 rounded-full flex items-center justify-center text-white ${areaColors[(sortedPosts[2].data as any).area] || 'bg-gray-500'}`}>
+                    {(sortedPosts[2].data as any).area === 'north' ? '🏙️' : 
+                     (sortedPosts[2].data as any).area === 'central' ? '🏔️' : 
+                     (sortedPosts[2].data as any).area === 'south' ? '🌴' : '🌊'}
+                  </div>
+                ) : (
+                  <img
+                    src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
+                    alt="Relume logo 2"
+                    class="size-12"
+                  />
+                )}
               </div>
               <h3 class="mb-2 text-xl font-bold md:text-2xl">
-                多日遊的難忘經歷
+                {sortedPosts[2] ? sortedPosts[2].data.title : '多日遊的難忘經歷'}
               </h3>
-              <p>記錄我短暫而美好的旅行</p>
+              <p>{sortedPosts[2] ? (sortedPosts[2].data.description || '記錄我短暫而美好的旅行') : '記錄我短暫而美好的旅行'}</p>
             </div>
             <div class="mt-5 flex items-center gap-4 md:mt-6">
-              <button
-                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                title="探索"
-              >
+              {sortedPosts[2] ? (
+                <a
+                  href={`/travel/${(sortedPosts[2].data as any).area || 'other'}/${getSlugFromId(sortedPosts[2].id)}`}
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="探索"
+                >
                 探索<svg
                   stroke="currentColor"
                   fill="none"
@@ -414,7 +497,30 @@ function getSlugFromId(id: string) {
                     fill="currentColor"
                   ></path>
                 </svg>
-              </button>
+              </a>
+              ) : (
+                <button
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="探索"
+                >
+                  探索<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -427,38 +533,64 @@ function getSlugFromId(id: string) {
             class="flex size-full flex-col items-center justify-center self-start"
           >
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg"
-              alt="Relume placeholder image 1"
+              src={sortedPosts[3] ? (sortedPosts[3].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg"}
+              alt={sortedPosts[3] ? sortedPosts[3].data.title : "Relume placeholder image 1"}
+              class="aspect-[3/4] w-full object-cover"
             />
           </div>
           <div class="block flex-col justify-center p-6 sm:flex">
-            <p class="mb-2 font-semibold">冒險</p>
+            <p class="mb-2 font-semibold">{sortedPosts[3] ? areaLabels[(sortedPosts[3].data as any).area] || '冒險' : '冒險'}</p>
             <h2 class="mb-2 text-xl font-bold md:text-2xl">
-              Medium length section heading goes here
+              {sortedPosts[3] ? sortedPosts[3].data.title : 'Medium length section heading goes here'}
             </h2>
-            <p>分享我的單車冒險故事</p>
+            <p>{sortedPosts[3] ? (sortedPosts[3].data.description || '分享我的單車冒險故事') : '分享我的單車冒險故事'}</p>
             <div class="mt-5 md:mt-6">
-              <button
-                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                title="Button"
-              >
-                Button<svg
-                  stroke="currentColor"
-                  fill="none"
-                  stroke-width="0"
-                  viewBox="0 0 15 15"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+              {sortedPosts[3] ? (
+                <a
+                  href={`/travel/${(sortedPosts[3].data as any).area || 'other'}/${getSlugFromId(sortedPosts[3].id)}`}
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="閱讀"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </button>
+                  閱讀<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="Button"
+                >
+                  Button<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -469,52 +601,88 @@ function getSlugFromId(id: string) {
             class="block flex-1 p-6 sm:flex sm:flex-col sm:justify-center md:p-8 lg:p-12"
           >
             <div>
-              <p class="mb-2 font-semibold">單車</p>
+              <p class="mb-2 font-semibold">{sortedPosts[4] ? areaLabels[(sortedPosts[4].data as any).area] || '單車' : '單車'}</p>
               <h2
                 class="rb-5 mb-5 text-4xl leading-[1.2] font-bold md:mb-6 md:text-5xl lg:text-6xl"
               >
-                Medium length section heading goes here
+                {sortedPosts[4] ? sortedPosts[4].data.title : 'Medium length section heading goes here'}
               </h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Suspendisse varius enim in eros elementum tristique.
+                {sortedPosts[4] ? (sortedPosts[4].data.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.') : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.'}
               </p>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <button
-                class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-                title="Button"
-              >
-                Button</button
-              ><button
-                class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
-                title="Button"
-              >
-                Button<svg
-                  stroke="currentColor"
-                  fill="none"
-                  stroke-width="0"
-                  viewBox="0 0 15 15"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+              {sortedPosts[4] ? (
+                <a
+                  href={`/travel/${(sortedPosts[4].data as any).area || 'other'}/${getSlugFromId(sortedPosts[4].id)}`}
+                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+                  title="查看"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </button>
+                  查看</a
+                >
+              ) : (
+                <button
+                  class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
+                  title="Button"
+                >
+                  Button</button
+                >
+              )}
+              {sortedPosts[4] ? (
+                <a
+                  href={`/travel/${(sortedPosts[4].data as any).area || 'other'}/${getSlugFromId(sortedPosts[4].id)}`}
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="閱讀"
+                >
+                  閱讀<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  class="rounded-button inline-flex items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border-0 text-text-primary gap-2 bg-transparent p-0"
+                  title="Button"
+                >
+                  Button<svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="0"
+                    viewBox="0 0 15 15"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.1584 3.13508C6.35985 2.94621 6.67627 2.95642 6.86514 3.15788L10.6151 7.15788C10.7954 7.3502 10.7954 7.64949 10.6151 7.84182L6.86514 11.8418C6.67627 12.0433 6.35985 12.0535 6.1584 11.8646C5.95694 11.6757 5.94673 11.3593 6.1356 11.1579L9.565 7.49985L6.1356 3.84182C5.94673 3.64036 5.95694 3.32394 6.1584 3.13508Z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
           <div
             class="flex w-full flex-col items-center justify-center self-start"
           >
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-              alt="Relume placeholder image 2"
+              src={sortedPosts[4] ? (sortedPosts[4].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
+              alt={sortedPosts[4] ? sortedPosts[4].data.title : "Relume placeholder image 2"}
+              class="w-full object-cover aspect-[3/2]"
             />
           </div>
         </div>
@@ -524,10 +692,19 @@ function getSlugFromId(id: string) {
 </section>
 
 <!-- 未來旅行規劃 -->
-<section id="future-plans" class="px-[5%] py-16 md:py-24 lg:py-28">
-  <div class="container">
+<section id="future-plans" class="relative px-[5%] py-16 md:py-24 lg:py-28 overflow-hidden">
+  <!-- 背景圖片層 -->
+  <div 
+    id="section-background" 
+    class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 opacity-100"
+    style={`background-image: url(${defaultImage.url});`}
+  ></div>
+  <!-- 遮罩層 -->
+  <div class="absolute inset-0 bg-black/50 transition-opacity duration-700 opacity-100" id="section-overlay"></div>
+  
+  <div class="container relative z-10">
     <div class="mb-12 text-center md:mb-18 lg:mb-20">
-      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+      <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl text-white drop-shadow-lg">
         今天我想...
       </h2>
     </div>
@@ -536,30 +713,43 @@ function getSlugFromId(id: string) {
       <!-- 願望顯示區塊 -->
       <div 
         id="wish-display" 
-        class="min-h-[120px] mb-8 p-8 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center transition-all duration-500 opacity-50"
+        class="min-h-[200px] mb-8 p-8 rounded-lg border-2 border-dashed border-white/30 bg-white/10 backdrop-blur-sm flex items-center justify-center transition-all duration-500 opacity-50"
       >
-        <p class="text-gray-400 text-lg">點擊按鈕，看看今天想做什麼...</p>
+        <div class="relative z-10">
+          <p class="text-white/70 text-lg drop-shadow-md">點擊按鈕，看看今天想做什麼...</p>
+        </div>
       </div>
       
       <!-- 按鈕 -->
       <button
         id="wish-button"
-        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-8 py-4 text-lg hover:scale-105 hover:shadow-lg"
+        class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-white/30 text-white bg-white/10 backdrop-blur-sm px-8 py-4 text-lg hover:scale-105 hover:shadow-lg hover:bg-white/20 drop-shadow-md"
         title="給我一個靈感"
       >
         ✨ 給我一個靈感
       </button>
     </div>
+    
+    <!-- 版權聲明 -->
+    <div 
+      id="section-copyright" 
+      class="absolute bottom-4 right-4 text-xs text-white/80 opacity-100 transition-opacity duration-700 bg-black/30 px-3 py-2 rounded-lg backdrop-blur-sm"
+    >
+      Photo by <a href={defaultImage.photographerUrl} target="_blank" rel="noopener" class="underline hover:text-white">{defaultImage.photographer}</a> on <a href="https://unsplash.com" target="_blank" rel="noopener" class="underline hover:text-white">Unsplash</a>
+    </div>
   </div>
 </section>
 
 
-<script define:vars={{ wishes }}>
+<script define:vars={{ wishes, wishImages, defaultImage }}>
   document.addEventListener('DOMContentLoaded', function() {
     const wishDisplay = document.getElementById('wish-display');
     const wishButton = document.getElementById('wish-button');
+    const sectionBackground = document.getElementById('section-background');
+    const sectionOverlay = document.getElementById('section-overlay');
+    const sectionCopyright = document.getElementById('section-copyright');
     
-    if (!wishDisplay || !wishButton) return;
+    if (!wishDisplay || !wishButton || !sectionBackground || !sectionOverlay || !sectionCopyright) return;
     
     wishButton.addEventListener('click', function() {
       // 先淡出
@@ -568,11 +758,28 @@ function getSlugFromId(id: string) {
       
       setTimeout(() => {
         // 隨機選擇願望
-        const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+        const randomIndex = Math.floor(Math.random() * wishes.length);
+        const randomWish = wishes[randomIndex];
+        const correspondingImage = wishImages[randomIndex];
+        
+        // 更新 section 背景圖片
+        if (correspondingImage) {
+          sectionBackground.style.backgroundImage = `url(${correspondingImage.url})`;
+          sectionBackground.style.opacity = '1';
+          sectionOverlay.style.opacity = '1';
+          
+          // 更新版權信息
+          sectionCopyright.innerHTML = `Photo by <a href="${correspondingImage.photographerUrl}" target="_blank" rel="noopener" class="underline hover:text-white">${correspondingImage.photographer}</a> on <a href="https://unsplash.com" target="_blank" rel="noopener" class="underline hover:text-white">Unsplash</a> | Powered by @Astro`;
+          sectionCopyright.style.opacity = '1';
+        }
         
         // 更新內容和樣式
-        wishDisplay.innerHTML = `<p class="text-2xl font-bold text-amber-600">💫 ${randomWish}</p>`;
-        wishDisplay.className = "min-h-[120px] mb-8 p-8 rounded-lg border-2 border-amber-300 bg-amber-50 flex items-center justify-center transition-all duration-500";
+        const contentDiv = wishDisplay.querySelector('.relative.z-10');
+        if (contentDiv) {
+          contentDiv.innerHTML = `<p class="text-2xl font-bold text-white drop-shadow-lg">💫 ${randomWish}</p>`;
+        }
+        
+        wishDisplay.className = "min-h-[200px] mb-8 p-8 rounded-lg border-2 border-amber-300/50 bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all duration-500";
         
         // 淡入
         wishDisplay.style.opacity = '1';

@@ -1,8 +1,17 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: "頁面未找到",
+  description: "抱歉，您訪問的頁面不存在。請檢查網址是否正確，或回到首頁探索其他內容。",
+  image: "/images/lighthouse.png",
+  type: "website"
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
   <div class="flex flex-col items-center justify-center h-screen">
     <h1 class="text-4xl font-bold">Error: 404</h1>
     <p class="text-2xl text-gray-500">未找到頁面</p>

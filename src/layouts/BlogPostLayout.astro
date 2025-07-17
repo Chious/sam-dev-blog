@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import TableOfContents from '@components/TableOfContents.astro';
 
 const { frontmatter, headings = [] } = Astro.props;
@@ -12,9 +13,21 @@ function formatDate(date: Date) {
     day: 'numeric'
   });
 }
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: frontmatter.title,
+  description: frontmatter.description || `閱讀關於 ${frontmatter.title} 的部落格文章`,
+  image: frontmatter.image || "/images/lighthouse.png",
+  type: 'article',
+  publishedTime: frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined,
+  modifiedTime: frontmatter.lastModified ? new Date(frontmatter.lastModified).toISOString() : undefined,
+  tags: frontmatter.tags || [],
+  author: 'Sam'
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
    <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
      <div class="container">
        <div

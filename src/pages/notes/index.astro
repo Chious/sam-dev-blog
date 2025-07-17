@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { categoryNames } from '@data/noteCategoryNames';
 
 const notes = await getCollection('notes');
@@ -22,9 +23,17 @@ const categories = Array.from(categoriesMap.entries()).map(([category, categoryN
   count: categoryNotes.length,
   notes: categoryNotes.slice(0, 3) // 只顯示前3篇作為預覽
 }));
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: "技術筆記",
+  description: "整理各種技術學習筆記，包含前端開發、演算法、AWS、React、函數式程式設計等主題。持續記錄學習過程中的重點知識與心得體悟。",
+  image: "/images/lighthouse.png",
+  type: "website"
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
   <section class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <!-- 麵包屑導航 -->

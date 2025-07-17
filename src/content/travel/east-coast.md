@@ -7,7 +7,7 @@ duration: "4天3夜"
 budget: 6176
 difficulty: "medium"
 tags: ["travel", "east-coast", "multi-day"]
-image: "/img/blog/zeabur-deploy.png"
+image: "/img/blog/LINE_ALBUM_2025715_250717_1.jpg"
 ---
 
 # 台灣東部 4 日遊簡易規劃

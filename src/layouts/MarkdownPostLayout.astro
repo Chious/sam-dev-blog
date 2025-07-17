@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/Breadcrumb.astro';
 import PdfViewer from '@components/PdfViewer.astro';
 import { categoryNames } from '@data/noteCategoryNames';
@@ -38,9 +39,21 @@ if (frontmatter.type === 'travel') {
     { label: displayCategoryName, href: `/notes/${category}/` }
   );
 }
+
+// 組合 SEO 資訊
+const seoConfig: SEOProps = {
+  title: frontmatter.title,
+  description: frontmatter.description || `閱讀關於 ${frontmatter.title} 的詳細內容`,
+  image: frontmatter.image,
+  type: 'article',
+  publishedTime: frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined,
+  modifiedTime: frontmatter.lastModified ? new Date(frontmatter.lastModified).toISOString() : undefined,
+  tags: frontmatter.tags || [],
+  author: 'Sam'
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
    <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
      <div class="container">
        <div
@@ -58,15 +71,15 @@ if (frontmatter.type === 'travel') {
            <div class="rb-4 mb-4 flex items-center sm:mb-0">
              <div class="mr-4 shrink-0">
                <img
-                 src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
-                 alt="Relume placeholder avatar"
+                 src="/images/profolio-picture.png"
+                 alt="作者頭像"
                  class="size-14 min-h-14 min-w-14 rounded-full object-cover"
                />
              </div>
              <div>
-               <h6 class="font-semibold">張三</h6>
+               <h6 class="font-semibold">Sam</h6>
                <div class="mt-1 flex">
-                 <p class="text-sm">2022年1月11日</p>
+                 <p class="text-sm">{frontmatter.date ? new Date(frontmatter.date).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' }) : '最近發佈'}</p>
                  <span class="mx-2">•</span>
                  <p class="text-sm">5分鐘閱讀</p>
                </div>
@@ -140,9 +153,9 @@ if (frontmatter.type === 'travel') {
        </div>
        <div class="mx-auto w-full overflow-hidden">
          <img
-           src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+           src={frontmatter.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"}
            class="aspect-[2] size-full rounded-image object-cover"
-           alt="Relume placeholder image"
+           alt={frontmatter.title || "文章圖片"}
          />
        </div>
      </div>

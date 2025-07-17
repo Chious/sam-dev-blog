@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -31,35 +32,35 @@ const areaData = {
     emoji: '🏙️',
     description: '繁華都市與自然山景的完美結合',
     tagline: '在城市與自然間找到平衡',
-    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+    heroImage: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   },
   central: {
     title: '中部旅行',
     emoji: '🏔️',
     description: '高山美景與傳統文化的深度體驗',
     tagline: '探索台灣的心臟地帶',
-    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+    heroImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   },
   south: {
     title: '南部旅行',
     emoji: '🌴',
-    description: '熱情陽光與海洋文化的美好時光',
-    tagline: '感受南國的熱情與活力',
-    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+    description: '熱帶風情與古都文化的魅力',
+    tagline: '感受南國的熱情與歷史',
+    heroImage: 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   },
   east: {
     title: '東部旅行',
     emoji: '🌊',
-    description: '壯麗山海與原住民文化的深度探索',
-    tagline: '在山海間尋找心靈的歸宿',
-    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+    description: '太平洋海岸與原住民文化的純淨之美',
+    tagline: '擁抱大自然的壯麗',
+    heroImage: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   },
   other: {
-    title: '其他旅行',
+    title: '其他地區',
     emoji: '🗺️',
-    description: '更多精彩的旅行體驗等著你發現',
-    tagline: '探索無界限的旅行可能',
-    heroImage: 'https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg',
+    description: '更多精彩的旅行體驗',
+    tagline: '探索未知的美好',
+    heroImage: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   }
 };
 
@@ -69,9 +70,17 @@ const currentArea = areaData[area as keyof typeof areaData];
 function getSlugFromId(id: string) {
   return id.replace(/\.md$/, '');
 }
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: currentArea.title,
+  description: `${currentArea.description}。瀏覽所有關於台灣${currentArea.title}的旅行記錄，包含景點推薦、行程規劃、美食探索等精彩內容。`,
+  image: currentArea.heroImage,
+  type: "website"
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
 <!-- Hero Section -->
 <section id="hero" class="relative px-[5%]">
   <div class="relative z-10 container">

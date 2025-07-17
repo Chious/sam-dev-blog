@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { categoryNames } from '@data/noteCategoryNames';
 
 export async function getStaticPaths() {
@@ -25,11 +26,18 @@ export async function getStaticPaths() {
 
 const { category, notes } = Astro.props;
 
-
 const displayName = categoryNames[category] || category;
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: `${displayName} 筆記`,
+  description: `瀏覽所有關於 ${displayName} 的技術筆記與學習記錄。深入探討相關技術概念、實作經驗與問題解決方案。`,
+  image: "/images/lighthouse.png",
+  type: "website"
+};
 ---
 
-<BaseLayout> 
+<BaseLayout seo={seoConfig}> 
   <section class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <!-- 麵包屑導航 -->

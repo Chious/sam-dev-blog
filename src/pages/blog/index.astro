@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import type { SEOProps } from '@layouts/BaseLayout.astro';
 
 // 獲取所有部落格文章並按日期排序
 const blogs = await getCollection('blog');
@@ -60,9 +61,17 @@ function formatDate(date: Date) {
 function getSlug(blog: any) {
   return blog.data.slug || blog.id.replace(/\.md$/, '');
 }
+
+// SEO 配置
+const seoConfig: SEOProps = {
+  title: "部落格文章",
+  description: "瀏覽 Sam 的所有部落格文章，包含前端開發心得、技術分享、學習筆記等內容。持續更新最新的程式設計知識與開發經驗。",
+  image: "/images/lighthouse.png",
+  type: "website"
+};
 ---
 
-<BaseLayout>
+<BaseLayout seo={seoConfig}>
   <section class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <!-- 麵包屑導航 -->

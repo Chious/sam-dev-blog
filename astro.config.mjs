@@ -7,6 +7,7 @@ import rehypeMermaid from "rehype-mermaid";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://sam-dev-blog.vercel.app",
   markdown: {
     syntaxHighlight: {
       type: "shiki",
