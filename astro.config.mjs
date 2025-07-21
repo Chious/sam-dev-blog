@@ -20,8 +20,8 @@ export default defineConfig({
   build: {
     assets: "assets",
   },
-
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()],
     resolve: {
       alias: {

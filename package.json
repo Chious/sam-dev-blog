@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
+    "@astrojs/starlight-docsearch": "^0.6.0",
     "@astrojs/vercel": "^8.0.4",
+    "@docsearch/css": "^3.9.0",
+    "@docsearch/js": "^3.9.0",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.10.1",
     "playwright": "^1.53.2",
