@@ -70,11 +70,11 @@ const tocHeadings = headings.length > 0 ? headings : defaultHeadings;
         role="region"
         aria-labelledby="toc-button"
         data-orientation="vertical"
-        class="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+        class="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=closed]:max-h-0 data-[state=open]:animate-accordion-down data-[state=open]:max-h-[60vh] transition-all duration-300 ease-in-out"
         style="--radix-accordion-content-height:var(--radix-collapsible-content-height);--radix-accordion-content-width:var(--radix-collapsible-content-width)"
       >
         <div class="pb-0">
-          <div class="mt-3 md:mt-4">
+          <div class="mt-3 md:mt-4 max-h-[60vh] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
             {tocHeadings.map((heading) => {
               // 計算縮排：depth 2 = 0px, depth 3 = 16px, depth 4 = 32px, etc.
               const marginLeft = (heading.depth - 2) * 16;
@@ -102,14 +102,62 @@ const tocHeadings = headings.length > 0 ? headings : defaultHeadings;
     const content = document.getElementById('toc-content');
     
     if (button && content) {
-      button.addEventListener('click', () => {
+      const toggleTOC = (event: Event) => {
+        // 只在手機版才允許收合
+        if (window.innerWidth >= 1024) { // lg breakpoint 以上不允許收合
+          return;
+        }
+        
+        event.preventDefault();
+        event.stopPropagation();
+        
         const isOpen = button.getAttribute('data-state') === 'open';
         const newState = isOpen ? 'closed' : 'open';
         
+        // 更新 button 狀態
         button.setAttribute('data-state', newState);
         button.setAttribute('aria-expanded', (!isOpen).toString());
+        
+        // 更新 content 狀態
         content.setAttribute('data-state', newState);
-      });
+        
+        // 更新父容器狀態 (如果存在)
+        const parentContainer = button.closest('[data-orientation="vertical"]');
+        if (parentContainer) {
+          parentContainer.setAttribute('data-state', newState);
+        }
+        
+        // 手機版強制隱藏/顯示內容
+        if (newState === 'closed') {
+          content.style.display = 'none';
+        } else {
+          content.style.display = 'block';
+        }
+      };
+      
+      // 添加點擊和觸摸事件
+      button.addEventListener('click', toggleTOC);
+      button.addEventListener('touchend', toggleTOC);
+      
+      // 處理螢幕尺寸變化
+      const handleResize = () => {
+        if (window.innerWidth >= 1024) { // lg breakpoint 以上確保常駐開啟
+          // 重置為開啟狀態
+          button.setAttribute('data-state', 'open');
+          button.setAttribute('aria-expanded', 'true');
+          content.setAttribute('data-state', 'open');
+          content.style.display = '';
+          
+          // 更新父容器狀態
+          const parentContainer = button.closest('[data-orientation="vertical"]');
+          if (parentContainer) {
+            parentContainer.setAttribute('data-state', 'open');
+          }
+        }
+      };
+      
+      window.addEventListener('resize', handleResize);
+      handleResize(); // 初始檢查
     }
   });
 </script> 

@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import type { SEOProps } from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/Breadcrumb.astro';
 import PdfViewer from '@components/PdfViewer.astro';
+import TableOfContents from '@components/TableOfContents.astro';
 import { categoryNames } from '@data/noteCategoryNames';
 
 const { frontmatter, headings = [] } = Astro.props;
@@ -167,82 +168,7 @@ const seoConfig: SEOProps = {
          class="grid grid-cols-1 gap-y-8 lg:grid-cols-[20rem_1fr] lg:gap-x-16 xxl:gap-x-48 min-w-0"
        >
          <div class="min-w-0">
-           <div class="lg:sticky lg:top-24">
-             <div class="lg:block" data-orientation="vertical">
-               <div
-                 data-state="open"
-                 data-orientation="vertical"
-                 class="border-b border-border-primary first:border-t border-none"
-               >
-                 <h3
-                   data-orientation="vertical"
-                   data-state="open"
-                   class="flex w-full"
-                 >
-                   <button
-                     type="button"
-                     aria-controls="radix-:R5:"
-                     aria-expanded="true"
-                     data-state="open"
-                     data-orientation="vertical"
-                     id="radix-:R1:"
-                     class="flex-1 font-bold transition-all focus-visible:outline-none focus-visible:ring-0 [&amp;[data-state=open]&gt;svg]:rotate-180 flex cursor-pointer items-center justify-between gap-3 border border-border-primary px-4 py-3 lg:pointer-events-none lg:cursor-auto lg:border-none lg:p-0 [&amp;_svg]:size-4 [&amp;_svg]:lg:hidden"
-                     data-radix-collection-item=""
-                   >
-                     <h3 class="text-lg leading-[1.4] font-bold md:text-2xl">
-                       目錄
-                     </h3>
-                     <svg
-                       stroke="currentColor"
-                       fill="none"
-                       stroke-width="0"
-                       viewBox="0 0 15 15"
-                       class="size-7 shrink-0 text-text-primary transition-transform duration-300 md:size-8"
-                       height="1em"
-                       width="1em"
-                       xmlns="http://www.w3.org/2000/svg"
-                     >
-                       <path
-                         fill-rule="evenodd"
-                         clip-rule="evenodd"
-                         d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
-                         fill="currentColor"
-                       ></path>
-                     </svg>
-                   </button>
-                 </h3>
-                 <div
-                   data-state="open"
-                   id="radix-:R5:"
-                   role="region"
-                   aria-labelledby="radix-:R1:"
-                   data-orientation="vertical"
-                   class="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
-                   style="--radix-accordion-content-height:var(--radix-collapsible-content-height);--radix-accordion-content-width:var(--radix-collapsible-content-width)"
-                 >
-                   <div class="pb-0">
-                     <div class="mt-3 md:mt-4">
-                       {headings.length > 0 ? (
-                         headings.map((heading: { depth: number; slug: string; text: string }) => (
-                           <a
-                             href={`#${heading.slug}`}
-                             class="block px-4 py-3 md:text-md hover:text-dodger-DEFAULT transition-colors"
-                             style={`margin-left: ${(heading.depth - 2) * 16}px`}
-                           >
-                             {heading.text}
-                           </a>
-                         ))
-                       ) : (
-                         <p class="px-4 py-3 text-text-primary opacity-60">
-                           此文章沒有標題
-                         </p>
-                       )}
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
+           <TableOfContents headings={headings} />
          </div>
          <div class="min-w-0 w-full">
            {frontmatter.hasPdf && frontmatter.pdfUrl && (
