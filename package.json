@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
+    "@astrojs/sitemap": "^3.4.1",
     "@astrojs/starlight-docsearch": "^0.6.0",
     "@astrojs/vercel": "^8.0.4",
     "@docsearch/css": "^3.9.0",

@@ -45,7 +45,7 @@ const fullTitle = seo.title
 // 確保圖片是完整 URL
 const fullImageUrl = finalSEO.image?.startsWith('http') 
   ? finalSEO.image 
-  : `${Astro.site || 'https://sam-dev-blog.vercel.app'}${finalSEO.image}`;
+  : `${Astro.site || 'https://sam-dev.space'}${finalSEO.image}`;
 
 // Canonical URL
 const canonicalUrl = seo.canonical || Astro.url.href;
@@ -62,6 +62,8 @@ const canonicalUrl = seo.canonical || Astro.url.href;
     <meta name="description" content={finalSEO.description} />
     <meta name="author" content={finalSEO.author} />
     <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
     
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />

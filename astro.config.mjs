@@ -5,9 +5,12 @@ import path from "path";
 import vercelStatic from "@astrojs/vercel";
 import rehypeMermaid from "rehype-mermaid";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
-  site: "https://sam-dev-blog.vercel.app",
+  site: "https://sam-dev.space",
+
   markdown: {
     syntaxHighlight: {
       type: "shiki",
@@ -15,11 +18,13 @@ export default defineConfig({
     },
     rehypePlugins: [rehypeMermaid],
   },
+
   output: "static",
 
   build: {
     assets: "assets",
   },
+
   vite: {
     // @ts-ignore
     plugins: [tailwindcss()],
@@ -36,4 +41,5 @@ export default defineConfig({
   },
 
   adapter: vercelStatic({}),
+  integrations: [sitemap()],
 });
