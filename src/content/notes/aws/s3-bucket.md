@@ -171,6 +171,25 @@ flowchart LR
 - 災難復原資料： 只有在發生災難時才會用到，但那時又要求立即可用。
 - 舊的專案檔案或報告： 偶爾需要查閱，但大部分時間都閒置著。
 
+### 生命週期
+
+- One Zone IA: 只會將你的資料儲存在單一的 AWS 可用區內。
+- Standard IA:數據不常被存取，但當需要時，要求快速（毫秒級）存取。
+- Glacier Archive/ Deep Archive: 資料存取頻率極低，每年可能只存取一兩次，並且可以接受數分鐘到數小時的擷取時間。
+
+> Your application on EC2 creates images thumbnails after profile photos are uploaded to Amazon S3. These thumbnails can be easily recreated, and only need to be kept for 60 days. The source photos should be immediately retrieved for these 60 days, and afterward, the user can wait up to 6 hours. How would you design this?
+
+### 效能
+
+- Multi-Part upload: 可以將一個大檔案拆分成多個小檔案，然後分別上傳，最後再合併成一個大檔案。
+
+- User Metadata:
+- Object Tag:
+
+### S3 Event Notification
+
+- 當 S3 中的物件發生變化時，可以透過 Event Notification 來通知其他服務。
+
 ## 六、實際使用情境
 
 ### 使用情境 1：使用 Bucket 存取圖片
