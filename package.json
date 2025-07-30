@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
+    "@astrojs/preact": "^4.1.0",
     "@astrojs/sitemap": "^3.4.1",
-    "@astrojs/starlight-docsearch": "^0.6.0",
     "@astrojs/vercel": "^8.0.4",
-    "@docsearch/css": "^3.9.0",
-    "@docsearch/js": "^3.9.0",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.10.1",
+    "fuse.js": "^7.1.0",
     "playwright": "^1.53.2",
+    "preact": "^10.27.0",
     "rehype-mermaid": "^3.0.0",
     "unsplash-js": "^7.0.19"
   },

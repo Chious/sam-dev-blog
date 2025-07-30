@@ -25,6 +25,7 @@ const seoConfig: SEOProps = {
   tags: frontmatter.tags || [],
   author: 'Sam'
 };
+
 ---
 
 <BaseLayout seo={seoConfig}>
@@ -84,7 +85,7 @@ const seoConfig: SEOProps = {
                />
              </div>
              <div>
-               <h6 class="font-semibold">{frontmatter.author || '張家盛'}</h6>
+               <h6 class="font-semibold">{frontmatter.author || 'Sam'}</h6>
                <div class="mt-1 flex">
                  {frontmatter.date && (
                    <>

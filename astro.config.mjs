@@ -4,8 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import vercelStatic from "@astrojs/vercel";
 import rehypeMermaid from "rehype-mermaid";
-
 import sitemap from "@astrojs/sitemap";
+import preact from "@astrojs/preact";
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,5 +41,5 @@ export default defineConfig({
   },
 
   adapter: vercelStatic({}),
-  integrations: [sitemap()],
+  integrations: [sitemap(), preact()],
 });
