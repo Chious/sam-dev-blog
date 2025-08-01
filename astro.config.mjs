@@ -6,6 +6,12 @@ import vercelStatic from "@astrojs/vercel";
 import rehypeMermaid from "rehype-mermaid";
 import sitemap from "@astrojs/sitemap";
 import preact from "@astrojs/preact";
+import {
+  transformerMeta,
+  transformerCreateCodeBlockHeader,
+  transformerAddTitleToCodeBlocksHeaders,
+  transformerCopyButton,
+} from "./src/plugins/shiki-transformer";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,6 +21,16 @@ export default defineConfig({
     syntaxHighlight: {
       type: "shiki",
       excludeLangs: ["mermaid", "math"],
+    },
+    shikiConfig: {
+      theme: "github-dark",
+      transformers: [
+        transformerMeta(),
+        transformerCreateCodeBlockHeader(),
+        transformerAddTitleToCodeBlocksHeaders(),
+        transformerCopyButton(),
+      ],
+      wrap: false,
     },
     rehypePlugins: [rehypeMermaid],
   },

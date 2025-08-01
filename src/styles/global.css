@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@import "@/styles/shiki-transformer.css";
 
 /* 基本 dark mode 樣式覆蓋 */
 html,
