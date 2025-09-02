@@ -2,7 +2,7 @@
 title: 【草稿】日常反思筆記
 date: 2025-08-22
 tags: ["rethink"]
-description:
+description: 在 AI 的時代下，日常反思筆記
 ---
 
 ## 理解、讀對問題
