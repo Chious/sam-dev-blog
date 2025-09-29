@@ -1,6 +1,6 @@
 ---
 title: 【DVA-C02】EC2 Instance Storage
-tags: ['AWS', 'EC2']
+tags: ["AWS", "EC2"]
 sidebar_label: 【DVA-C02】EC2 Instance Storage
 ---
 
