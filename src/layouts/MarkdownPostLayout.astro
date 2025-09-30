@@ -1,6 +1,8 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import type { SEOProps } from '@layouts/BaseLayout.astro';
+import BaseLayout from './BaseLayout.astro';
+import type { SEOProps } from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+import profolioPicture from '@/assets/profolio-picture.png';
 import Breadcrumb from '@components/Breadcrumb.astro';
 import PdfViewer from '@components/PdfViewer.astro';
 import TableOfContents from '@components/TableOfContents.astro';
@@ -71,9 +73,11 @@ const seoConfig: SEOProps = {
          >
            <div class="rb-4 mb-4 flex items-center sm:mb-0">
              <div class="mr-4 shrink-0">
-               <img
-                 src="/images/profolio-picture.png"
+               <Image
+                 src={profolioPicture}
                  alt="作者頭像"
+                 width={56}
+                 height={56}
                  class="size-14 min-h-14 min-w-14 rounded-full object-cover"
                />
              </div>
@@ -153,10 +157,12 @@ const seoConfig: SEOProps = {
          </div>
        </div>
        <div class="mx-auto w-full overflow-hidden">
-         <img
+         <Image
            src={frontmatter.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"}
            class="aspect-[2] size-full rounded-image object-cover"
            alt={frontmatter.title || "文章圖片"}
+           width={800}
+           height={400}
          />
        </div>
      </div>

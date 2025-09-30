@@ -2,6 +2,8 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import type { SEOProps } from '@layouts/BaseLayout.astro';
 import TableOfContents from '@components/TableOfContents.astro';
+import { Image } from 'astro:assets';
+import profolioPicture from '@/assets/profolio-picture.png';
 
 const { frontmatter, headings = [] } = Astro.props;
 
@@ -78,9 +80,11 @@ const seoConfig: SEOProps = {
          >
            <div class="rb-4 mb-4 flex items-center sm:mb-0">
              <div class="mr-4 shrink-0">
-               <img
-                 src={`${import.meta.env.BASE_URL}images/profolio-picture.png`}
+               <Image
+                 src={profolioPicture}
                  alt="作者頭像"
+                 width={56}
+                 height={56}
                  class="size-14 min-h-14 min-w-14 rounded-full object-cover"
                />
              </div>
@@ -112,15 +116,18 @@ const seoConfig: SEOProps = {
        </div>
        
        {/* Featured Image */}
-       {frontmatter.image && (
-         <div class="mx-auto w-full overflow-hidden mb-12">
-           <img
-             src={frontmatter.image}
-             class="aspect-[2] size-full rounded-image object-cover"
-             alt={frontmatter.title}
-           />
-         </div>
-       )}
+      {frontmatter.image && (
+        <div class="mx-auto w-full overflow-hidden mb-12">
+          <Image
+            src={frontmatter.image}
+            class="aspect-[2] size-full rounded-image object-cover"
+            alt={frontmatter.title}
+            width={800}
+            height={400}
+            loading="lazy"
+          />
+        </div>
+      )}
      </div>
    </section>
    

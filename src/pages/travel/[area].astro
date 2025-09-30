@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   return [
@@ -125,10 +126,12 @@ const seoConfig: SEOProps = {
     </div>
   </div>
   <div class="absolute inset-0 z-0">
-    <img
+    <Image
       src={currentArea.heroImage}
       class="size-full object-cover"
       alt={`${currentArea.title} 風景`}
+      width={1920}
+      height={1080}
     />
     <div class="absolute inset-0 bg-black/50"></div>
   </div>
@@ -152,9 +155,11 @@ const seoConfig: SEOProps = {
         return (
           <div class="group relative overflow-hidden rounded-lg bg-white shadow-sm transition-transform hover:scale-105">
             <div class="aspect-[4/3] overflow-hidden">
-              <img
+              <Image
                 src={post.data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
                 alt={post.data.title}
+                width={400}
+                height={300}
                 class="h-full w-full object-cover transition-transform group-hover:scale-110"
               />
             </div>

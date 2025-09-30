@@ -3,6 +3,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import type { SEOProps } from '@layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { createApi } from 'unsplash-js';
+import { Image } from 'astro:assets';
+import heroTaiwan from '@/assets/hero-taiwan.jpg';
+import bikeImage from '@/assets/bike.png';
 
 const travelPoints = ["國聖燈塔","鵝鑾鼻燈塔","三貂角燈塔","富貴角燈塔"]
 const wishes = [
@@ -138,10 +141,12 @@ const seoConfig: SEOProps = {
     </div>
   </div>
   <div class="absolute inset-0 z-0">
-    <img
-      src="/img/blog/72689.jpg"
+    <Image
+      src={heroTaiwan}
       class="size-full object-cover"
       alt="台灣美麗風景"
+      width={1920}
+      height={1080}
     />
     <div class="absolute inset-0 bg-black/50"></div>
   </div>
@@ -184,10 +189,12 @@ const seoConfig: SEOProps = {
           </div>
         </div>
         <div>
-          <img
-            src="/img/bike.png"
+          <Image
+            src={bikeImage}
             alt="鐵馬行旅"
             class="w-full object-contain aspect-square"
+            width={400}
+            height={400}
           />
         </div>
       </div>
@@ -368,9 +375,12 @@ const seoConfig: SEOProps = {
           <div
             class="flex w-full flex-col items-center justify-center self-start"
           >
-            <img
+            <Image
               src={sortedPosts[0] ? (sortedPosts[0].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
-              alt={sortedPosts[0] ? sortedPosts[0].data.title : "Relume placeholder image 2"}
+              alt={sortedPosts[0] ? sortedPosts[0].data.title : "旅行預覽圖片"}
+              width={600}
+              height={400}
+              class="w-full object-cover aspect-[3/2]"
             />
           </div>
         </div>
@@ -532,9 +542,11 @@ const seoConfig: SEOProps = {
           <div
             class="flex size-full flex-col items-center justify-center self-start"
           >
-            <img
+            <Image
               src={sortedPosts[3] ? (sortedPosts[3].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg"}
-              alt={sortedPosts[3] ? sortedPosts[3].data.title : "Relume placeholder image 1"}
+              alt={sortedPosts[3] ? sortedPosts[3].data.title : "旅行預覽圖片"}
+              width={400}
+              height={533}
               class="aspect-[3/4] w-full object-cover"
             />
           </div>
@@ -679,9 +691,11 @@ const seoConfig: SEOProps = {
           <div
             class="flex w-full flex-col items-center justify-center self-start"
           >
-            <img
+            <Image
               src={sortedPosts[4] ? (sortedPosts[4].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
-              alt={sortedPosts[4] ? sortedPosts[4].data.title : "Relume placeholder image 2"}
+              alt={sortedPosts[4] ? sortedPosts[4].data.title : "旅行預覽圖片"}
+              width={600}
+              height={400}
               class="w-full object-cover aspect-[3/2]"
             />
           </div>
