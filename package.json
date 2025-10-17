@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^6.3.2",
+    "@astrojs/mdx": "^4.3.6",
     "@astrojs/preact": "^4.1.0",
     "@astrojs/sitemap": "^3.4.1",
     "@shikijs/transformers": "^3.9.1",

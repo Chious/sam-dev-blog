@@ -1,28 +1,29 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
-import path from 'path';
-import rehypeMermaid from 'rehype-mermaid';
-import sitemap from '@astrojs/sitemap';
-import preact from '@astrojs/preact';
+import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
+import rehypeMermaid from "rehype-mermaid";
+import sitemap from "@astrojs/sitemap";
+import preact from "@astrojs/preact";
+import mdx from "@astrojs/mdx";
 import {
   transformerMeta,
   transformerCreateCodeBlockHeader,
   transformerAddTitleToCodeBlocksHeaders,
   transformerCopyButton,
-} from './src/plugins/shiki-transformer';
+} from "./src/plugins/shiki-transformer";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sam-dev.space',
+  site: "https://sam-dev.space",
 
   markdown: {
     syntaxHighlight: {
-      type: 'shiki',
-      excludeLangs: ['mermaid', 'math'],
+      type: "shiki",
+      excludeLangs: ["mermaid", "math"],
     },
     shikiConfig: {
-      theme: 'github-dark',
+      theme: "github-dark",
       transformers: [
         transformerMeta(),
         transformerCreateCodeBlockHeader(),
@@ -34,11 +35,11 @@ export default defineConfig({
     rehypePlugins: [rehypeMermaid],
   },
 
-  output: 'static',
+  output: "static",
 
   image: {
     service: {
-      entrypoint: 'astro/assets/services/sharp',
+      entrypoint: "astro/assets/services/sharp",
       config: {
         limitInputPixels: false,
       },
@@ -46,7 +47,7 @@ export default defineConfig({
   },
 
   build: {
-    assets: 'assets',
+    assets: "assets",
   },
 
   vite: {
@@ -54,14 +55,14 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve('./src'),
-        '@components': path.resolve('./src/components'),
-        '@layouts': path.resolve('./src/layouts'),
-        '@pages': path.resolve('./src/pages'),
-        '@styles': path.resolve('./src/styles'),
-        '@data': path.resolve('./src/data'),
+        "@": path.resolve("./src"),
+        "@components": path.resolve("./src/components"),
+        "@layouts": path.resolve("./src/layouts"),
+        "@pages": path.resolve("./src/pages"),
+        "@styles": path.resolve("./src/styles"),
+        "@data": path.resolve("./src/data"),
       },
     },
   },
-  integrations: [sitemap(), preact()],
+  integrations: [sitemap(), preact(), mdx()],
 });
