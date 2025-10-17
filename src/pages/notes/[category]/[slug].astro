@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import MarkdownPostLayout from '@layouts/MarkdownPostLayout.astro';
+import { getReadingTimeString } from '@utils/readingTime';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes');
@@ -23,8 +24,11 @@ export async function getStaticPaths() {
 
 const { note } = Astro.props;
 const { Content, headings } = await render(note);
+
+// 計算閱讀時數
+const readingTime = getReadingTimeString(note.body);
 ---
 
-<MarkdownPostLayout frontmatter={note.data} headings={headings}>
+<MarkdownPostLayout frontmatter={note.data} headings={headings} readingTime={readingTime}>
   <Content />
 </MarkdownPostLayout>

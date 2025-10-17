@@ -8,8 +8,11 @@ import PdfViewer from '@components/PdfViewer.astro';
 import TableOfContents from '@components/TableOfContents.astro';
 import { categoryNames } from '@data/noteCategoryNames';
 import { generateArticleImage } from '@utils/imageGenerator';
+import { getArticleRecommendations } from '@utils/articleRecommendations';
+import ArticleRecommendations from '@components/ArticleRecommendations.astro';
+import { getCollection } from 'astro:content';
 
-const { frontmatter, headings = [] } = Astro.props;
+const { frontmatter, headings = [], readingTime = '5分鐘閱讀' } = Astro.props;
 
 // 從 URL 中獲取路徑資訊
 const currentPath = Astro.url.pathname;
@@ -30,6 +33,28 @@ const articleImage = await generateArticleImage(
   articleType,
   frontmatter.image
 );
+
+// 獲取文章推薦
+let recommendations = {};
+
+// 只為筆記頁面生成推薦
+if (pathParts[1] === 'notes' && pathParts[2]) {
+  try {
+    const allNotes = await getCollection('notes');
+    const category = pathParts[2];
+    const currentSlug = pathParts.slice(2).join('/'); // 去掉 'notes' 前綴，只保留 category/slug
+    
+    
+    recommendations = getArticleRecommendations(
+      currentSlug,
+      category,
+      allNotes
+    );
+  } catch (error) {
+    console.warn('Failed to get article recommendations:', error);
+  }
+}
+
 
 // 根據頁面類型生成麵包屑
 let breadcrumbItems = [{ label: '首頁', href: '/' }];
@@ -105,7 +130,7 @@ const seoConfig: SEOProps = {
                <div class="mt-1 flex">
                  <p class="text-sm">{frontmatter.date ? new Date(frontmatter.date).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' }) : '最近發佈'}</p>
                  <span class="mx-2">•</span>
-                 <p class="text-sm">5分鐘閱讀</p>
+                 <p class="text-sm">{readingTime}</p>
                </div>
              </div>
            </div>
@@ -144,7 +169,7 @@ const seoConfig: SEOProps = {
                    d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM8.339 18.337H5.667v-8.59h2.672v8.59zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096zm11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z"
                  ></path></svg></a
              ><a href="#" class="rounded-[1.25rem] bg-background-secondary p-1"
-               ><svg
+               ><svg探索更多精彩內容
                  stroke="currentColor"
                  fill="currentColor"
                  stroke-width="0"
@@ -156,7 +181,7 @@ const seoConfig: SEOProps = {
                >
                  <path
                    d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
-                 ></path></svg></a
+                 ></path></svg探索更多精彩內容></a
              ><a href="#" class="rounded-[1.25rem] bg-background-secondary p-1"
                ><svg
                  stroke="currentColor"
@@ -211,27 +236,5 @@ const seoConfig: SEOProps = {
      </div>
    </section>
    
-   <section id="relume" class="relative px-[5%] py-16 md:py-24 lg:py-28">
-     <div class="container">
-       <div class="w-full max-w-lg">
-         <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
-           探索更多精彩內容
-         </h2>
-         <p class="md:text-md">繼續閱讀，了解更多技術與個人經歷的精彩文章。</p>
-         <div class="mt-6 flex flex-wrap gap-4 md:mt-8">
-           <button
-             class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary bg-background-alternative text-text-alternative px-6 py-3"
-             title="閱讀"
-           >
-             閱讀</button
-           ><button
-             class="rounded-button inline-flex gap-3 items-center justify-center whitespace-nowrap transition-all duration-200 ease-in-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none border border-border-primary text-text-primary bg-background-primary px-6 py-3"
-             title="返回"
-           >
-             返回
-           </button>
-         </div>
-       </div>
-     </div>
-   </section>
+   <ArticleRecommendations recommendations={recommendations} />
  </BaseLayout>

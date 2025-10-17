@@ -5,8 +5,9 @@ import TableOfContents from '@components/TableOfContents.astro';
 import { Image } from 'astro:assets';
 import profolioPicture from '@/assets/profolio-picture.png';
 import { generateArticleImage } from '@utils/imageGenerator';
+import { getReadingTimeString } from '@utils/readingTime';
 
-const { frontmatter, headings = [] } = Astro.props;
+const { frontmatter, headings = [], readingTime = '5分鐘閱讀' } = Astro.props;
 
 // 生成文章圖片
 const articleImage = await generateArticleImage(
@@ -108,7 +109,7 @@ const seoConfig: SEOProps = {
                      <span class="mx-2">•</span>
                    </>
                  )}
-                 <p class="text-sm">{frontmatter.readingTime || '5分鐘閱讀'}</p>
+                 <p class="text-sm">{readingTime}</p>
                </div>
              </div>
            </div>

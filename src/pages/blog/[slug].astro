@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BlogPostLayout from '@layouts/BlogPostLayout.astro';
+import { getReadingTimeString } from '@utils/readingTime';
 
 export async function getStaticPaths() {
   const blogs = await getCollection('blog');
@@ -49,6 +50,9 @@ export async function getStaticPaths() {
 const { blog, computedDate } = Astro.props;
 const { Content, headings } = await render(blog);
 
+// 計算閱讀時數
+const readingTime = getReadingTimeString(blog.body);
+
 // 創建一個包含計算日期的 frontmatter 物件
 const frontmatter = {
   ...blog.data,
@@ -56,6 +60,6 @@ const frontmatter = {
 };
 ---
 
-<BlogPostLayout frontmatter={frontmatter} headings={headings}>
+<BlogPostLayout frontmatter={frontmatter} headings={headings} readingTime={readingTime}>
   <Content />
 </BlogPostLayout> 

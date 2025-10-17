@@ -1,0 +1,163 @@
+---
+import { Image } from 'astro:assets';
+import { generateArticleImageSync } from '@utils/imageGenerator';
+import { generateArticleUrl, formatArticleDate } from '@utils/articleRecommendations';
+
+export interface Props {
+  recommendations: {
+    previous?: {
+      title: string;
+      slug: string;
+      description?: string;
+      date?: Date;
+      category?: string;
+      tags?: string[];
+      image?: string;
+    };
+    next?: {
+      title: string;
+      slug: string;
+      description?: string;
+      date?: Date;
+      category?: string;
+      tags?: string[];
+      image?: string;
+    };
+  };
+}
+
+const { recommendations } = Astro.props;
+---
+
+{recommendations.previous || recommendations.next ? (
+  <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="container">
+      <div class="mb-12 text-center md:mb-18 lg:mb-20">
+        <h2 class="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+          繼續閱讀
+        </h2>
+        <p class="md:text-md">探索更多精彩內容</p>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+        {/* 上一篇 */}
+        {recommendations.previous && (
+          <div class="group">
+            <a 
+              href={generateArticleUrl(recommendations.previous)}
+              class="block overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+            >
+              <div class="relative">
+                <Image
+                  src={generateArticleImageSync(
+                    recommendations.previous.title,
+                    recommendations.previous.description,
+                    'notes',
+                    recommendations.previous.image
+                  )}
+                  alt={recommendations.previous.title}
+                  width={600}
+                  height={300}
+                  class="aspect-[2] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                  <div class="mb-2 flex items-center gap-2">
+                    <span class="inline-flex items-center rounded-badge px-2 py-1 text-xs font-semibold bg-background-secondary text-text-primary">
+                      ← 上一篇
+                    </span>
+                    {recommendations.previous.date && (
+                      <span class="text-xs text-white/80">
+                        {formatArticleDate(recommendations.previous.date)}
+                      </span>
+                    )}
+                  </div>
+                  <h3 class="text-lg font-bold text-white line-clamp-2">
+                    {recommendations.previous.title}
+                  </h3>
+                  {recommendations.previous.description && (
+                    <p class="mt-2 text-sm text-white/90 line-clamp-2">
+                      {recommendations.previous.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </a>
+          </div>
+        )}
+        
+        {/* 下一篇 */}
+        {recommendations.next && (
+          <div class="group">
+            <a 
+              href={generateArticleUrl(recommendations.next)}
+              class="block overflow-hidden rounded-card border border-border-primary bg-background-primary text-text-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+            >
+              <div class="relative">
+                <Image
+                  src={generateArticleImageSync(
+                    recommendations.next.title,
+                    recommendations.next.description,
+                    'notes',
+                    recommendations.next.image
+                  )}
+                  alt={recommendations.next.title}
+                  width={600}
+                  height={300}
+                  class="aspect-[2] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                  <div class="mb-2 flex items-center gap-2">
+                    <span class="inline-flex items-center rounded-badge px-2 py-1 text-xs font-semibold bg-background-secondary text-text-primary">
+                      下一篇 →
+                    </span>
+                    {recommendations.next.date && (
+                      <span class="text-xs text-white/80">
+                        {formatArticleDate(recommendations.next.date)}
+                      </span>
+                    )}
+                  </div>
+                  <h3 class="text-lg font-bold text-white line-clamp-2">
+                    {recommendations.next.title}
+                  </h3>
+                  {recommendations.next.description && (
+                    <p class="mt-2 text-sm text-white/90 line-clamp-2">
+                      {recommendations.next.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </a>
+          </div>
+        )}
+      </div>
+      
+      {/* 如果只有一篇文章，居中顯示 */}
+      {recommendations.previous && !recommendations.next && (
+        <div class="flex justify-center">
+          <div class="w-full max-w-md">
+            {/* 上一篇的內容已經在上面渲染 */}
+          </div>
+        </div>
+      )}
+      
+      {!recommendations.previous && recommendations.next && (
+        <div class="flex justify-center">
+          <div class="w-full max-w-md">
+            {/* 下一篇的內容已經在上面渲染 */}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+) : null}
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
