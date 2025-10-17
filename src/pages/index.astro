@@ -6,6 +6,7 @@ import BlogPreviewCard from '@/components/BlogPreviewCard.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import profolioPicture from "@/assets/profolio-picture.png";
+import { generateArticleImageSync } from '@utils/imageGenerator';
 
 // 獲取所有 notes
 const allNotes = await getCollection('notes');
@@ -69,6 +70,14 @@ for (const note of sortedNotes) {
   const category = pathParts[0];
   const slug = pathParts[pathParts.length - 1];
   
+  // 生成文章圖片
+  const articleImage = generateArticleImageSync(
+    note.data.title,
+    note.data.description,
+    'notes',
+    note.data.image
+  );
+  
   articlesToShow.push({
     title: note.data.title,
     description: note.data.description,
@@ -76,7 +85,7 @@ for (const note of sortedNotes) {
     category: category,
     tags: note.data.tags,
     readingTime: note.data.readingTime,
-    image: note.data.image,
+    image: articleImage,
     date: note.data.date
   });
 }
@@ -85,7 +94,20 @@ for (const note of sortedNotes) {
 while (articlesToShow.length < 3) {
   const fallbackIndex: number = articlesToShow.length;
   if (fallbackIndex < fallbackArticles.length) {
-    articlesToShow.push(fallbackArticles[fallbackIndex]);
+    const fallbackArticle = fallbackArticles[fallbackIndex] as typeof fallbackArticles[0];
+    
+    // 為假資料生成圖片
+    const fallbackImage = generateArticleImageSync(
+      fallbackArticle.title,
+      fallbackArticle.description,
+      'notes',
+      fallbackArticle.image
+    );
+    
+    articlesToShow.push({
+      ...fallbackArticle,
+      image: fallbackImage
+    });
   } else {
     break;
   }

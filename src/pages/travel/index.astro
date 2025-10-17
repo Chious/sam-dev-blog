@@ -6,6 +6,7 @@ import { createApi } from 'unsplash-js';
 import { Image } from 'astro:assets';
 import heroTaiwan from '@/assets/hero-taiwan.jpg';
 import bikeImage from '@/assets/bike.png';
+import { generateArticleImageSync } from '@utils/imageGenerator';
 
 const travelPoints = ["國聖燈塔","鵝鑾鼻燈塔","三貂角燈塔","富貴角燈塔"]
 const wishes = [
@@ -79,6 +80,13 @@ try {
     photographerUrl: 'https://unsplash.com'
   }));
 }
+
+// 為客戶端準備安全的數據（只包含圖片 URL，不包含 API 相關信息）
+const clientSafeWishImages = wishImages.map(img => ({
+  url: img.url,
+  photographer: img.photographer,
+  photographerUrl: img.photographerUrl
+}));
 
 // 取得所有旅遊文章，按日期排序
 const travelPosts = await getCollection('travel' as any) as any[];
@@ -376,7 +384,16 @@ const seoConfig: SEOProps = {
             class="flex w-full flex-col items-center justify-center self-start"
           >
             <Image
-              src={sortedPosts[0] ? (sortedPosts[0].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
+              src={sortedPosts[0] ? generateArticleImageSync(
+                sortedPosts[0].data.title,
+                sortedPosts[0].data.description,
+                'travel',
+                sortedPosts[0].data.image
+              ) : generateArticleImageSync(
+                "旅行預覽圖片",
+                "探索台灣各地的旅行足跡",
+                'travel'
+              )}
               alt={sortedPosts[0] ? sortedPosts[0].data.title : "旅行預覽圖片"}
               width={600}
               height={400}
@@ -543,7 +560,16 @@ const seoConfig: SEOProps = {
             class="flex size-full flex-col items-center justify-center self-start"
           >
             <Image
-              src={sortedPosts[3] ? (sortedPosts[3].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-portrait.svg"}
+              src={sortedPosts[3] ? generateArticleImageSync(
+                sortedPosts[3].data.title,
+                sortedPosts[3].data.description,
+                'travel',
+                sortedPosts[3].data.image
+              ) : generateArticleImageSync(
+                "旅行預覽圖片",
+                "探索台灣各地的旅行足跡",
+                'travel'
+              )}
               alt={sortedPosts[3] ? sortedPosts[3].data.title : "旅行預覽圖片"}
               width={400}
               height={533}
@@ -692,7 +718,16 @@ const seoConfig: SEOProps = {
             class="flex w-full flex-col items-center justify-center self-start"
           >
             <Image
-              src={sortedPosts[4] ? (sortedPosts[4].data.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg") : "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"}
+              src={sortedPosts[4] ? generateArticleImageSync(
+                sortedPosts[4].data.title,
+                sortedPosts[4].data.description,
+                'travel',
+                sortedPosts[4].data.image
+              ) : generateArticleImageSync(
+                "旅行預覽圖片",
+                "探索台灣各地的旅行足跡",
+                'travel'
+              )}
               alt={sortedPosts[4] ? sortedPosts[4].data.title : "旅行預覽圖片"}
               width={600}
               height={400}
@@ -755,7 +790,7 @@ const seoConfig: SEOProps = {
 </section>
 
 
-<script define:vars={{ wishes, wishImages, defaultImage }}>
+<script define:vars={{ wishes, wishImages: clientSafeWishImages, defaultImage }}>
   document.addEventListener('DOMContentLoaded', function() {
     const wishDisplay = document.getElementById('wish-display');
     const wishButton = document.getElementById('wish-button');

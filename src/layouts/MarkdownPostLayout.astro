@@ -7,12 +7,29 @@ import Breadcrumb from '@components/Breadcrumb.astro';
 import PdfViewer from '@components/PdfViewer.astro';
 import TableOfContents from '@components/TableOfContents.astro';
 import { categoryNames } from '@data/noteCategoryNames';
+import { generateArticleImage } from '@utils/imageGenerator';
 
 const { frontmatter, headings = [] } = Astro.props;
 
 // 從 URL 中獲取路徑資訊
 const currentPath = Astro.url.pathname;
 const pathParts = currentPath.split('/');
+
+// 確定文章類型
+let articleType = 'notes';
+if (frontmatter.type === 'travel') {
+  articleType = 'travel';
+} else if (pathParts[1] === 'blog') {
+  articleType = 'blog';
+}
+
+// 生成文章圖片
+const articleImage = await generateArticleImage(
+  frontmatter.title,
+  frontmatter.description,
+  articleType,
+  frontmatter.image
+);
 
 // 根據頁面類型生成麵包屑
 let breadcrumbItems = [{ label: '首頁', href: '/' }];
@@ -47,7 +64,7 @@ if (frontmatter.type === 'travel') {
 const seoConfig: SEOProps = {
   title: frontmatter.title,
   description: frontmatter.description || `閱讀關於 ${frontmatter.title} 的詳細內容`,
-  image: frontmatter.image,
+  image: articleImage,
   type: 'article',
   publishedTime: frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined,
   modifiedTime: frontmatter.lastModified ? new Date(frontmatter.lastModified).toISOString() : undefined,
@@ -158,15 +175,15 @@ const seoConfig: SEOProps = {
            </div>
          </div>
        </div>
-       <div class="mx-auto w-full overflow-hidden">
-         <Image
-           src={frontmatter.image || "https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"}
-           class="aspect-[2] size-full rounded-image object-cover"
-           alt={frontmatter.title || "文章圖片"}
-           width={800}
-           height={400}
-         />
-       </div>
+      <div class="mx-auto w-full overflow-hidden">
+        <Image
+          src={articleImage}
+          class="aspect-[2] size-full rounded-image object-cover"
+          alt={frontmatter.title || "文章圖片"}
+          width={800}
+          height={400}
+        />
+      </div>
      </div>
    </section>
    

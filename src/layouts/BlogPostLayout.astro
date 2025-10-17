@@ -4,8 +4,17 @@ import type { SEOProps } from '@layouts/BaseLayout.astro';
 import TableOfContents from '@components/TableOfContents.astro';
 import { Image } from 'astro:assets';
 import profolioPicture from '@/assets/profolio-picture.png';
+import { generateArticleImage } from '@utils/imageGenerator';
 
 const { frontmatter, headings = [] } = Astro.props;
+
+// 生成文章圖片
+const articleImage = await generateArticleImage(
+  frontmatter.title,
+  frontmatter.description,
+  'blog',
+  frontmatter.image
+);
 
 // 格式化日期
 function formatDate(date: Date) {
@@ -20,7 +29,7 @@ function formatDate(date: Date) {
 const seoConfig: SEOProps = {
   title: frontmatter.title,
   description: frontmatter.description || `閱讀關於 ${frontmatter.title} 的部落格文章`,
-  image: frontmatter.image || "/images/lighthouse.png",
+  image: articleImage,
   type: 'article',
   publishedTime: frontmatter.date ? new Date(frontmatter.date).toISOString() : undefined,
   modifiedTime: frontmatter.lastModified ? new Date(frontmatter.lastModified).toISOString() : undefined,
@@ -118,18 +127,16 @@ const seoConfig: SEOProps = {
        </div>
        
        {/* Featured Image */}
-      {frontmatter.image && (
-        <div class="mx-auto w-full overflow-hidden mb-12">
-          <Image
-            src={frontmatter.image}
-            class="aspect-[2] size-full rounded-image object-cover"
-            alt={frontmatter.title}
-            width={800}
-            height={400}
-            loading="lazy"
-          />
-        </div>
-      )}
+      <div class="mx-auto w-full overflow-hidden mb-12">
+        <Image
+          src={articleImage}
+          class="aspect-[2] size-full rounded-image object-cover"
+          alt={frontmatter.title}
+          width={800}
+          height={400}
+          loading="lazy"
+        />
+      </div>
      </div>
    </section>
    
