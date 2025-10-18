@@ -50,6 +50,13 @@ export default defineConfig({
     assets: "assets",
     inlineStylesheets: "auto",
   },
+  
+  compressHTML: true,
+  
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
 
   vite: {
     // @ts-ignore

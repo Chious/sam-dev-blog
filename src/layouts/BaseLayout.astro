@@ -100,6 +100,10 @@ const canonicalUrl = seo.canonical || Astro.url.href;
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     
+    <!-- Preload 關鍵資源 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
     <style>
       html, body {
         margin: 0;
@@ -123,6 +127,16 @@ const canonicalUrl = seo.canonical || Astro.url.href;
       .tech-stack-hidden {
         opacity: 0 !important;
         visibility: hidden !important;
+      }
+      
+      /* Critical CSS for LCP - 首屏關鍵樣式 */
+      #relume {
+        contain: layout style paint;
+      }
+      
+      .rounded-image {
+        content-visibility: auto;
+        contain-intrinsic-size: 600px 600px;
       }
     </style>
     
