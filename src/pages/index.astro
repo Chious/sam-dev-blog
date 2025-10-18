@@ -4,8 +4,17 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import type { SEOProps } from '@layouts/BaseLayout.astro';
 import BlogPreviewCard from '@/components/BlogPreviewCard.astro';
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import profolioPicture from "@/assets/profolio-picture.png";
+
+// 預先優化 LCP 圖片
+const optimizedProfilePic = await getImage({
+  src: profolioPicture,
+  width: 500,
+  height: 500,
+  format: 'avif',
+  quality: 75
+});
 import { generateArticleImageSync } from '@utils/imageGenerator';
 
 // 獲取所有 notes
@@ -122,7 +131,7 @@ const seoConfig: SEOProps = {
 };
 ---
 
-<BaseLayout seo={seoConfig}>
+<BaseLayout seo={seoConfig} preloadImage={optimizedProfilePic.src}>
   <section id="relume" class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">
       <div
@@ -144,11 +153,11 @@ const seoConfig: SEOProps = {
             fetchpriority="high"
             loading="eager"
             format='avif'
-            quality={85}
-            width={600}
-            height={600}
-            widths={[400, 600, 800, 1200]}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+            quality={75}
+            width={500}
+            height={500}
+            widths={[320, 500, 800]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px"
             decoding="async"
           />
         </div>
@@ -156,7 +165,7 @@ const seoConfig: SEOProps = {
     </div>
   </section>
 
-  <TechStack/>
+  <TechStack client:visible/>
   
   <section id="relume blog" class="px-[5%] py-16 md:py-24 lg:py-28">
     <div class="container">

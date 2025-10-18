@@ -17,9 +17,10 @@ export interface SEOProps {
 
 interface Props {
   seo?: SEOProps;
+  preloadImage?: string; // LCP 圖片的 URL
 }
 
-const { seo = {} } = Astro.props;
+const { seo = {}, preloadImage } = Astro.props;
 
 // 預設 SEO 配置
 const defaultSEO = {
@@ -103,6 +104,11 @@ const canonicalUrl = seo.canonical || Astro.url.href;
     <!-- Preload 關鍵資源 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
+    <!-- Preload LCP 圖片 -->
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+    )}
     
     <style>
       html, body {
