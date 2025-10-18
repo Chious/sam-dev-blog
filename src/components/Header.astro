@@ -3,6 +3,8 @@ import { Image } from "astro:assets";
 import Menu from './Menu.astro';
 import Search from './Search/Search.astro';
 import linkedinIcon from '@/assets/linkedin.svg';
+import mediumIcon from '@/assets/medium.png';
+import githubIcon from '@/assets/github.svg';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/notes', label: 'Notes' },
@@ -25,10 +27,10 @@ class="z-[100] grid w-full grid-cols-[1fr_max-content_1fr] items-center justify-
 <div class="w-full flex flex-row min-h-16 items-center justify-end gap-x-4">
   <Search />
   <a href="https://medium.com/@chu23294752" target="_blank" rel="noopener noreferrer">
-    <Image src={`/images/medium.png`} alt="Medium" width={24} height={24} format='webp' loading="lazy" />
+    <Image src={mediumIcon} alt="Medium" width={24} height={24} format='webp' loading="lazy" />
   </a>
     <a href="https://github.com/Chious" target="_blank" rel="noopener noreferrer">
-      <Image src={`/images/github.svg`} alt="GitHub" width={24} height={24} format='webp' loading="lazy" />
+      <Image src={githubIcon} alt="GitHub" width={24} height={24} format='webp' loading="lazy" />
     </a>
     <a href="https://www.linkedin.com/in/sam-chiou-51b201238" target="_blank" rel="noopener noreferrer">
       <Image src={linkedinIcon} alt="LinkedIn" width={24} height={24} format='webp' loading="lazy" />
