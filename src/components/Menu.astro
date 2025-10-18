@@ -1,5 +1,6 @@
 ---
-import Search from './Search/Search.astro';
+import { Image } from 'astro:assets';
+import logoImage from '@/assets/favicon.png';
 const navLinks = [
   { href: '/', label: '首頁' },
   { href: '/notes', label: '技術筆記' },
@@ -21,8 +22,8 @@ const navLinks = [
   <!-- Close button for mobile -->
   <div class="flex justify-between items-center mt-4 mb-8 lg:hidden">
     <a href="#" class="flex flex-shrink-0">
-      <img
-        src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
+      <Image
+        src={logoImage}
         alt="Logo image"
       />
     </a>

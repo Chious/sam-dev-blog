@@ -48,14 +48,29 @@ export default defineConfig({
 
   build: {
     assets: "assets",
+    inlineStylesheets: "auto",
   },
 
   vite: {
     // @ts-ignore
     plugins: [tailwindcss()],
+    css: {
+      devSourcemap: true,
+    },
+    build: {
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            tailwind: ["tailwindcss"],
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         "@": path.resolve("./src"),
+        "@assets": path.resolve("./src/assets"),
         "@components": path.resolve("./src/components"),
         "@layouts": path.resolve("./src/layouts"),
         "@pages": path.resolve("./src/pages"),

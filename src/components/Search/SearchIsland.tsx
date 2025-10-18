@@ -212,7 +212,7 @@ function SearchIsland() {
         class="flex items-center justify-center w-10 h-10 cursor-pointer"
         onClick={openDialog}
       >
-        <img src="/images/search.svg" alt="search" />
+        <img src="/images/search.svg" alt="search" width={24} height={24} />
       </button>
       <dialog
         ref={dialogRef}

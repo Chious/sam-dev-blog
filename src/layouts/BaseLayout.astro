@@ -100,6 +100,32 @@ const canonicalUrl = seo.canonical || Astro.url.href;
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.5;
+        background-color: #ffffff;
+        color: #111827;
+      }
+      
+      body.dark {
+        background-color: #111827;
+        color: #f3f4f6;
+      }
+      
+      .min-h-screen { min-height: 100vh; }
+      .flex { display: flex; }
+      .flex-col { flex-direction: column; }
+      
+      /* 防止 FOUC */
+      .tech-stack-hidden {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+    </style>
+    
     <!-- JSON-LD 結構化資料 -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

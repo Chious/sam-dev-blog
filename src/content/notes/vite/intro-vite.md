@@ -65,11 +65,11 @@ Vite 是一個現代化的前端打包工具，它能幫助我們輕鬆實踐效
 
   ```js
   // main.js
-  const button = document.querySelector('button');
+  const button = document.querySelector("button");
 
-  button.addEventListener('click', () => {
+  button.addEventListener("click", () => {
     // 直到點擊後，才去下載 counter.js
-    import('./counter.js').then(({ initializeCounter }) => {
+    import("./counter.js").then(({ initializeCounter }) => {
       initializeCounter();
     });
   });
@@ -84,10 +84,10 @@ Vite 是一個現代化的前端打包工具，它能幫助我們輕鬆實踐效
   **需求**：頁面中有一個很肥大的圖表元件，我希望它在主要內容顯示後再慢慢載入。
 
   ```jsx
-  import { lazy, Suspense } from 'react';
+  import { lazy, Suspense } from "react";
 
   // 使用 lazy 動態引入圖表元件
-  const HeavyChart = lazy(() => import('@/components/heavy-chart'));
+  const HeavyChart = lazy(() => import("@/components/heavy-chart"));
 
   function MyPage() {
     return (
@@ -122,7 +122,7 @@ Vite 是一個現代化的前端打包工具，它能幫助我們輕鬆實踐效
 
 ```jsx
 // MyForm.jsx
-import styles from './form.module.css';
+import styles from "./form.module.css";
 
 function MyForm() {
   return <h2 className={styles.form_title}>這是一個表單標題</h2>;
@@ -170,7 +170,7 @@ Vite 內建 PostCSS 支援。你只需要安裝你想要的插件，並建立一
 module.exports = {
   plugins: {
     autoprefixer: {}, // 自動加上 -webkit-, -moz- 等前綴
-    'postcss-nesting': {}, // 讓你可以在標準 CSS 中使用巢狀語法
+    "postcss-nesting": {}, // 讓你可以在標準 CSS 中使用巢狀語法
   },
 };
 ```
@@ -189,8 +189,8 @@ npm install -D vite-imagetools
 
 ```js
 // vite.config.js
-import { defineConfig } from 'vite';
-import imageTools from 'vite-imagetools';
+import { defineConfig } from "vite";
+import imageTools from "vite-imagetools";
 
 export default defineConfig({
   plugins: [imageTools()],
@@ -199,13 +199,13 @@ export default defineConfig({
 
 ```js
 // 透過在 import 路徑後加上查詢參數，告訴 Vite 如何處理這張圖
-import imageSrcset from './my-image.jpg?w=400;800;1200&format=webp&as=srcset';
-import imageFallback from './my-image.jpg?w=800&format=webp';
+import imageSrcset from "./my-image.jpg?w=400;800;1200&format=webp&as=srcset";
+import imageFallback from "./my-image.jpg?w=800&format=webp";
 
-const img = document.createElement('img');
+const img = document.createElement("img");
 img.srcset = imageSrcset; // 提供給瀏覽器選擇的 WebP 圖片集
 img.src = imageFallback; // 預設圖片
-img.loading = 'lazy'; // 圖片懶載入
+img.loading = "lazy"; // 圖片懶載入
 document.body.appendChild(img);
 ```
 
@@ -215,11 +215,11 @@ document.body.appendChild(img);
 
 ```js
 // 這會找到所有在 ./logos/ 目錄下的 .svg 檔案
-const modules = import.meta.glob('./logos/**/*.svg');
+const modules = import.meta.glob("./logos/**/*.svg");
 
 // 迴圈載入並使用它們
 for (const path in modules) {
-  modules[path]().then(module => {
+  modules[path]().then((module) => {
     console.log(`Loaded ${path}:`, module);
   });
 }
@@ -238,8 +238,8 @@ for (const path in modules) {
 - **元件程式碼** (`src/Button.tsx`)
 
   ```tsx
-  import React from 'react';
-  import './button.css'; // 元件自己的樣式
+  import React from "react";
+  import "./button.css"; // 元件自己的樣式
 
   export const Button = ({ children }) => {
     return <button className="my-button">{children}</button>;
@@ -249,25 +249,25 @@ for (const path in modules) {
 - **打包設定** (`vite.config.ts`)
 
   ```ts
-  import { resolve } from 'path';
-  import { defineConfig } from 'vite';
-  import react from '@vitejs/plugin-react';
+  import { resolve } from "path";
+  import { defineConfig } from "vite";
+  import react from "@vitejs/plugin-react";
 
   export default defineConfig({
     plugins: [react()],
     build: {
       lib: {
-        entry: resolve(__dirname, 'src/index.ts'), // 函式庫的進入點
-        name: 'MyAwesomeLib', // UMD 模式下的全域變數名稱
-        fileName: 'my-awesome-lib', // 輸出的檔案名稱
+        entry: resolve(__dirname, "src/index.ts"), // 函式庫的進入點
+        name: "MyAwesomeLib", // UMD 模式下的全域變數名稱
+        fileName: "my-awesome-lib", // 輸出的檔案名稱
       },
       rollupOptions: {
         // 告訴 Vite/Rollup，react 這個依賴是外部的，不要把它打包進來
-        external: ['react', 'react-dom'],
+        external: ["react", "react-dom"],
         output: {
           globals: {
-            react: 'React',
-            'react-dom': 'ReactDOM',
+            react: "React",
+            "react-dom": "ReactDOM",
           },
         },
       },
@@ -286,7 +286,7 @@ npm link ../my-awesome-lib  // 本地開發時使用
 
 ```js
 // /my-company-repo/offical-website/src/pages/index.tsx
-import { Button } from 'my-awesome-lib';
+import { Button } from "my-awesome-lib";
 
 export default function HomePage() {
   return (
@@ -323,18 +323,18 @@ Module Federation (模組聯盟) 是一種先進的架構，它允許一個 Java
 
     ```js
     // header-app/vite.config.js
-    import federation from '@originjs/vite-plugin-federation';
+    import federation from "@originjs/vite-plugin-federation";
 
     export default defineConfig({
       plugins: [
         federation({
-          name: 'headerApp', // 應用名稱
-          filename: 'remoteEntry.js', // 入口檔案
+          name: "headerApp", // 應用名稱
+          filename: "remoteEntry.js", // 入口檔案
           exposes: {
             // 暴露出去的元件
-            './Header': './src/Header.tsx',
+            "./Header": "./src/Header.tsx",
           },
-          shared: ['react', 'react-dom'], // 共用的依賴
+          shared: ["react", "react-dom"], // 共用的依賴
         }),
       ],
     });
@@ -344,17 +344,17 @@ Module Federation (模組聯盟) 是一種先進的架構，它允許一個 Java
 
     ```js
     // main-app/vite.config.js
-    import federation from '@originjs/vite-plugin-federation';
+    import federation from "@originjs/vite-plugin-federation";
 
     export default defineConfig({
       plugins: [
         federation({
-          name: 'mainApp',
+          name: "mainApp",
           remotes: {
             // 從遠端載入的應用
-            headerApp: 'http://localhost:5001/assets/remoteEntry.js',
+            headerApp: "http://localhost:5001/assets/remoteEntry.js",
           },
-          shared: ['react', 'react-dom'],
+          shared: ["react", "react-dom"],
         }),
       ],
     });
@@ -364,10 +364,10 @@ Module Federation (模組聯盟) 是一種先進的架構，它允許一個 Java
 
     ```jsx
     // main-app/src/App.tsx
-    import React from 'react';
+    import React from "react";
 
     // 從遠端應用動態載入 Header 元件
-    const Header = React.lazy(() => import('headerApp/Header'));
+    const Header = React.lazy(() => import("headerApp/Header"));
 
     function App() {
       return (

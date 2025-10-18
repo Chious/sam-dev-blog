@@ -1,0 +1,41 @@
+# Robots.txt for sam-dev.space
+# Allow all web crawlers to access all content
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://sam-dev.space/sitemap-index.xml
+
+# Crawl delay (optional - helps prevent overloading your server)
+Crawl-delay: 1
+
+# Specific rules for different content types
+# Allow access to all blog posts
+Allow: /blog/
+
+# Allow access to all notes
+Allow: /notes/
+
+# Allow access to travel content
+Allow: /travel/
+
+# Allow access to images and assets
+Allow: /img/
+Allow: /images/
+Allow: /assets/
+
+# Allow access to API endpoints (if you want search engines to index them)
+Allow: /api/
+
+# Disallow access to admin or private areas (if any exist in the future)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Disallow access to temporary or development files
+Disallow: /temp/
+Disallow: /scripts/temp/
+
+# Allow access to favicon and other important files
+Allow: /favicon.png
+Allow: /favicon.ico

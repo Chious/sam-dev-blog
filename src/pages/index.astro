@@ -140,9 +140,14 @@ const seoConfig: SEOProps = {
           <Image
             src={profolioPicture}
             class="w-full rounded-image object-cover"
-            alt="Relume placeholder image"
+            alt="Sam's profile picture"
             fetchpriority="high"
             loading="eager"
+            format='webp'
+            width={500}
+            height={500}
+            srcset={`${profolioPicture.src}?w=500&h=500 500w, ${profolioPicture.src}?w=1000&h=1000 1000w, ${profolioPicture.src}?w=1500&h=1500 1500w`}
+            sizes="(max-width: 500px) 500px, (max-width: 1000px) 1000px, (max-width: 1500px) 1500px, 1000px"
           />
         </div>
       </div>

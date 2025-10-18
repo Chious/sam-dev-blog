@@ -1,0 +1,18 @@
+{
+  // Paste Image 設定 - 將截圖儲存到 src/assets/ 目錄
+  "pasteImage.path": "${projectRoot}/src/assets",
+  "pasteImage.basePath": "${projectRoot}/src",
+  "pasteImage.prefix": "@",
+  "pasteImage.forceUnixStyleSeparator": true,
+  "pasteImage.defaultName": "Y-MM-DD-HH-mm-ss",
+  "pasteImage.encodePath": "urlEncodeSpace",
+
+  // 可選：顯示檔案路徑確認輸入框，方便修改檔案名稱
+  "pasteImage.showFilePathConfirmInputBox": true,
+  "pasteImage.filePathConfirmInputBoxMode": "onlyName",
+
+  // Markdown 專用：使用 Astro 的圖片導入語法
+  "[markdown]": {
+    "pasteImage.insertPattern": "![${imageFileNameWithoutExt}](${imageFilePath})"
+  }
+}
