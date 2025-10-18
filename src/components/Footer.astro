@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import linkedinIcon from '@/assets/linkedin.svg';
+import logo from '@/assets/favicon.png';
 
 const year = new Date().getFullYear();
 ---
@@ -11,11 +12,14 @@ const year = new Date().getFullYear();
     >
       <div class="flex flex-col">
         <a href="#" class="mb-5 md:mb-6"
-          ><img
-            src="/favicon.png"
+          ><Image
+            src={logo}
             alt="Logo image"
+            format='webp'
             class="inline-block w-10 h-10"
-        /></a>
+            width={40}
+            height={40}
+          /></a>
         <p class="mb-5 md:mb-6">
           訂閱我們的電子報，隨時獲取最新功能和更新資訊。
         </p>
