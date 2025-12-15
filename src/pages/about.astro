@@ -1,0 +1,106 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { SEOProps } from "@/layouts/BaseLayout.astro";
+import {getProjects} from "@/utils/notion";
+import { getEntry, render } from "astro:content";
+import ProfileFlipCard from "@/components/ProfileFlipCard";
+import profolioPicture from "@/assets/profolio-2.jpg";
+
+const projects = await getProjects();
+const aboutEntry = await getEntry("about" as any, "about");
+
+if (!aboutEntry) {
+  throw new Error("About content not found");
+}
+
+const { Content } = await render(aboutEntry);
+
+const seoConfig: SEOProps = {
+  title: "關於我",
+  description: aboutEntry.data.description || "我是 Sam，社會科學背景的前端工程師。從資料分析到前端開發，分享我的學習歷程與工程實務經驗。",
+  image: "/images/lighthouse.png",
+  type: "website"
+};
+---
+<BaseLayout seo={seoConfig}>
+  <section class="px-[5%] py-16 md:py-24 lg:py-28">
+    <div class="container max-w-4xl mx-auto">     
+      <ProfileFlipCard 
+        client:load
+        imageSrc={profolioPicture.src}
+        projects={projects}
+      />
+
+      <article id="article-content" class="prose prose-lg max-w-none mb-16 dark:prose-invert 
+        prose-headings:text-black prose-p:text-black prose-a:text-black 
+        prose-strong:text-black prose-li:text-black prose-ul:text-black 
+        text-black transition-opacity duration-500">
+        <Content />
+      </article>
+
+      <section id="projects" class="mt-20 scroll-mt-24 hidden opacity-0 transition-opacity duration-500">
+        <h2 class="text-3xl font-bold mb-8 text-gray-900">作品集</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project) => (
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex-col gap-4">
+              {project.coverImage && (
+                <div class="w-full h-48 overflow-hidden bg-gray-200 relative group">
+                  <div class="absolute w-full h-full flex flex-col gap-4 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40">
+                    <a href={project.livePageUrl} target="_blank" rel="noopener noreferrer" class="text-white underline hover:underline">Live Page</a>
+                    <a href={project.codeUrl} target="_blank" rel="noopener noreferrer" class="text-white underline hover:underline">Code</a>
+                  </div>
+                  <img 
+                    src={project.coverImage} 
+                    alt={project.title}
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  </div>
+              )}
+              <div class="p-6 ">
+                <h3 class="text-xl font-semibold mb-3 text-gray-900">
+                  {project.title}
+                </h3>
+                
+                {project.tags && project.tags.length > 0 && (
+                  <ul class="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag) => (
+                      <li class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm rounded-full text-gray-700 dark:text-gray-300">
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <script>
+    import { aboutViewStore } from "@/stores/aboutViewStore";
+
+    // 監聽 store 變化並更新顯示
+    aboutViewStore.subscribe((view) => {
+      const articleElement = document.getElementById('article-content');
+      const projectsElement = document.getElementById('projects');
+
+      if (articleElement && projectsElement) {
+        if (view === 'article') {
+          articleElement.classList.remove('hidden', 'opacity-0');
+          articleElement.classList.add('opacity-100');
+          projectsElement.classList.remove('opacity-100');
+          projectsElement.classList.add('hidden', 'opacity-0');
+        } else {
+          articleElement.classList.remove('opacity-100');
+          articleElement.classList.add('hidden', 'opacity-0');
+          projectsElement.classList.remove('hidden', 'opacity-0');
+          projectsElement.classList.add('opacity-100');
+        }
+      }
+    });
+  </script>
+</BaseLayout>
