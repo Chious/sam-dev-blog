@@ -19,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install system dependencies
         run: |
@@ -54,6 +54,9 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -62,5 +65,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: sam-dev-blog
           directory: dist
-          # 可選：自定義域名
-          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
