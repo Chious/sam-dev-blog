@@ -28,6 +28,7 @@
     "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
+    "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
     "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",

@@ -1,12 +1,31 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { SEOProps } from "@/layouts/BaseLayout.astro";
-import {getProjects} from "@/utils/notion";
-import { getEntry, render } from "astro:content";
+import { getEntry, render, getCollection } from "astro:content";
 import ProfileFlipCard from "@/components/ProfileFlipCard";
 import profolioPicture from "@/assets/profolio-2.jpg";
 
-const projects = await getProjects();
+const projectsCollection = await getCollection("projects");
+const images = import.meta.glob('/src/assets/notion/**/*.{png,jpg,jpeg,gif,webp}', { eager: true, import: 'default' });
+
+const projects = projectsCollection.map(entry => {
+  let coverImage = entry.data.coverImage;
+  
+  if (coverImage && coverImage.startsWith('src/assets/')) {
+    const imagePath = '/' + coverImage;
+    const imageModule = images[imagePath];
+    if (imageModule) {
+      coverImage = (imageModule as any).src || imageModule;
+    }
+  }
+  
+  return {
+    ...entry.data,
+    coverImage,
+  };
+});
+
+
 const aboutEntry = await getEntry("about" as any, "about");
 
 if (!aboutEntry) {
