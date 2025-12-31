@@ -9,10 +9,7 @@ export async function getStaticPaths() {
   return blogs.map((blog) => {
     // 解析檔案名稱中的日期和 slug
     function parseFilename(filename: string) {
-      // 移除 .md 後綴
-      const nameWithoutExt = filename.replace(/\.md$/, '');
-      
-      // 檢查是否符合 YYYY-MM-DD-slug 格式
+      const nameWithoutExt = filename.replace(/\.md$/, '');  
       const dateRegex = /^(\d{4}-\d{2}-\d{2})-(.+)$/;
       const match = nameWithoutExt.match(dateRegex);
       
@@ -23,8 +20,6 @@ export async function getStaticPaths() {
           slug: slug
         };
       }
-      
-      // 如果不符合格式，直接使用檔案名作為 slug
       return {
         date: undefined,
         slug: nameWithoutExt

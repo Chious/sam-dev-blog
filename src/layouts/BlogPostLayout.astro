@@ -5,7 +5,6 @@ import TableOfContents from '@components/TableOfContents.astro';
 import { Image } from 'astro:assets';
 import profolioPicture from '@/assets/profolio-picture.png';
 import { generateArticleImage } from '@utils/imageGenerator';
-import { getReadingTimeString } from '@utils/readingTime';
 
 const { frontmatter, headings = [], readingTime = '5分鐘閱讀' } = Astro.props;
 
