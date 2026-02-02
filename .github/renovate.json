@@ -1,0 +1,36 @@
+{
+    "baseBranches": [
+        "main"
+    ],
+    "rebaseWhen": "conflicted",
+    "labels": [
+        "dependencies"
+    ],
+    "automergeStrategy": "merge-commit",
+    "prHourlyLimit": 2,
+    "packageRules": [
+        {
+            "matchPackagePatterns": [
+                "^@astro/*",
+                "astro",
+                "vite",
+                "@vitejs/*"
+            ],
+            "groupName": "astro"
+        },
+        {
+            "matchPackagePatterns": [
+                "^@notionhq/*",
+                "notion-sdk-js"
+            ],
+            "groupName": "notion"
+        },
+        {
+            "matchPackagePatterns": [
+                "^@notionhq/*",
+                "notion-sdk-js"
+            ],
+            "groupName": "notion"
+        }
+    ]
+}
