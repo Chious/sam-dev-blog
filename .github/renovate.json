@@ -4,15 +4,6 @@
   "labels": ["dependencies"],
   "platformAutomerge": true,
   "automergeStrategy": "merge-commit",
-  "prHourlyLimit": 3,
-  "prConcurrentLimit": 5,
-
-  "timezone": "Asia/Taipei",
-  "schedule": ["before 3am on Monday"],
-
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "🤖 依賴套件更新儀表板",
-  "dependencyDashboardAutoclose": true,
 
   "vulnerabilityAlerts": {
     "enabled": true,
