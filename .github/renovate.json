@@ -1,70 +1,181 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":enableVulnerabilityAlertsWithLabel(security)"
+  ],
+
   "baseBranches": ["main"],
   "rebaseWhen": "conflicted",
   "labels": ["dependencies"],
   "automergeStrategy": "merge-commit",
-  "prHourlyLimit": 2,
+  "prHourlyLimit": 3,
   "prConcurrentLimit": 5,
-  
+
   "timezone": "Asia/Taipei",
   "schedule": ["before 3am on Monday"],
-  
+
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "🤖 依賴套件更新儀表板",
-  
+  "dependencyDashboardAutoclose": true,
+
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": ["security", "dependencies"]
+    "labels": ["security", "dependencies"],
+    "schedule": ["at any time"],
+    "stabilityDays": 0
   },
-  
+
   "osvVulnerabilityAlerts": true,
-  
+  "transitiveRemediation": true,
+  "rangeStrategy": "update-lockfile",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 3am on the first day of the month"]
+  },
+
   "packageRules": [
     {
-      "description": "🔒 安全更新：高優先級但遵循每週排程",
-      "matchUpdateTypes": ["patch"],
-      "matchPackagePatterns": ["*"],
-      "addLabels": ["security"],
-      "automerge": true,
-      "automergeType": "pr",
-      "prPriority": 10
+      "description": "🚨 Critical/High 安全漏洞：立即處理，繞過排程",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "vulnerabilitySeverity": ["critical", "high"],
+      "addLabels": ["security", "high-priority"],
+      "prPriority": 100,
+      "schedule": ["at any time"],
+      "automerge": false,
+      "platformAutomerge": false,
+      "commitMessagePrefix": "fix(security):"
     },
     {
-      "description": "⚡ 自動合併 patch 和 minor 更新",
-      "matchUpdateTypes": ["minor", "patch"],
+      "description": "⚠️ Moderate 安全漏洞：高優先級",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "vulnerabilitySeverity": ["moderate"],
+      "addLabels": ["security", "moderate-priority"],
+      "prPriority": 50,
+      "schedule": ["at any time"],
+      "automerge": false,
+      "commitMessagePrefix": "fix(security):"
+    },
+    {
+      "description": "📉 Low 安全漏洞：遵循排程",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "vulnerabilitySeverity": ["low"],
+      "addLabels": ["security", "low-priority"],
+      "prPriority": 20,
       "automerge": true,
-      "automergeType": "pr"
+      "commitMessagePrefix": "fix(security):"
+    },
+    {
+      "description": "🔧 特殊處理：rehype-mermaid 安全降版",
+      "matchPackageNames": ["rehype-mermaid"],
+      "matchCurrentVersion": ">=3.0.0",
+      "allowedVersions": "<3.0.0",
+      "rangeStrategy": "replace",
+      "prPriority": 100,
+      "schedule": ["at any time"],
+      "addLabels": ["security", "downgrade"],
+      "commitMessagePrefix": "fix(security):"
+    },
+    {
+      "description": "⚡ 自動合併 patch 更新（非 major）",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "prPriority": 10,
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "description": "✨ 自動合併 minor 更新（非 major）",
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "prPriority": 5,
+      "commitMessagePrefix": "feat(deps):"
+    },
+    {
+      "description": "🎯 Major 更新：需手動審查",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "prPriority": 1,
+      "addLabels": ["major-update"],
+      "commitMessagePrefix": "feat(deps)!:"
     },
     {
       "description": "🔄 GitHub Actions 群組更新",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "prPriority": 15,
+      "commitMessagePrefix": "ci:"
+    },
+    {
+      "description": "🐳 Docker 映像更新",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "groupName": "Docker",
+      "automerge": false,
+      "prPriority": 8,
+      "commitMessagePrefix": "build(docker):"
     },
     {
       "description": "🚀 Astro 生態系統套件群組",
-      "matchPackagePatterns": [
-        "^@astrojs/",
-        "astro",
-        "vite",
-        "@vitejs/"
-      ],
-      "groupName": "Astro Ecosystem"
+      "matchPackagePatterns": ["^@astrojs/", "astro", "vite", "@vitejs/"],
+      "groupName": "Astro Ecosystem",
+      "automerge": false,
+      "prPriority": 12,
+      "commitMessagePrefix": "feat(astro):"
     },
     {
       "description": "📝 Notion SDK 套件群組",
-      "matchPackagePatterns": [
-        "^@notionhq/",
-        "notion-sdk-js"
-      ],
-      "groupName": "Notion SDK"
+      "matchPackagePatterns": ["^@notionhq/", "notion-sdk-js"],
+      "groupName": "Notion SDK",
+      "automerge": true,
+      "commitMessagePrefix": "feat(notion):"
     },
     {
-      "description": "🔧 開發依賴自動合併",
+      "description": "🎨 Tailwind CSS 生態系統",
+      "matchPackagePatterns": ["tailwindcss", "^@tailwindcss/"],
+      "groupName": "Tailwind CSS",
+      "automerge": false,
+      "commitMessagePrefix": "feat(styles):"
+    },
+    {
+      "description": "🧪 測試工具群組",
+      "matchPackagePatterns": ["playwright", "^@playwright/", "vitest", "jest"],
+      "groupName": "Testing Tools",
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "commitMessagePrefix": "test:"
+    },
+    {
+      "description": "🔧 開發依賴自動合併（patch & minor）",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "pr",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "description": "📦 Production 依賴：謹慎處理 minor",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "minimumReleaseAge": "3 days",
+      "commitMessagePrefix": "feat(deps):"
+    },
+    {
+      "description": "🔒 鎖定檔案維護",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": true,
+      "schedule": ["before 3am on the first day of the month"],
+      "commitMessagePrefix": "chore:"
     }
-  ]
+  ],
+
+  "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{configDescription}}}{{{controls}}}{{{footer}}}",
+  "prBodyColumns": ["Package", "Change", "Type", "Update", "Pending"],
+
+  "ignorePresets": [":prHourlyLimit2"],
+
+  "postUpdateOptions": ["npmDedupe"]
 }
