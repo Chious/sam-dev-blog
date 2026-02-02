@@ -30,36 +30,6 @@
 
   "packageRules": [
     {
-      "description": "🚨 Critical/High 安全漏洞：立即處理，繞過排程",
-      "matchUpdateTypes": ["major", "minor", "patch"],
-      "matchSeverity": ["critical", "high"],
-      "addLabels": ["security", "high-priority"],
-      "prPriority": 100,
-      "schedule": ["at any time"],
-      "automerge": false,
-      "platformAutomerge": false,
-      "commitMessagePrefix": "fix(security):"
-    },
-    {
-      "description": "⚠️ Moderate 安全漏洞：高優先級",
-      "matchUpdateTypes": ["major", "minor", "patch"],
-      "matchSeverity": ["moderate"],
-      "addLabels": ["security", "moderate-priority"],
-      "prPriority": 50,
-      "schedule": ["at any time"],
-      "automerge": false,
-      "commitMessagePrefix": "fix(security):"
-    },
-    {
-      "description": "📉 Low 安全漏洞：遵循排程",
-      "matchUpdateTypes": ["major", "minor", "patch"],
-      "matchSeverity": ["low"],
-      "addLabels": ["security", "low-priority"],
-      "prPriority": 20,
-      "automerge": true,
-      "commitMessagePrefix": "fix(security):"
-    },
-    {
       "description": "🔧 特殊處理：rehype-mermaid 安全降版",
       "matchPackageNames": ["rehype-mermaid"],
       "matchCurrentVersion": ">=3.0.0",
