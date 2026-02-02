@@ -1,36 +1,74 @@
 {
-    "baseBranches": [
-        "main"
-    ],
-    "rebaseWhen": "conflicted",
-    "labels": [
-        "dependencies"
-    ],
-    "automergeStrategy": "merge-commit",
-    "prHourlyLimit": 2,
-    "packageRules": [
-        {
-            "matchPackagePatterns": [
-                "^@astro/*",
-                "astro",
-                "vite",
-                "@vitejs/*"
-            ],
-            "groupName": "astro"
-        },
-        {
-            "matchPackagePatterns": [
-                "^@notionhq/*",
-                "notion-sdk-js"
-            ],
-            "groupName": "notion"
-        },
-        {
-            "matchPackagePatterns": [
-                "^@notionhq/*",
-                "notion-sdk-js"
-            ],
-            "groupName": "notion"
-        }
-    ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "baseBranches": ["main"],
+  "rebaseWhen": "conflicted",
+  "labels": ["dependencies"],
+  "automergeStrategy": "merge-commit",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  
+  "timezone": "Asia/Taipei",
+  "schedule": ["before 3am on Monday"],
+  
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🤖 依賴套件更新儀表板",
+  
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"]
+  },
+  
+  "osvVulnerabilityAlerts": true,
+  
+  "packageRules": [
+    {
+      "description": "🔒 安全更新：高優先級但遵循每週排程",
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": ["*"],
+      "addLabels": ["security"],
+      "automerge": true,
+      "automergeType": "pr",
+      "prPriority": 10
+    },
+    {
+      "description": "⚡ 自動合併 patch 和 minor 更新",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "🔄 GitHub Actions 群組更新",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "🚀 Astro 生態系統套件群組",
+      "matchPackagePatterns": [
+        "^@astrojs/",
+        "astro",
+        "vite",
+        "@vitejs/"
+      ],
+      "groupName": "Astro Ecosystem"
+    },
+    {
+      "description": "📝 Notion SDK 套件群組",
+      "matchPackagePatterns": [
+        "^@notionhq/",
+        "notion-sdk-js"
+      ],
+      "groupName": "Notion SDK"
+    },
+    {
+      "description": "🔧 開發依賴自動合併",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
 }

@@ -11,7 +11,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Cloudflare Pages
+    name: Deploy to Cloudflare Pages 
+    if: |
+      github.actor != 'sam-dev-blog-renovate[bot]' &&
+      !contains(github.event.head_commit.message, 'chore(deps)') &&
+      !contains(github.event.pull_request.labels.*.name, 'dependencies')
     steps:
       - name: Checkout
         uses: actions/checkout@v4

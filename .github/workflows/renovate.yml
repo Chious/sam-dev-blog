@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
       # Don't waste time starting Renovate if JSON is invalid
       - name: Validate Renovate JSON
         run: jq type .github/renovate.json
@@ -36,7 +36,7 @@ jobs:
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@8343fa1c8d38f3d030aa8332773b737f7e2fa591 # v34.82.0
+        uses: renovatebot/github-action@c56dbeca772b331ddf18eefad8b93f0f3c69d34a # v34.159.2
         env:
           # Repository taken from variable to keep configuration file generic
           RENOVATE_REPOSITORIES: ${{ github.repository }}
