@@ -30,11 +30,11 @@ jobs:
         run: jq type .github/renovate.json
       - name: Get token
         id: get_token
-        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1.7.0
+        uses: actions/create-github-app-token@v1
         with:
-          app_id: ${{ secrets.RENOVATE_APP_ID }}
-          installation_id: ${{ secrets.RENOVATE_INSTALL_ID }}
-          private_key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@8343fa1c8d38f3d030aa8332773b737f7e2fa591 # v34.82.0
         env:
