@@ -5,6 +5,10 @@
   "platformAutomerge": true,
   "automergeStrategy": "merge-commit",
 
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🤖 依賴套件更新儀表板",
+  "dependencyDashboardAutoclose": true,
+
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security", "dependencies"],
