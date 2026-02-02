@@ -32,7 +32,7 @@
     {
       "description": "🚨 Critical/High 安全漏洞：立即處理，繞過排程",
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "vulnerabilitySeverity": ["critical", "high"],
+      "matchSeverity": ["critical", "high"],
       "addLabels": ["security", "high-priority"],
       "prPriority": 100,
       "schedule": ["at any time"],
@@ -43,7 +43,7 @@
     {
       "description": "⚠️ Moderate 安全漏洞：高優先級",
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "vulnerabilitySeverity": ["moderate"],
+      "matchSeverity": ["moderate"],
       "addLabels": ["security", "moderate-priority"],
       "prPriority": 50,
       "schedule": ["at any time"],
@@ -53,7 +53,7 @@
     {
       "description": "📉 Low 安全漏洞：遵循排程",
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "vulnerabilitySeverity": ["low"],
+      "matchSeverity": ["low"],
       "addLabels": ["security", "low-priority"],
       "prPriority": 20,
       "automerge": true,
