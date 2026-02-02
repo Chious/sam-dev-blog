@@ -2,6 +2,7 @@
   "baseBranches": ["main"],
   "rebaseWhen": "conflicted",
   "labels": ["dependencies"],
+  "platformAutomerge": true,
   "automergeStrategy": "merge-commit",
   "prHourlyLimit": 3,
   "prConcurrentLimit": 5,
