@@ -75,7 +75,7 @@ const articlesToShow = [];
 // 添加真實文章
 for (const note of sortedNotes) {
   // 從 slug 中提取 category (第一級目錄)
-  const pathParts = note.slug.split('/');
+  const pathParts = note.id.split('/');
   const category = pathParts[0];
   const slug = pathParts[pathParts.length - 1];
   

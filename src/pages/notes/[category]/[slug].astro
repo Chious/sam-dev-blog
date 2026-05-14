@@ -26,7 +26,7 @@ const { note } = Astro.props;
 const { Content, headings } = await render(note);
 
 // 計算閱讀時數
-const readingTime = getReadingTimeString(note.body);
+const readingTime = getReadingTimeString(note.body || '');
 ---
 
 <MarkdownPostLayout frontmatter={note.data} headings={headings} readingTime={readingTime}>

@@ -38,6 +38,7 @@ export default defineConfig({
   output: "static",
 
   image: {
+    dangerouslyProcessSVG: true,
     service: {
       entrypoint: "astro/assets/services/sharp",
       config: {
@@ -68,9 +69,6 @@ export default defineConfig({
       cssCodeSplit: true,
       rollupOptions: {
         output: {
-          manualChunks: {
-            tailwind: ["tailwindcss"],
-          },
         },
       },
     },

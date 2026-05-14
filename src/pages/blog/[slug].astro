@@ -46,7 +46,7 @@ const { blog, computedDate } = Astro.props;
 const { Content, headings } = await render(blog);
 
 // 計算閱讀時數
-const readingTime = getReadingTimeString(blog.body);
+const readingTime = getReadingTimeString(blog.body || '');
 
 // 創建一個包含計算日期的 frontmatter 物件
 const frontmatter = {

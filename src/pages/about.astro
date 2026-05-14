@@ -84,7 +84,7 @@ const seoConfig: SEOProps = {
                 
                 {project.tags && project.tags.length > 0 && (
                   <ul class="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag) => (
+                    {project.tags.map((tag: string) => (
                       <li class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm rounded-full text-gray-700 dark:text-gray-300">
                         {tag}
                       </li>
