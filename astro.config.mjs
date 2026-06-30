@@ -15,7 +15,7 @@ import {
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://sam-dev.space",
+  site: "https://sam-dev.tw",
 
   markdown: {
     syntaxHighlight: {
@@ -68,8 +68,7 @@ export default defineConfig({
     build: {
       cssCodeSplit: true,
       rollupOptions: {
-        output: {
-        },
+        output: {},
       },
     },
     resolve: {
